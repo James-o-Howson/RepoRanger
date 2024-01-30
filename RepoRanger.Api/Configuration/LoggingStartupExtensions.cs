@@ -1,6 +1,6 @@
 ﻿using Serilog;
 
-namespace RepoRanger.Api.Configuration.Logging;
+namespace RepoRanger.Api.Configuration;
 
 internal static class LoggingStartupExtensions
 {

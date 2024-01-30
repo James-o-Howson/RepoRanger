@@ -1,6 +1,4 @@
-using RepoRanger.Api.Configuration.AzureDevOps;
-using RepoRanger.Api.Configuration.ExceptionHandlers;
-using RepoRanger.Api.Configuration.Logging;
+using RepoRanger.Api.Configuration;
 using RepoRanger.Api.Configuration.Quartz;
 
 var builder = WebApplication.CreateBuilder(args);

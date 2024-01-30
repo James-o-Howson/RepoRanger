@@ -1,7 +1,7 @@
 ﻿using RepoRanger.Application.Options;
 using RepoRanger.Infrastructure.AzureDevOps;
 
-namespace RepoRanger.Api.Configuration.AzureDevOps;
+namespace RepoRanger.Api.Configuration;
 
 internal static class AzureDevOpsStartupExtensions
 {

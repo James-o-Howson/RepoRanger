@@ -2,18 +2,19 @@
 using System.Xml.XPath;
 using Microsoft.Extensions.Options;
 using Quartz;
+using RepoRanger.Api.Configuration.Quartz;
 using RepoRanger.Infrastructure.AzureDevOps;
 
-namespace RepoRanger.Api.Configuration.Quartz.Jobs;
+namespace RepoRanger.Api.Jobs;
 
 [DisallowConcurrentExecution]
-internal sealed class RepoClonerJob : IJob
+internal sealed class RepositoryDataCollectorJob : IJob
 {
-    private readonly ILogger<RepoClonerJob> _logger;
+    private readonly ILogger<RepositoryDataCollectorJob> _logger;
     private readonly QuartzSettings _quartzSettings;
     private readonly IAzureDevOpsService _azureDevOpsService;
 
-    public RepoClonerJob(ILogger<RepoClonerJob> logger, IOptions<QuartzSettings> options, IAzureDevOpsService azureDevOpsService)
+    public RepositoryDataCollectorJob(ILogger<RepositoryDataCollectorJob> logger, IOptions<QuartzSettings> options, IAzureDevOpsService azureDevOpsService)
     {
         _logger = logger;
         _azureDevOpsService = azureDevOpsService;

@@ -1,4 +1,6 @@
-﻿namespace RepoRanger.Api.Configuration.ExceptionHandlers;
+﻿using RepoRanger.Api.Middleware;
+
+namespace RepoRanger.Api.Configuration;
 
 internal static class ExceptionHandlerStartupExtensions
 {

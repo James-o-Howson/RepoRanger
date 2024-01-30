@@ -1,5 +1,5 @@
 ﻿using Quartz;
-using RepoRanger.Api.Configuration.Quartz.Jobs;
+using RepoRanger.Api.Jobs;
 using RepoRanger.Application.Options;
 
 namespace RepoRanger.Api.Configuration.Quartz;
@@ -15,7 +15,7 @@ internal static class QuartzStartupExtensions
             options.UseSimpleTypeLoader();
             options.UseInMemoryStore();
 
-            options.ScheduleJob<RepoClonerJob>(trigger =>
+            options.ScheduleJob<RepositoryDataCollectorJob>(trigger =>
             {
                 const string description = "Trigger scheduled every 5 minutes beginning on API startup";
                 trigger.WithIdentity("10 Minute Scheduled Trigger")
