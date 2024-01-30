@@ -84,11 +84,11 @@ internal sealed class RepositoryDataCollectorJob : IJob
         Console.WriteLine($"Project file contains {packageReferences.Count()} package references:");
         foreach (var packageReference in packageReferences)
         {
-            Console.WriteLine($"{packageReference.Include}, version {packageReference.Version}");
+            Console.WriteLine($"{packageReference.Name}, version {packageReference.Version}");
         }
 
         return packageReferences;
     }
 
-    private record PackageReference(string Include, Version Version);
+    private record PackageReference(string Name, Version Version);
 }
