@@ -1,6 +1,9 @@
 ﻿using System.Text.Json;
 using Microsoft.Extensions.Options;
 using RepoRanger.Infrastructure.AzureDevOps.Models;
+using RepoRanger.Infrastructure.AzureDevOps.Models.Items;
+using RepoRanger.Infrastructure.AzureDevOps.Models.Projects;
+using RepoRanger.Infrastructure.AzureDevOps.Models.Repositories;
 
 namespace RepoRanger.Infrastructure.AzureDevOps;
 

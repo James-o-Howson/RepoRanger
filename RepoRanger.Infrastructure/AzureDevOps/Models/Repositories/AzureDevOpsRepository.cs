@@ -1,4 +1,6 @@
-namespace RepoRanger.Infrastructure.AzureDevOps.Models;
+using RepoRanger.Infrastructure.AzureDevOps.Models.Projects;
+
+namespace RepoRanger.Infrastructure.AzureDevOps.Models.Repositories;
 
 public sealed record AzureDevOpsRepository(
     string Id,

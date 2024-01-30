@@ -1,4 +1,4 @@
-namespace RepoRanger.Infrastructure.AzureDevOps.Models;
+namespace RepoRanger.Infrastructure.AzureDevOps.Models.Items;
 
 public sealed record AzureDevOpsItem(
     string ObjectId,
