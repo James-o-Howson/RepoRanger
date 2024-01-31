@@ -1,10 +1,10 @@
 ﻿using RepoRanger.Application.Options;
 
-namespace RepoRanger.Api.Configuration.Quartz;
+namespace RepoRanger.Api.Options;
 
-internal sealed class QuartzSettings : IOptions
+internal sealed class QuartzOptions : IOptions
 {
-    public string SectionName => "QuartzSettings";
+    public string SectionName => "QuartzOptions";
     
     public bool RepoClonerJobEnabled { get; set; }
 

@@ -1,16 +1,13 @@
-using RepoRanger.Api.Configuration;
-using RepoRanger.Api.Configuration.Quartz;
+using RepoRanger.Api;
+using RepoRanger.Infrastructure;
+using RepoRanger.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 
-builder.Services.AddQuartzServices(builder.Configuration);
-builder.Services.AddAzureDevOpsServices(builder.Configuration);
-builder.Services.AddExceptionHandlerServices();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddHealthChecks();
-builder.Services.AddSwaggerGen();
+builder.Services.AddApiServices(builder.Configuration);
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddPersistenceServices(builder.Configuration);
 
 var app = builder.Build();
 

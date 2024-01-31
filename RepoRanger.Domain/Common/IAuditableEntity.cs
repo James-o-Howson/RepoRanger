@@ -1,6 +1,6 @@
-﻿namespace RepoRanger.Domain.Common;
+namespace RepoRanger.Domain.Common;
 
-public abstract class BaseAuditableEntity<TId> : BaseEntity<TId>, IAuditableEntity
+public interface IAuditableEntity
 {
     public DateTime Created { get; set; }
     public string? CreatedBy { get; set; }

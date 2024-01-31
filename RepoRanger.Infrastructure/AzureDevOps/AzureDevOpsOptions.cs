@@ -5,9 +5,9 @@ using RepoRanger.Application.Options;
 
 namespace RepoRanger.Infrastructure.AzureDevOps;
 
-public sealed class AzureDevOpsSettings : IOptions
+public sealed class AzureDevOpsOptions : IOptions
 {
-    public string SectionName => "AzureDevOpsSettings";
+    public string SectionName => "AzureDevOpsOptions";
     
     public string BaseAddress { get; set; }
     public string PersonalAccessToken { get; set; }

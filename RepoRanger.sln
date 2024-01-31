@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Application", "R
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Domain", "RepoRanger.Domain\RepoRanger.Domain.csproj", "{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Persistence", "RepoRanger.Persistence\RepoRanger.Persistence.csproj", "{7F43B6F7-08A1-45D2-B733-796833F12230}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F43B6F7-08A1-45D2-B733-796833F12230}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F43B6F7-08A1-45D2-B733-796833F12230}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F43B6F7-08A1-45D2-B733-796833F12230}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F43B6F7-08A1-45D2-B733-796833F12230}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

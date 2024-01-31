@@ -2,8 +2,9 @@
 using System.Xml.XPath;
 using Microsoft.Extensions.Options;
 using Quartz;
-using RepoRanger.Api.Configuration.Quartz;
+using RepoRanger.Api.Options;
 using RepoRanger.Infrastructure.AzureDevOps;
+using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
 
 namespace RepoRanger.Api.Jobs;
 
@@ -11,14 +12,14 @@ namespace RepoRanger.Api.Jobs;
 internal sealed class RepositoryDataCollectorJob : IJob
 {
     private readonly ILogger<RepositoryDataCollectorJob> _logger;
-    private readonly QuartzSettings _quartzSettings;
+    private readonly QuartzOptions _quartzOptions;
     private readonly IAzureDevOpsService _azureDevOpsService;
 
-    public RepositoryDataCollectorJob(ILogger<RepositoryDataCollectorJob> logger, IOptions<QuartzSettings> options, IAzureDevOpsService azureDevOpsService)
+    public RepositoryDataCollectorJob(ILogger<RepositoryDataCollectorJob> logger, IOptions<QuartzOptions> options, IAzureDevOpsService azureDevOpsService)
     {
         _logger = logger;
         _azureDevOpsService = azureDevOpsService;
-        _quartzSettings = options.Value;
+        _quartzOptions = options.Value;
     }
 
     public async Task Execute(IJobExecutionContext context)
@@ -27,7 +28,7 @@ internal sealed class RepositoryDataCollectorJob : IJob
         {
             _logger.LogInformation("Repo Cloner Job - Starting");
 
-            if (!_quartzSettings.RepoClonerJobEnabled)
+            if (!_quartzOptions.RepoClonerJobEnabled)
             {
                 _logger.LogInformation("Repo Cloner Job Disabled - Skipping");
                 return;

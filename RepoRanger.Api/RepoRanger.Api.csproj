@@ -11,6 +11,11 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.1"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.1">
+          <PrivateAssets>all</PrivateAssets>
+          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.1" />
         <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.1.0" />
         <PackageReference Include="Quartz.Extensions.Hosting" Version="3.8.0" />
         <PackageReference Include="Serilog" Version="3.1.1" />
@@ -29,6 +34,7 @@
     <ItemGroup>
       <ProjectReference Include="..\RepoRanger.Application\RepoRanger.Application.csproj" />
       <ProjectReference Include="..\RepoRanger.Infrastructure\RepoRanger.Infrastructure.csproj" />
+      <ProjectReference Include="..\RepoRanger.Persistence\RepoRanger.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

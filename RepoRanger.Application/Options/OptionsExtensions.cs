@@ -27,12 +27,9 @@ public static class OptionsExtensions
     public static TOptions RegisterOptions<TOptions>(this IServiceCollection services, IConfiguration configuration) 
         where TOptions : class, IOptions, new()
     {
-        var options = new TOptions();
+        var options = TryLoad<TOptions>(configuration);
+        services.Configure<TOptions>(configuration.GetSection(options.SectionName));
         
-        var configurationSection = configuration.GetSection(options.SectionName);
-        services.Configure<TOptions>(configurationSection);
-        
-        configurationSection.Bind(options);
         return options;
     }
 }
