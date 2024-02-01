@@ -51,7 +51,7 @@ internal static class ServiceConfiguration
             options.UseSimpleTypeLoader();
             options.UseInMemoryStore();
 
-            options.ScheduleJob<RepositoryDataCollectorJob>(trigger =>
+            options.ScheduleJob<AzureDevOpsRepoRangerJob>(trigger =>
             {
                 const string description = "Trigger scheduled every 5 minutes beginning on API startup";
                 trigger.WithIdentity("10 Minute Scheduled Trigger")

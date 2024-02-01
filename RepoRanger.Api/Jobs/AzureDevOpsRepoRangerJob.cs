@@ -7,14 +7,14 @@ using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
 namespace RepoRanger.Api.Jobs;
 
 [DisallowConcurrentExecution]
-internal sealed class RepositoryDataCollectorJob : IJob
+internal sealed class AzureDevOpsRepoRangerJob : IJob
 {
-    private readonly ILogger<RepositoryDataCollectorJob> _logger;
+    private readonly ILogger<AzureDevOpsRepoRangerJob> _logger;
     private readonly QuartzOptions _quartzOptions;
     private readonly IAzureDevOpsRepositoryDataExtractor _azureDevOpsRepositoryDataExtractor;
     private readonly IRepositoryService _repositoryService;
 
-    public RepositoryDataCollectorJob(ILogger<RepositoryDataCollectorJob> logger, IOptions<QuartzOptions> options, IAzureDevOpsRepositoryDataExtractor azureDevOpsRepositoryDataExtractor, IRepositoryService repositoryService)
+    public AzureDevOpsRepoRangerJob(ILogger<AzureDevOpsRepoRangerJob> logger, IOptions<QuartzOptions> options, IAzureDevOpsRepositoryDataExtractor azureDevOpsRepositoryDataExtractor, IRepositoryService repositoryService)
     {
         _logger = logger;
         _azureDevOpsRepositoryDataExtractor = azureDevOpsRepositoryDataExtractor;
@@ -34,7 +34,7 @@ internal sealed class RepositoryDataCollectorJob : IJob
                 return;
             }
 
-            var azureDevOpsRepositories = await _azureDevOpsRepositoryDataExtractor.GetAzureRepositoryDefinitionsAsync();
+            var azureDevOpsRepositories = await _azureDevOpsRepositoryDataExtractor.GetAzureRepositoriesAsync();
             await _repositoryService.SaveAsync(azureDevOpsRepositories, context.CancellationToken);
 
             _logger.LogInformation("Repo Cloner Job - Finished");

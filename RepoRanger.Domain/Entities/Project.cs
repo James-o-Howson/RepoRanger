@@ -1,5 +1,4 @@
 ﻿using RepoRanger.Domain.Common;
-using RepoRanger.Domain.ValueObjects;
 
 namespace RepoRanger.Domain.Entities;
 
@@ -10,18 +9,18 @@ public class Project : BaseAuditableEntity<Guid>
     
     private Project() { }
 
-    public Project(string name, ProjectType type)
+    public Project(string name, string version)
     {
         ArgumentException.ThrowIfNullOrEmpty(name);
-        ArgumentNullException.ThrowIfNull(type);
+        ArgumentException.ThrowIfNullOrEmpty(version);
         
         Id = Guid.NewGuid();
         Name = name;
-        Type = type;
+        Version = version;
     }
 
     public string Name { get; private set; }
-    public ProjectType Type { get; private set; }
+    public string Version { get; private set; }
     public IReadOnlyCollection<Branch> Branches => _branches;
     public IReadOnlyCollection<Dependency> Dependencies => _dependencies;
 

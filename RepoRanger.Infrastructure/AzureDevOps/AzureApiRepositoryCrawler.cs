@@ -1,82 +1,116 @@
 ﻿using System.Xml.Linq;
 using System.Xml.XPath;
+using Microsoft.Extensions.Logging;
 using RepoRanger.Application.ViewModels;
+using RepoRanger.Infrastructure.AzureDevOps.Models.Items;
+using RepoRanger.Infrastructure.AzureDevOps.Models.Projects;
+using RepoRanger.Infrastructure.AzureDevOps.Models.Repositories;
+using RepoRanger.Infrastructure.FileParsing.CSharp;
 
 namespace RepoRanger.Infrastructure.AzureDevOps;
 
 public interface IAzureDevOpsRepositoryDataExtractor
 {
-    Task<SourceViewModel> GetAzureRepositoryDefinitionsAsync();
+    Task<SourceViewModel> GetAzureRepositoriesAsync();
 }
 
 public sealed class AzureDevOpsRepositoryDataExtractor : IAzureDevOpsRepositoryDataExtractor
 {
     private const string Source = "AzureDevOps";
+    
     private readonly IAzureDevOpsService _azureDevOpsService;
+    private readonly ILogger<AzureDevOpsRepositoryDataExtractor> _logger;
+    private readonly ICsprojDependencyFileParser _dependencyFileParser;
+    private readonly ICsprojDotNetVersionFileParser _dotNetVersionFileParser;
 
-    public AzureDevOpsRepositoryDataExtractor(IAzureDevOpsService azureDevOpsService)
+    public AzureDevOpsRepositoryDataExtractor(IAzureDevOpsService azureDevOpsService,
+        ILogger<AzureDevOpsRepositoryDataExtractor> logger,
+        ICsprojDependencyFileParser dependencyFileParser,
+        ICsprojDotNetVersionFileParser dotNetVersionFileParser)
     {
         _azureDevOpsService = azureDevOpsService;
+        _logger = logger;
+        _dependencyFileParser = dependencyFileParser;
+        _dotNetVersionFileParser = dotNetVersionFileParser;
     }
 
-    public async Task<SourceViewModel> GetAzureRepositoryDefinitionsAsync()
+    public async Task<SourceViewModel> GetAzureRepositoriesAsync()
     {
         var projects = await _azureDevOpsService.GetProjectsAsync();
         if (projects is null) throw new ApplicationException("Unable to retrieve Azure Dev Ops Projects");
 
-        var repositoryViewModels = new List<RepositoryViewModel>();
+        var tasks = projects.Value.Select(async p => await CreateRepositories(p));
+        var repositoryViewModels = (await Task.WhenAll(tasks)).SelectMany(v => v);
         
-        foreach (var project in projects.Value)
-        {
-            var repositories = await _azureDevOpsService.GetRepositoriesAsync(project.Name);
-            if (repositories is null) throw new ApplicationException($"Unable to retrieve Azure Dev Ops Repositories for Project: {project.Name}");
-
-            foreach (var repository in repositories.Value)
-            {
-                var projectViewModels = new List<ProjectViewModel>();
-
-                var items = await _azureDevOpsService.GetItemsAsync(project.Name, repository.Id);
-
-                var solutionItemDefinitions = items?.Value.Where(i => !i.IsFolder && i.Path.EndsWith(".sln")).ToList();
-                var projectItemDefinitions = items?.Value.Where(i => !i.IsFolder && i.Path.EndsWith(".csproj")).ToList();
-
-                if (projectItemDefinitions is null || projectItemDefinitions.Count <= 0) continue;
-                
-                foreach (var projectItemDefinition in projectItemDefinitions)
-                {
-                    var itemContent =
-                        await _azureDevOpsService.GetItemAsync(project.Name, repository.Id, projectItemDefinition.Path);
-
-                    if (string.IsNullOrEmpty(itemContent)) continue;
-
-                    var packageReferences = GetPackageReferences(itemContent);
-                    
-                    var dependencyViewModels = packageReferences.Select(r => new DependencyViewModel(r.Name, r.Version)).ToList();
-                    projectViewModels.Add(new ProjectViewModel(project.Name, "", "", dependencyViewModels));
-                }
-                
-                var branchViewModel = new BranchViewModel(repository.DefaultBranch, true, projectViewModels);
-                repositoryViewModels.Add(new RepositoryViewModel(repository.Name, repository.Url, repository.RemoteUrl, [branchViewModel]));
-            }
-        }
-
         return new SourceViewModel(Source, repositoryViewModels);
     }
 
-    private static IEnumerable<PackageReference> GetPackageReferences(string itemContent)
+    private async Task<List<RepositoryViewModel>> CreateRepositories(AzureDevOpsProject project)
     {
-        var doc = XDocument.Parse(itemContent);
-        var packageReferences = doc.XPathSelectElements("//PackageReference")
-            .Select(pr => new PackageReference(pr.Attribute("Include").Value.Trim(), pr.Attribute("Version").Value.Trim())).ToList();
+        var repositories = await _azureDevOpsService.GetRepositoriesAsync(project.Name);
+        if (repositories is null) throw new ApplicationException($"Unable to retrieve Azure Dev Ops Repositories for Project: {project.Name}");
 
-        Console.WriteLine($"Project file contains {packageReferences.Count()} package references:");
-        foreach (var packageReference in packageReferences)
+        var repositoryViewModels = new List<RepositoryViewModel>();
+        foreach (var repository in repositories.Value)
         {
-            Console.WriteLine($"{packageReference.Name}, version {packageReference.Version}");
+            var items = await _azureDevOpsService.GetItemsAsync(project.Name, repository.Id);
+
+            var solutionItemDefinitions = items?.Value.Where(i => !i.IsFolder && i.Path.EndsWith(".sln")).ToList();
+            var projectItemDefinitions = items?.Value.Where(i => !i.IsFolder && i.Path.EndsWith(".csproj")).ToList();
+
+            if (projectItemDefinitions is null || projectItemDefinitions.Count <= 0) continue;
+                
+            var repositoryViewModel = await CreateRepository(projectItemDefinitions, project, repository);
+            repositoryViewModels.Add(repositoryViewModel);
         }
 
-        return packageReferences;
+        return repositoryViewModels;
     }
 
-    private record PackageReference(string Name, string Version);
+    private async Task<RepositoryViewModel> CreateRepository(List<AzureDevOpsItem> projectItemDefinitions, AzureDevOpsProject project,
+        AzureDevOpsRepository repository)
+    {
+        var projectViewModels = await CreateProjects(projectItemDefinitions, project, repository);
+                
+        var branchViewModel = new BranchViewModel(repository.DefaultBranch, true, projectViewModels);
+        return new RepositoryViewModel(repository.Name, repository.Url, repository.RemoteUrl, [branchViewModel]);
+    }
+
+    private async Task<List<ProjectViewModel>> CreateProjects(List<AzureDevOpsItem> projectItemDefinitions, AzureDevOpsProject project,
+        AzureDevOpsRepository repository)
+    {
+        var projectViewModels = new List<ProjectViewModel>();
+
+        foreach (var projectItemDefinition in projectItemDefinitions)
+        {
+            var itemContent =
+                await _azureDevOpsService.GetItemAsync(project.Name, repository.Id, projectItemDefinition.Path);
+
+            if (string.IsNullOrEmpty(itemContent)) continue;
+            projectViewModels.Add(CreateProject(itemContent, project));
+        }
+
+        return projectViewModels;
+    }
+
+    private ProjectViewModel CreateProject(string itemContent, AzureDevOpsProject project)
+    {
+        var dependencyViewModels = _dependencyFileParser.Parse(itemContent);
+        var dotnetVersion = _dotNetVersionFileParser.Parse(itemContent);
+                    
+        return new ProjectViewModel(project.Name, dotnetVersion, dependencyViewModels);
+    }
+
+    private ProjectMetadata GetProjectMetadata(string itemContent)
+    {
+        var doc = XDocument.Parse(itemContent);
+        var element = doc.XPathSelectElement("//PackageReference");
+        var type = element.Attribute("Include")?.Value.Trim() ?? string.Empty;
+        var version = element.Attribute("Version")?.Value.Trim() ?? string.Empty;
+        var projectMetadata = new ProjectMetadata(type, version);
+
+        return projectMetadata;
+    }
+
+    private record ProjectMetadata(string Type, string Version);
 }

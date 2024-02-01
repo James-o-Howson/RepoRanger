@@ -10,8 +10,6 @@ internal sealed class ProjectConfiguration : GuidBaseAuditableEntityConfiguratio
         builder.HasMany(b => b.Dependencies)
             .WithMany(p => p.Projects);
 
-        builder.OwnsOne(p => p.Type);
-        
         base.Configure(builder);
     }
 }
