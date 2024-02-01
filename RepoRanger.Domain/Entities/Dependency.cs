@@ -4,8 +4,21 @@ namespace RepoRanger.Domain.Entities;
 
 public class Dependency : BaseAuditableEntity<Guid>
 {
-    public IList<Project> Projects { get; private set; } = new List<Project>();
+    private readonly List<Project> _projects = [];
     
-    public string Name { get; set; }
-    public string Version { get; set; }
+    private Dependency() { }
+
+    public Dependency(string name, string version)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(name);
+        ArgumentException.ThrowIfNullOrEmpty(version);
+        
+        Id = Guid.NewGuid();
+        Name = name;
+        Version = version;
+    }
+    
+    public string Name { get; private set; }
+    public string Version { get; private set; }
+    public IReadOnlyCollection<Project> Projects => _projects;
 }

@@ -33,9 +33,9 @@ namespace RepoRanger.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     Type_Name = table.Column<string>(type: "TEXT", nullable: false),
                     Type_Version = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
                     LastModified = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -47,15 +47,11 @@ namespace RepoRanger.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Repositories",
+                name: "Sources",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    DefaultBranchId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Url = table.Column<string>(type: "TEXT", nullable: false),
-                    RemoteUrl = table.Column<string>(type: "TEXT", nullable: false),
-                    Source_Name = table.Column<string>(type: "TEXT", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
                     LastModified = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -63,7 +59,7 @@ namespace RepoRanger.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Repositories", x => x.Id);
+                    table.PrimaryKey("PK_Sources", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -91,12 +87,38 @@ namespace RepoRanger.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Repositories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Url = table.Column<string>(type: "TEXT", nullable: false),
+                    RemoteUrl = table.Column<string>(type: "TEXT", nullable: false),
+                    SourceId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DefaultBranchId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
+                    LastModified = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Repositories", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Repositories_Sources_SourceId",
+                        column: x => x.SourceId,
+                        principalTable: "Sources",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Branches",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RepositoryId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
+                    RepositoryId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
                     LastModified = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -151,6 +173,11 @@ namespace RepoRanger.Persistence.Migrations
                 name: "IX_DependencyProject_ProjectsId",
                 table: "DependencyProject",
                 column: "ProjectsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Repositories_SourceId",
+                table: "Repositories",
+                column: "SourceId");
         }
 
         /// <inheritdoc />
@@ -173,6 +200,9 @@ namespace RepoRanger.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Repositories");
+
+            migrationBuilder.DropTable(
+                name: "Sources");
         }
     }
 }

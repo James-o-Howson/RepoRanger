@@ -4,7 +4,26 @@ namespace RepoRanger.Domain.Entities;
 
 public class Branch : BaseAuditableEntity<Guid>
 {
-    public Guid RepositoryId { get; set; }
-    public IList<Project> Projects { get; private set; } = new List<Project>();
-    public string Name { get; set; }
+    private readonly List<Project> _projects = [];
+    
+    private Branch() { }
+
+    public Branch(string name)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(name);
+        
+        Id = Guid.NewGuid();
+        Name = name;
+    }
+
+    public string Name { get; private set; }
+    public Guid RepositoryId { get; private set; }
+    public IReadOnlyCollection<Project> Projects => _projects;
+
+    public void AddProjects(IEnumerable<Project> projects)
+    {
+        ArgumentNullException.ThrowIfNull(projects);
+        
+        _projects.AddRange(projects);
+    }
 }

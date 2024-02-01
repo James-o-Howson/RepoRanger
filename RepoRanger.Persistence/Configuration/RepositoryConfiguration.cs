@@ -7,8 +7,6 @@ internal sealed class RepositoryConfiguration : GuidBaseAuditableEntityConfigura
 {
     public override void Configure(EntityTypeBuilder<Repository> builder)
     {
-        builder.OwnsOne(r => r.Source);
-        
         builder.HasMany(r => r.Branches)
             .WithOne()
             .HasForeignKey(b => b.RepositoryId)

@@ -11,7 +11,7 @@ using RepoRanger.Persistence;
 namespace RepoRanger.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240131073458_Initial")]
+    [Migration("20240201003635_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -190,13 +190,52 @@ namespace RepoRanger.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("SourceId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Url")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("SourceId");
+
                     b.ToTable("Repositories");
+                });
+
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Source", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(true)
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModified")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastModifiedBy")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(true)
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Sources");
                 });
 
             modelBuilder.Entity("BranchProject", b =>
@@ -267,30 +306,21 @@ namespace RepoRanger.Persistence.Migrations
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.Repository", b =>
                 {
-                    b.OwnsOne("RepoRanger.Domain.ValueObjects.Source", "Source", b1 =>
-                        {
-                            b1.Property<Guid>("RepositoryId")
-                                .HasColumnType("TEXT");
-
-                            b1.Property<string>("Name")
-                                .IsRequired()
-                                .HasColumnType("TEXT");
-
-                            b1.HasKey("RepositoryId");
-
-                            b1.ToTable("Repositories");
-
-                            b1.WithOwner()
-                                .HasForeignKey("RepositoryId");
-                        });
-
-                    b.Navigation("Source")
+                    b.HasOne("RepoRanger.Domain.Entities.Source", null)
+                        .WithMany("Repositories")
+                        .HasForeignKey("SourceId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.Repository", b =>
                 {
                     b.Navigation("Branches");
+                });
+
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Source", b =>
+                {
+                    b.Navigation("Repositories");
                 });
 #pragma warning restore 612, 618
         }

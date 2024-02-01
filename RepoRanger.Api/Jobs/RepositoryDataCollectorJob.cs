@@ -1,8 +1,6 @@
-﻿using System.Xml.Linq;
-using System.Xml.XPath;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Quartz;
-using RepoRanger.Api.Options;
+using RepoRanger.Application.Services;
 using RepoRanger.Infrastructure.AzureDevOps;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
 
@@ -13,12 +11,14 @@ internal sealed class RepositoryDataCollectorJob : IJob
 {
     private readonly ILogger<RepositoryDataCollectorJob> _logger;
     private readonly QuartzOptions _quartzOptions;
-    private readonly IAzureDevOpsService _azureDevOpsService;
+    private readonly IAzureDevOpsRepositoryDataExtractor _azureDevOpsRepositoryDataExtractor;
+    private readonly IRepositoryService _repositoryService;
 
-    public RepositoryDataCollectorJob(ILogger<RepositoryDataCollectorJob> logger, IOptions<QuartzOptions> options, IAzureDevOpsService azureDevOpsService)
+    public RepositoryDataCollectorJob(ILogger<RepositoryDataCollectorJob> logger, IOptions<QuartzOptions> options, IAzureDevOpsRepositoryDataExtractor azureDevOpsRepositoryDataExtractor, IRepositoryService repositoryService)
     {
         _logger = logger;
-        _azureDevOpsService = azureDevOpsService;
+        _azureDevOpsRepositoryDataExtractor = azureDevOpsRepositoryDataExtractor;
+        _repositoryService = repositoryService;
         _quartzOptions = options.Value;
     }
 
@@ -34,7 +34,8 @@ internal sealed class RepositoryDataCollectorJob : IJob
                 return;
             }
 
-            await GetAzureRepositoryDefinitions();
+            var azureDevOpsRepositories = await _azureDevOpsRepositoryDataExtractor.GetAzureRepositoryDefinitionsAsync();
+            await _repositoryService.SaveAsync(azureDevOpsRepositories, context.CancellationToken);
 
             _logger.LogInformation("Repo Cloner Job - Finished");
         }
@@ -44,52 +45,4 @@ internal sealed class RepositoryDataCollectorJob : IJob
             context.Result = e;
         }
     }
-
-    private async Task GetAzureRepositoryDefinitions()
-    {
-        var projects = await _azureDevOpsService.GetProjectsAsync();
-        if (projects is null) throw new ApplicationException("Unable to retrieve Azure Dev Ops Projects");
-            
-        foreach (var project in projects.Value)
-        {
-            var repositories = await _azureDevOpsService.GetRepositoriesAsync(project.Name);
-            if (repositories is null) throw new ApplicationException($"Unable to retrieve Azure Dev Ops Repositories for Project: {project.Name}");
-
-            foreach (var repository in repositories.Value)
-            {
-                var items = await _azureDevOpsService.GetItemsAsync(project.Name, repository.Id);
-
-                var solutionItemDefinitions = items?.Value.Where(i => !i.IsFolder && i.Path.EndsWith(".sln")).ToList();
-                var projectItemDefinitions = items?.Value.Where(i => !i.IsFolder && i.Path.EndsWith(".csproj")).ToList();
-
-                if (projectItemDefinitions is null || projectItemDefinitions.Count <= 0) continue;
-                foreach (var projectItemDefinition in projectItemDefinitions)
-                {
-                    var itemContent =
-                        await _azureDevOpsService.GetItemAsync(project.Name, repository.Id, projectItemDefinition.Path);
-
-                    if (string.IsNullOrEmpty(itemContent)) continue;
-
-                    var packageReferences = GetPackageReferences(itemContent);
-                }
-            }
-        }
-    }
-
-    private List<PackageReference> GetPackageReferences(string itemContent)
-    {
-        var doc = XDocument.Parse(itemContent);
-        var packageReferences = doc.XPathSelectElements("//PackageReference")
-            .Select(pr => new PackageReference(pr.Attribute("Include").Value, new Version(pr.Attribute("Version").Value))).ToList();
-
-        Console.WriteLine($"Project file contains {packageReferences.Count()} package references:");
-        foreach (var packageReference in packageReferences)
-        {
-            Console.WriteLine($"{packageReference.Name}, version {packageReference.Version}");
-        }
-
-        return packageReferences;
-    }
-
-    private record PackageReference(string Name, Version Version);
 }

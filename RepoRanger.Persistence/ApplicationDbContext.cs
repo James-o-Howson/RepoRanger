@@ -15,6 +15,7 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Branch> Branches { get; set; }
     public DbSet<Project> Projects { get; set; }
     public DbSet<Dependency> Dependencies { get; set; }
+    public DbSet<Source> Sources { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

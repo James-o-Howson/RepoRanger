@@ -26,5 +26,7 @@ public static class ServiceConfiguration
             client.DefaultRequestHeaders.Authorization = options.AuthenticationHeader();
 
         }).AddStandardResilienceHandler();
+
+        services.AddScoped<IAzureDevOpsRepositoryDataExtractor, AzureDevOpsRepositoryDataExtractor>();
     }
 }
