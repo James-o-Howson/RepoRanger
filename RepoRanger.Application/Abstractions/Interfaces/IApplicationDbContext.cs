@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Application.Abstractions.Interfaces;
 

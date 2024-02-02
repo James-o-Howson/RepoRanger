@@ -1,5 +1,5 @@
 ﻿using RepoRanger.Application.Sources.Commands.Common.Models;
-using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Application.Sources.Commands.Common.Mapping;
 

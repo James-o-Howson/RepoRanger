@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Persistence;
 

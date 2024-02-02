@@ -1,6 +1,6 @@
 ﻿using RepoRanger.Domain.Common;
 
-namespace RepoRanger.Domain.Entities;
+namespace RepoRanger.Domain.Source;
 
 public sealed class Source : BaseAuditableEntity<Guid>
 {

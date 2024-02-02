@@ -1,5 +1,5 @@
 ﻿using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Application.Abstractions;
 
