@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using System.Xml.XPath;
 using Microsoft.Extensions.Logging;
-using RepoRanger.Application.Sources.Common.Models;
+using RepoRanger.Application.Sources.Commands.Common.Models;
 
 namespace RepoRanger.Infrastructure.FileParsing.CSharp;
 

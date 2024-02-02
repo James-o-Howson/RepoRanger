@@ -1,7 +1,7 @@
-﻿using RepoRanger.Application.Sources.Common.Models;
+﻿using RepoRanger.Application.Sources.Commands.Common.Models;
 using RepoRanger.Domain.Entities;
 
-namespace RepoRanger.Application.Sources.Common.Mapping;
+namespace RepoRanger.Application.Sources.Commands.Common.Mapping;
 
 internal static class BranchMappingExtensions
 {

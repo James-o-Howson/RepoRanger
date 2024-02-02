@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using RepoRanger.Application.Sources.Common.Validators;
+using RepoRanger.Application.Sources.Commands.Common.Validators;
 
 namespace RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 

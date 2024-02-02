@@ -1,3 +1,3 @@
-﻿namespace RepoRanger.Application.Sources.Common.Models;
+﻿namespace RepoRanger.Application.Sources.Commands.Common.Models;
 
 public record SourceDto(string Name, IEnumerable<RepositoryDto> Repositories);
