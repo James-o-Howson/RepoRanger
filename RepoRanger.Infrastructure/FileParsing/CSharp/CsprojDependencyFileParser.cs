@@ -1,14 +1,14 @@
 ﻿using System.Xml.Linq;
 using System.Xml.XPath;
 using Microsoft.Extensions.Logging;
-using RepoRanger.Application.ViewModels;
+using RepoRanger.Application.Sources.Common.Models;
 
 namespace RepoRanger.Infrastructure.FileParsing.CSharp;
 
 public interface ICsprojDependencyFileParser
 {
     bool CanParse(string filePath);
-    IEnumerable<DependencyViewModel> Parse(string content);
+    IEnumerable<DependencyDto> Parse(string content);
 }
 
 public sealed class CsprojDependencyFileParser : ICsprojDependencyFileParser
@@ -22,7 +22,7 @@ public sealed class CsprojDependencyFileParser : ICsprojDependencyFileParser
 
     public bool CanParse(string filePath) => filePath.EndsWith(".csproj");
 
-    public IEnumerable<DependencyViewModel> Parse(string content)
+    public IEnumerable<DependencyDto> Parse(string content)
     {
         ArgumentException.ThrowIfNullOrEmpty(content);
         
@@ -33,7 +33,7 @@ public sealed class CsprojDependencyFileParser : ICsprojDependencyFileParser
                 var name = pr.Attribute("Include")?.Value.Trim() ?? string.Empty;
                 var version = pr.Attribute("Version")?.Value.Trim() ?? string.Empty;
                 
-                return new DependencyViewModel(name, version);
+                return new DependencyDto(name, version);
             }).ToList();
 
         _logger.LogInformation("Project file contains {DependencyCount} dependency references:", dependencyViewModels.Count);

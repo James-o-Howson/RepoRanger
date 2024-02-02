@@ -1,4 +1,5 @@
 using RepoRanger.Api;
+using RepoRanger.Application;
 using RepoRanger.Infrastructure;
 using RepoRanger.Persistence;
 
@@ -6,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 
 builder.Services.AddApiServices(builder.Configuration);
+builder.Services.AddApplicationServices();
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
 

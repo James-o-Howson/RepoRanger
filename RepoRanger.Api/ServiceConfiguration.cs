@@ -3,8 +3,7 @@ using RepoRanger.Api.Jobs;
 using RepoRanger.Api.Middleware;
 using RepoRanger.Api.Services;
 using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Application.Options;
-using RepoRanger.Application.Services;
+using RepoRanger.Application.Abstractions.Options;
 using RepoRanger.Persistence;
 using Serilog;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
@@ -24,7 +23,6 @@ internal static class ServiceConfiguration
         services.AddHttpContextAccessor();
 
         services.AddScoped<ICurrentUserService, CurrentUserService>();
-        services.AddTransient<IRepositoryService, RepositoryService>();
     }
     
     public static void UseSerilog(this IHostBuilder hostBuilder)
@@ -35,7 +33,7 @@ internal static class ServiceConfiguration
 
         SerilogHostBuilderExtensions.UseSerilog(hostBuilder);
     }
-
+    
     private static void AddExceptionHandlerServices(this IServiceCollection services)
     {
         services.AddExceptionHandler<GlobalExceptionHandler>();

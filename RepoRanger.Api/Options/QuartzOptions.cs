@@ -1,4 +1,4 @@
-﻿using RepoRanger.Application.Options;
+﻿using RepoRanger.Application.Abstractions.Options;
 
 namespace RepoRanger.Api.Options;
 

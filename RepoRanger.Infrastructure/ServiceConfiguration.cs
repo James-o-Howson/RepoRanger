@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Application.Options;
+using RepoRanger.Application.Abstractions.Options;
 using RepoRanger.Infrastructure.AzureDevOps;
 using RepoRanger.Infrastructure.FileParsing.CSharp;
 using RepoRanger.Infrastructure.Services;

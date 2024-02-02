@@ -1,7 +1,7 @@
 ﻿using System.Xml.Linq;
 using System.Xml.XPath;
 using Microsoft.Extensions.Logging;
-using RepoRanger.Application.ViewModels;
+using RepoRanger.Application.Sources.Common.Models;
 using RepoRanger.Infrastructure.AzureDevOps.Models.Items;
 using RepoRanger.Infrastructure.AzureDevOps.Models.Projects;
 using RepoRanger.Infrastructure.AzureDevOps.Models.Repositories;
@@ -11,7 +11,7 @@ namespace RepoRanger.Infrastructure.AzureDevOps;
 
 public interface IAzureDevOpsRepositoryDataExtractor
 {
-    Task<SourceViewModel> GetAzureRepositoriesAsync();
+    Task<SourceDto> GetAzureRepositoriesAsync();
 }
 
 public sealed class AzureDevOpsRepositoryDataExtractor : IAzureDevOpsRepositoryDataExtractor
@@ -34,7 +34,7 @@ public sealed class AzureDevOpsRepositoryDataExtractor : IAzureDevOpsRepositoryD
         _dotNetVersionFileParser = dotNetVersionFileParser;
     }
 
-    public async Task<SourceViewModel> GetAzureRepositoriesAsync()
+    public async Task<SourceDto> GetAzureRepositoriesAsync()
     {
         var projects = await _azureDevOpsService.GetProjectsAsync();
         if (projects is null) throw new ApplicationException("Unable to retrieve Azure Dev Ops Projects");
@@ -42,15 +42,15 @@ public sealed class AzureDevOpsRepositoryDataExtractor : IAzureDevOpsRepositoryD
         var tasks = projects.Value.Select(async p => await CreateRepositories(p));
         var repositoryViewModels = (await Task.WhenAll(tasks)).SelectMany(v => v);
         
-        return new SourceViewModel(Source, repositoryViewModels);
+        return new SourceDto(Source, repositoryViewModels);
     }
 
-    private async Task<List<RepositoryViewModel>> CreateRepositories(AzureDevOpsProject project)
+    private async Task<List<RepositoryDto>> CreateRepositories(AzureDevOpsProject project)
     {
         var repositories = await _azureDevOpsService.GetRepositoriesAsync(project.Name);
         if (repositories is null) throw new ApplicationException($"Unable to retrieve Azure Dev Ops Repositories for Project: {project.Name}");
 
-        var repositoryViewModels = new List<RepositoryViewModel>();
+        var repositoryViewModels = new List<RepositoryDto>();
         foreach (var repository in repositories.Value)
         {
             var items = await _azureDevOpsService.GetItemsAsync(project.Name, repository.Id);
@@ -67,19 +67,19 @@ public sealed class AzureDevOpsRepositoryDataExtractor : IAzureDevOpsRepositoryD
         return repositoryViewModels;
     }
 
-    private async Task<RepositoryViewModel> CreateRepository(List<AzureDevOpsItem> projectItemDefinitions, AzureDevOpsProject project,
+    private async Task<RepositoryDto> CreateRepository(List<AzureDevOpsItem> projectItemDefinitions, AzureDevOpsProject project,
         AzureDevOpsRepository repository)
     {
         var projectViewModels = await CreateProjects(projectItemDefinitions, project, repository);
                 
-        var branchViewModel = new BranchViewModel(repository.DefaultBranch, true, projectViewModels);
-        return new RepositoryViewModel(repository.Name, repository.Url, repository.RemoteUrl, [branchViewModel]);
+        var branchViewModel = new BranchDto(repository.DefaultBranch, true, projectViewModels);
+        return new RepositoryDto(repository.Name, repository.Url, repository.RemoteUrl, [branchViewModel]);
     }
 
-    private async Task<List<ProjectViewModel>> CreateProjects(List<AzureDevOpsItem> projectItemDefinitions, AzureDevOpsProject project,
+    private async Task<List<ProjectDto>> CreateProjects(List<AzureDevOpsItem> projectItemDefinitions, AzureDevOpsProject project,
         AzureDevOpsRepository repository)
     {
-        var projectViewModels = new List<ProjectViewModel>();
+        var projectViewModels = new List<ProjectDto>();
 
         foreach (var projectItemDefinition in projectItemDefinitions)
         {
@@ -93,12 +93,12 @@ public sealed class AzureDevOpsRepositoryDataExtractor : IAzureDevOpsRepositoryD
         return projectViewModels;
     }
 
-    private ProjectViewModel CreateProject(string itemContent, AzureDevOpsProject project)
+    private ProjectDto CreateProject(string itemContent, AzureDevOpsProject project)
     {
         var dependencyViewModels = _dependencyFileParser.Parse(itemContent);
         var dotnetVersion = _dotNetVersionFileParser.Parse(itemContent);
                     
-        return new ProjectViewModel(project.Name, dotnetVersion, dependencyViewModels);
+        return new ProjectDto(project.Name, dotnetVersion, dependencyViewModels);
     }
 
     private ProjectMetadata GetProjectMetadata(string itemContent)

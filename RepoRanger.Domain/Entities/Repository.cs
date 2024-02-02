@@ -26,8 +26,25 @@ public class Repository : BaseAuditableEntity<Guid>
     public Guid SourceId { get; private set; }
     public Guid DefaultBranchId { get; private set; }
     public IReadOnlyCollection<Branch> Branches => _branches;
+
+    public void AddBranches(IList<Branch> branches)
+    {
+        ArgumentNullException.ThrowIfNull(branches);
+        
+        var defaults = branches.Where(b => b.IsDefault).ToList();
+        switch (defaults.Count)
+        {
+            case > 1: 
+                throw new ArgumentException("Cannot set more than 1 default branch per repository", nameof(branches));
+            case 1:
+                SetDefaultBranch(defaults.Single());
+                break;
+        }
+        
+        _branches.AddRange(branches);
+    }
     
-    public void SetDefaultBranch(Branch branch)
+    private void SetDefaultBranch(Branch branch)
     {
         ArgumentNullException.ThrowIfNull(branch);
         ArgumentNullException.ThrowIfNull(branch.Id);
@@ -37,12 +54,5 @@ public class Repository : BaseAuditableEntity<Guid>
         }
 
         DefaultBranchId = branch.Id;
-    }
-
-    public void AddBranches(IEnumerable<Branch> branches)
-    {
-        ArgumentNullException.ThrowIfNull(branches);
-        
-        _branches.AddRange(branches);
     }
 }

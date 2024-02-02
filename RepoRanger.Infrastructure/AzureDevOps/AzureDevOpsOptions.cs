@@ -1,7 +1,7 @@
 ﻿using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Extensions.Hosting;
-using RepoRanger.Application.Options;
+using RepoRanger.Application.Abstractions.Options;
 
 namespace RepoRanger.Infrastructure.AzureDevOps;
 

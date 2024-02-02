@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Hosting;
 
-namespace RepoRanger.Application.Options;
+namespace RepoRanger.Application.Abstractions.Options;
 
 public interface IOptions
 {

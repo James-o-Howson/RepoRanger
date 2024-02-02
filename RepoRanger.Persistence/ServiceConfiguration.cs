@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Application.Options;
+using RepoRanger.Application.Abstractions.Options;
 using RepoRanger.Persistence.Interceptors;
 
 namespace RepoRanger.Persistence;

@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
-using RepoRanger.Application.Options;
+using RepoRanger.Application.Abstractions.Options;
 
 namespace RepoRanger.Persistence;
 
