@@ -1,3 +1,7 @@
 ﻿namespace RepoRanger.Application.Sources.Queries.GetByName;
 
-internal sealed record SourcePreviewDto(Guid Id, string Name);
+public sealed class SourcePreviewDto
+{
+    public Guid Id { get; init; }
+    public string Name { get; init; } = string.Empty;
+}

@@ -9,9 +9,9 @@ public sealed class AzureDevOpsOptions : IOptions
 {
     public string SectionName => "AzureDevOpsOptions";
     
-    public string BaseAddress { get; set; }
-    public string PersonalAccessToken { get; set; }
-    public string Organisation { get; set; }
+    public string BaseAddress { get; set; } = string.Empty;
+    public string PersonalAccessToken { get; set; } = string.Empty;
+    public string Organisation { get; set; } = string.Empty;
 
     public AuthenticationHeaderValue AuthenticationHeader() =>
         new("Basic", 
@@ -19,7 +19,7 @@ public sealed class AzureDevOpsOptions : IOptions
     
     public Uri BaseAddressUri() => new(BaseAddress);
 
-    public bool IsValid(IHostEnvironment environment)
+    public bool IsValid()
     {
         return !string.IsNullOrEmpty(BaseAddress) &&
                !string.IsNullOrEmpty(Organisation) &&

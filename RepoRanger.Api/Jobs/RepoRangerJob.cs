@@ -73,7 +73,10 @@ internal sealed class RepoRangerJob : IJob
 
         if (existing is not null)
         {
-            await _mediator.Send(new DeleteSourceCommand(existing.Id));
+            await _mediator.Send(new DeleteSourceCommand
+            {
+                Id = existing.Id
+            });
         }
     }
 }

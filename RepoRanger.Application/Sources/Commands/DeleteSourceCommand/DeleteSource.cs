@@ -5,7 +5,10 @@ using RepoRanger.Application.Abstractions.Interfaces;
 
 namespace RepoRanger.Application.Sources.Commands.DeleteSourceCommand;
 
-public sealed record DeleteSourceCommand(Guid Id) : IRequest;
+public sealed record DeleteSourceCommand : IRequest
+{
+    public Guid Id { get; init; }
+} 
 
 internal sealed class DeleteSourceCommandHandler : IRequestHandler<DeleteSourceCommand>
 {

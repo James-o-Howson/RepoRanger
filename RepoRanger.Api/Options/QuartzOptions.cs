@@ -8,5 +8,5 @@ internal sealed class QuartzOptions : IOptions
     
     public bool RepoClonerJobEnabled { get; set; }
 
-    public bool IsValid(IHostEnvironment environment) => true;
+    public bool IsValid() => true;
 }

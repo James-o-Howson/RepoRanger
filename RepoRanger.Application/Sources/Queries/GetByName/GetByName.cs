@@ -22,6 +22,10 @@ internal sealed class GetByNameQueryHandler : IRequestHandler<GetByNameQuery, So
 
         if (source is null) return null;
 
-        return new SourcePreviewDto(source.Id, source.Name);
+        return new SourcePreviewDto
+        {
+            Id = source.Id,
+            Name = source.Name
+        };
     }
 }

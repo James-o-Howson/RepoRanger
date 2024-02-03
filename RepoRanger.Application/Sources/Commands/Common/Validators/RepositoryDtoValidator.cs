@@ -10,9 +10,6 @@ internal sealed class RepositoryDtoValidator : AbstractValidator<RepositoryDto>
         RuleFor(r => r.Name)
             .NotEmpty();
         
-        RuleFor(r => r.Url)
-            .NotEmpty();
-        
         RuleFor(r => r.RemoteUrl)
             .NotEmpty();
         

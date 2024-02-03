@@ -7,8 +7,8 @@ internal sealed class ConnectionStringsOptions : IOptions
 {
     public string SectionName => "ConnectionStrings";
 
-    public string RepoRangerDatabase { get; set; }
+    public string RepoRangerDatabase { get; set; } = string.Empty;
 
-    public bool IsValid(IHostEnvironment environment) => 
+    public bool IsValid() => 
         !string.IsNullOrEmpty(RepoRangerDatabase);
 }

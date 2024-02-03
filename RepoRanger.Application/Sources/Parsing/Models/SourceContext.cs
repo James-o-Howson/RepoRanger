@@ -6,7 +6,7 @@ public interface ISourceContext
 
 public sealed class SourceContext : ISourceContext
 {
-    public string Name { get; init; }
+    public string Name { get; init; } = string.Empty;
     public IEnumerable<RepositoryContext> RepositoryContexts { get; set;  } = [];
     
 }

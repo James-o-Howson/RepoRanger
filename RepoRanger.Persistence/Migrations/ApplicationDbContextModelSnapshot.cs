@@ -47,7 +47,7 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("DependencyProject");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Entities.Branch", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Source.Branch", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -62,15 +62,8 @@ namespace RepoRanger.Persistence.Migrations
                         .IsUnicode(true)
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("LastModified")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(true)
-                        .HasColumnType("TEXT");
+                    b.Property<bool>("IsDefault")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -86,7 +79,7 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("Branches");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Entities.Dependency", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Source.Dependency", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -96,12 +89,6 @@ namespace RepoRanger.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("LastModified")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")
@@ -117,7 +104,7 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("Dependencies");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Entities.Project", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Source.Project", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -127,16 +114,6 @@ namespace RepoRanger.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(true)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("LastModified")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
                         .IsRequired()
                         .HasMaxLength(150)
                         .IsUnicode(true)
@@ -155,7 +132,7 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Entities.Repository", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Source.Repository", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -173,16 +150,6 @@ namespace RepoRanger.Persistence.Migrations
                     b.Property<Guid>("DefaultBranchId")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime?>("LastModified")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(true)
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -194,10 +161,6 @@ namespace RepoRanger.Persistence.Migrations
                     b.Property<Guid>("SourceId")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.HasKey("Id");
 
                     b.HasIndex("SourceId");
@@ -205,7 +168,7 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("Repositories");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Entities.Source", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Source.Source", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -215,16 +178,6 @@ namespace RepoRanger.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(true)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime?>("LastModified")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
                         .IsRequired()
                         .HasMaxLength(150)
                         .IsUnicode(true)
@@ -241,13 +194,13 @@ namespace RepoRanger.Persistence.Migrations
 
             modelBuilder.Entity("BranchProject", b =>
                 {
-                    b.HasOne("RepoRanger.Domain.Entities.Branch", null)
+                    b.HasOne("RepoRanger.Domain.Source.Branch", null)
                         .WithMany()
                         .HasForeignKey("BranchesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RepoRanger.Domain.Entities.Project", null)
+                    b.HasOne("RepoRanger.Domain.Source.Project", null)
                         .WithMany()
                         .HasForeignKey("ProjectsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -256,43 +209,43 @@ namespace RepoRanger.Persistence.Migrations
 
             modelBuilder.Entity("DependencyProject", b =>
                 {
-                    b.HasOne("RepoRanger.Domain.Entities.Dependency", null)
+                    b.HasOne("RepoRanger.Domain.Source.Dependency", null)
                         .WithMany()
                         .HasForeignKey("DependenciesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RepoRanger.Domain.Entities.Project", null)
+                    b.HasOne("RepoRanger.Domain.Source.Project", null)
                         .WithMany()
                         .HasForeignKey("ProjectsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Entities.Branch", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Source.Branch", b =>
                 {
-                    b.HasOne("RepoRanger.Domain.Entities.Repository", null)
+                    b.HasOne("RepoRanger.Domain.Source.Repository", null)
                         .WithMany("Branches")
                         .HasForeignKey("RepositoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Entities.Repository", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Source.Repository", b =>
                 {
-                    b.HasOne("RepoRanger.Domain.Entities.Source", null)
+                    b.HasOne("RepoRanger.Domain.Source.Source", null)
                         .WithMany("Repositories")
                         .HasForeignKey("SourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Entities.Repository", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Source.Repository", b =>
                 {
                     b.Navigation("Branches");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Entities.Source", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Source.Source", b =>
                 {
                     b.Navigation("Repositories");
                 });
