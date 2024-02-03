@@ -35,14 +35,25 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     {
         if (context == null) return;
 
-        foreach (var entry in context.ChangeTracker.Entries<IAuditableEntity>())
+        HandleCreatedEntities(context);
+        HandleModifiedEntities(context);
+    }
+    
+    private void HandleCreatedEntities(DbContext context)
+    {
+        foreach (var entry in context.ChangeTracker.Entries<ICreatedAuditableEntity>())
         {
-            if (entry.State == EntityState.Added)
-            {
-                entry.Entity.CreatedBy = _currentUserService.UserId;
-                entry.Entity.Created = _dateTime.Now;
-            } 
+            if (entry.State != EntityState.Added) continue;
+            
+            entry.Entity.CreatedBy = _currentUserService.UserId;
+            entry.Entity.Created = _dateTime.Now;
+        }
+    }
 
+    private void HandleModifiedEntities(DbContext context)
+    {
+        foreach (var entry in context.ChangeTracker.Entries<IModifiedAuditableEntity>())
+        {
             if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
             {
                 entry.Entity.LastModifiedBy = _currentUserService.UserId;

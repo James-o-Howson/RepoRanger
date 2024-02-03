@@ -2,7 +2,7 @@
 
 namespace RepoRanger.Domain.Source;
 
-public class Dependency : BaseAuditableEntity<Guid>
+public class Dependency : BaseCreatedAuditableEntity<Guid>
 {
     private readonly List<Project> _projects = [];
     

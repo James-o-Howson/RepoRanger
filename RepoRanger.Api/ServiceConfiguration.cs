@@ -49,7 +49,7 @@ internal static class ServiceConfiguration
             options.UseSimpleTypeLoader();
             options.UseInMemoryStore();
 
-            options.ScheduleJob<AzureDevOpsRepoRangerJob>(trigger =>
+            options.ScheduleJob<RepoRangerJob>(trigger =>
             {
                 const string description = "Trigger scheduled every 5 minutes beginning on API startup";
                 trigger.WithIdentity("10 Minute Scheduled Trigger")

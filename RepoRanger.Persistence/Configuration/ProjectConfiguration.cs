@@ -3,7 +3,7 @@ using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Persistence.Configuration;
 
-internal sealed class ProjectConfiguration : GuidBaseAuditableEntityConfiguration<Project>
+internal sealed class ProjectConfiguration : GuidBaseCreatedAuditableEntityConfiguration<Project>
 {
     public override void Configure(EntityTypeBuilder<Project> builder)
     {

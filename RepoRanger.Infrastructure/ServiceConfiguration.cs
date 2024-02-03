@@ -16,22 +16,18 @@ public static class ServiceConfiguration
     public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IDateTime, DateTimeService>();
-        services.AddTransient<ICsprojDependencyFileParser, CsprojDependencyFileParser>();
-        services.AddTransient<ICsprojDotNetVersionFileParser, CsprojDotNetVersionFileParser>();
-
         
-        
+        services.AddSourceParsingServices(configuration);
         services.AddAzureDevOpsService(configuration);
     }
 
-    private static void AddSourceParser(this IServiceCollection services, IConfiguration configuration)
+    private static void AddSourceParsingServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IFileContentParser, CSharpProjectFileContentParser>();
         services.AddTransient<IFileContentParser, AngularProjectFileContentParser>();
 
         services.AddTransient<ISourceParser, SourceParser>();
         services.RegisterOptions<SourceParserOptions>(configuration);
-        
     }
 
     private static void AddAzureDevOpsService(this IServiceCollection services, IConfiguration configuration)
@@ -44,7 +40,5 @@ public static class ServiceConfiguration
             client.DefaultRequestHeaders.Authorization = options.AuthenticationHeader();
 
         }).AddStandardResilienceHandler();
-
-        services.AddScoped<IAzureDevOpsRepositoryDataExtractor, AzureDevOpsRepositoryDataExtractor>();
     }
 }

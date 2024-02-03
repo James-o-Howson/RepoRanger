@@ -26,7 +26,7 @@ internal sealed class SourceParser : ISourceParser
 
         var sourceContext = new SourceContext
         {
-            SourceName = source.Name,
+            Name = source.Name,
             RepositoryContexts = repositoryPaths.Select(ParseRepository)
         };
 

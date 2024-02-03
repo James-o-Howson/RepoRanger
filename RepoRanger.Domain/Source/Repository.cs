@@ -2,7 +2,7 @@
 
 namespace RepoRanger.Domain.Source;
 
-public class Repository : BaseAuditableEntity<Guid>
+public class Repository : BaseCreatedAuditableEntity<Guid>
 {
     private readonly List<Branch> _branches = [];
     

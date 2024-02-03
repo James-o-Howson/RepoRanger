@@ -4,28 +4,29 @@ using Quartz;
 using RepoRanger.Application.Sources.Commands.Common.Models;
 using RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 using RepoRanger.Application.Sources.Commands.DeleteSourceCommand;
+using RepoRanger.Application.Sources.Parsing;
+using RepoRanger.Application.Sources.Parsing.Mapping;
 using RepoRanger.Application.Sources.Queries.GetByName;
-using RepoRanger.Infrastructure.AzureDevOps;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
 
 namespace RepoRanger.Api.Jobs;
 
 [DisallowConcurrentExecution]
-internal sealed class AzureDevOpsRepoRangerJob : IJob
+internal sealed class RepoRangerJob : IJob
 {
-    private readonly ILogger<AzureDevOpsRepoRangerJob> _logger;
+    private readonly ISourceParser _sourceParser;
+    private readonly ILogger<RepoRangerJob> _logger;
     private readonly QuartzOptions _quartzOptions;
-    private readonly IAzureDevOpsRepositoryDataExtractor _azureDevOpsRepositoryDataExtractor;
     private readonly IMediator _mediator;
 
-    public AzureDevOpsRepoRangerJob(ILogger<AzureDevOpsRepoRangerJob> logger,
+    public RepoRangerJob(ILogger<RepoRangerJob> logger,
         IOptions<QuartzOptions> options,
-        IAzureDevOpsRepositoryDataExtractor azureDevOpsRepositoryDataExtractor,
-        IMediator mediator)
+        IMediator mediator, 
+        ISourceParser sourceParser)
     {
         _logger = logger;
-        _azureDevOpsRepositoryDataExtractor = azureDevOpsRepositoryDataExtractor;
         _mediator = mediator;
+        _sourceParser = sourceParser;
         _quartzOptions = options.Value;
     }
 
@@ -41,14 +42,22 @@ internal sealed class AzureDevOpsRepoRangerJob : IJob
                 return;
             }
 
-            var sourceDto = await _azureDevOpsRepositoryDataExtractor.GetAzureRepositoriesAsync();
-            await DeleteIfSourceExistsAsync(sourceDto);
-            await CreateAsync(sourceDto);
+            await StartRanging();
         }
         catch (Exception e)
         {
             _logger.LogError(e, "Azure Repo Cloner Job - Error");
             context.Result = e;
+        }
+    }
+
+    private async Task StartRanging()
+    {
+        var sourceContexts = _sourceParser.Parse();
+        foreach (var sourceDto in sourceContexts.ToDtos())
+        {
+            await DeleteIfSourceExistsAsync(sourceDto);
+            await CreateAsync(sourceDto);
         }
     }
 

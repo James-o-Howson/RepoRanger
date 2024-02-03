@@ -2,7 +2,7 @@
 
 namespace RepoRanger.Domain.Source;
 
-public sealed class Source : BaseAuditableEntity<Guid>
+public sealed class Source : BaseCreatedAuditableEntity<Guid>
 {
     private readonly List<Repository> _repositories = [];
     

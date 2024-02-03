@@ -3,7 +3,7 @@ using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Persistence.Configuration;
 
-internal sealed class BranchConfiguration : GuidBaseAuditableEntityConfiguration<Branch>
+internal sealed class BranchConfiguration : GuidBaseCreatedAuditableEntityConfiguration<Branch>
 {
     public override void Configure(EntityTypeBuilder<Branch> builder)
     {
