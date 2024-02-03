@@ -53,7 +53,7 @@ internal sealed class RepoRangerJob : IJob
 
     private async Task StartRanging()
     {
-        var sourceContexts = _sourceParser.Parse();
+        var sourceContexts = await _sourceParser.ParseAsync();
         foreach (var sourceDto in sourceContexts.ToDtos())
         {
             await DeleteIfSourceExistsAsync(sourceDto);

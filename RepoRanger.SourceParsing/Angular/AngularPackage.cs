@@ -1,4 +1,4 @@
-﻿namespace RepoRanger.Infrastructure.Parsing.FileParsing.Angular;
+﻿namespace RepoRanger.SourceParsing.Angular;
 
 internal sealed class PackageJson
 {

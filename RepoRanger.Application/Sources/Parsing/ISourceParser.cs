@@ -4,5 +4,5 @@ namespace RepoRanger.Application.Sources.Parsing;
 
 public interface ISourceParser
 {
-    IEnumerable<SourceContext> Parse();
+    Task<IEnumerable<SourceContext>> ParseAsync();
 }

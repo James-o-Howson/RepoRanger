@@ -5,5 +5,5 @@ namespace RepoRanger.Application.Sources.Parsing;
 public interface IFileContentParser
 {
     bool CanParse(FileInfo fileInfo);
-    void Parse(string content, FileInfo fileInfo, BranchContext branchContext);
+    Task ParseAsync(string content, FileInfo fileInfo, BranchContext branchContext);
 }

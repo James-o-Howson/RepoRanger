@@ -36,6 +36,7 @@
       <ProjectReference Include="..\RepoRanger.Application\RepoRanger.Application.csproj" />
       <ProjectReference Include="..\RepoRanger.Infrastructure\RepoRanger.Infrastructure.csproj" />
       <ProjectReference Include="..\RepoRanger.Persistence\RepoRanger.Persistence.csproj" />
+      <ProjectReference Include="..\RepoRanger.SourceParsing\RepoRanger.SourceParsing.csproj" />
     </ItemGroup>
 
 </Project>

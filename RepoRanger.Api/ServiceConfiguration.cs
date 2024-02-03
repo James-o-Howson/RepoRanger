@@ -3,7 +3,6 @@ using RepoRanger.Api.Jobs;
 using RepoRanger.Api.Middleware;
 using RepoRanger.Api.Services;
 using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Application.Abstractions.Options;
 using RepoRanger.Persistence;
 using Serilog;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
@@ -42,7 +41,7 @@ internal static class ServiceConfiguration
     
     private static void AddQuartzServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.RegisterOptions<QuartzOptions>(configuration);
+        services.Configure<QuartzOptions>(configuration.GetSection("QuartzOptions"));
 
         services.AddQuartz(options =>
         {

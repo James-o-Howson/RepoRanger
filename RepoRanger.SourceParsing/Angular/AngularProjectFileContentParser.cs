@@ -1,17 +1,31 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using RepoRanger.Application.Sources.Parsing;
 using RepoRanger.Application.Sources.Parsing.Models;
 
-namespace RepoRanger.Infrastructure.Parsing.FileParsing.Angular;
+namespace RepoRanger.SourceParsing.Angular;
 
 internal sealed class AngularProjectFileContentParser : IFileContentParser
 {
+    private readonly ILogger<AngularProjectFileContentParser> _logger;
+
+    public AngularProjectFileContentParser(ILogger<AngularProjectFileContentParser> logger)
+    {
+        _logger = logger;
+    }
+
     public bool CanParse(FileInfo fileInfo) => 
         fileInfo.Name == "package.json";
 
-    public void Parse(string content, FileInfo fileInfo, BranchContext branchContext)
+    public async Task ParseAsync(string content, FileInfo fileInfo, BranchContext branchContext)
     {
-        var package = JsonSerializer.Deserialize<PackageJson>(content);
+        _logger.LogInformation("Parsing package.json {PackageJsonPath}", fileInfo.FullName);
+        
+        var package = await JsonSerializer.DeserializeAsync<PackageJson>(
+            new MemoryStream(Encoding.UTF8.GetBytes(content)),
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+        
         if (package is null) throw new ArgumentException($"Cannot deserialize {nameof(content)} into ${typeof(PackageJson)}", content);
 
         var projectContext = new ProjectContext
@@ -22,6 +36,8 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
         
         projectContext.DependencyContexts.AddRange(GetDependencies(package));
         branchContext.ProjectContexts.Add(projectContext);
+        
+        _logger.LogInformation("Finished Parsing package.json {PackageJsonPath}. Dependencies found = {DependencyCount}", fileInfo.FullName, projectContext.DependencyContexts.Count);
     }
 
     private static IEnumerable<DependencyContext> GetDependencies(PackageJson package)

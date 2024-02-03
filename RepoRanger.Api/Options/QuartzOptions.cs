@@ -1,12 +1,6 @@
-﻿using RepoRanger.Application.Abstractions.Options;
+﻿namespace RepoRanger.Api.Options;
 
-namespace RepoRanger.Api.Options;
-
-internal sealed class QuartzOptions : IOptions
+internal sealed class QuartzOptions
 {
-    public string SectionName => "QuartzOptions";
-    
     public bool RepoClonerJobEnabled { get; set; }
-
-    public bool IsValid() => true;
 }

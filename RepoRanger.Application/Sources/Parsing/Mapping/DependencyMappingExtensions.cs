@@ -1,6 +1,5 @@
 ﻿using RepoRanger.Application.Sources.Commands.Common.Models;
 using RepoRanger.Application.Sources.Parsing.Models;
-using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Application.Sources.Parsing.Mapping;
 
