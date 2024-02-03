@@ -15,7 +15,7 @@ internal static class RepositoryMappingExtensions
     {
         ArgumentNullException.ThrowIfNull(dto);
         
-        var repository = new Repository(dto.Name, dto.Url, dto.RemoteUrl);
+        var repository = new Repository(dto.Name, dto.RemoteUrl);
         repository.AddBranches(dto.Branches.ToEntities().ToList());
 
         return repository;

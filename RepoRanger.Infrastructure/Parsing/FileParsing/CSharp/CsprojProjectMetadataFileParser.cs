@@ -1,6 +1,6 @@
 ﻿using System.Xml.Linq;
 
-namespace RepoRanger.Infrastructure.FileParsing.CSharp;
+namespace RepoRanger.Infrastructure.Parsing.FileParsing.CSharp;
 
 public interface ICsprojDotNetVersionFileParser
 {

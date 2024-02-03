@@ -5,7 +5,7 @@ using RepoRanger.Application.Sources.Commands.Common.Models;
 using RepoRanger.Infrastructure.AzureDevOps.Models.Items;
 using RepoRanger.Infrastructure.AzureDevOps.Models.Projects;
 using RepoRanger.Infrastructure.AzureDevOps.Models.Repositories;
-using RepoRanger.Infrastructure.FileParsing.CSharp;
+using RepoRanger.Infrastructure.Parsing.FileParsing.CSharp;
 
 namespace RepoRanger.Infrastructure.AzureDevOps;
 

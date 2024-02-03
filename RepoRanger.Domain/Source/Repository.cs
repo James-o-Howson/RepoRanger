@@ -8,20 +8,17 @@ public class Repository : BaseAuditableEntity<Guid>
     
     private Repository() { }
 
-    public Repository(string name, string url, string remoteUrl)
+    public Repository(string name, string remoteUrl)
     {
         ArgumentException.ThrowIfNullOrEmpty(name);
-        ArgumentException.ThrowIfNullOrEmpty(url);
         ArgumentException.ThrowIfNullOrEmpty(remoteUrl);
         
         Id = Guid.NewGuid();
         Name = name;
-        Url = url;
         RemoteUrl = remoteUrl;
     }
 
     public string Name { get; private set; }
-    public string Url { get; private set; }
     public string RemoteUrl { get; private set; }
     public Guid SourceId { get; private set; }
     public Guid DefaultBranchId { get; private set; }

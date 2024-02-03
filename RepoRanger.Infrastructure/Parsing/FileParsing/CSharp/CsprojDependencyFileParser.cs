@@ -3,7 +3,7 @@ using System.Xml.XPath;
 using Microsoft.Extensions.Logging;
 using RepoRanger.Application.Sources.Commands.Common.Models;
 
-namespace RepoRanger.Infrastructure.FileParsing.CSharp;
+namespace RepoRanger.Infrastructure.Parsing.FileParsing.CSharp;
 
 public interface ICsprojDependencyFileParser
 {
