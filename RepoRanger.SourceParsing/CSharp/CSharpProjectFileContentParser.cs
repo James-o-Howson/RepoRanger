@@ -37,16 +37,24 @@ internal sealed class CSharpProjectFileContentParser : IFileContentParser
         
         _logger.LogInformation("Finished Parsing CSharp Project {CsprojFilePath}. Dependencies found = {DependencyCount}", fileInfo.FullName, projectContext.DependencyContexts.Count);
     }
-    
+
     private static IEnumerable<DependencyContext> GetDependencyContexts(string content)
     {
         var doc = XDocument.Parse(content);
-        var dependencyViewModels = doc.XPathSelectElements("//PackageReference")
+
+        var dependencyViewModels = doc.Descendants()
+            .Where(e => e.Name.LocalName == "PackageReference")
             .Select(pr =>
             {
                 var name = pr.Attribute("Include")?.Value.Trim() ?? string.Empty;
-                var version = pr.Attribute("Version")?.Value.Trim() ?? string.Empty;
-                
+                var versionElement = pr.Elements().FirstOrDefault(e => e.Name.LocalName == "Version");
+                var version = versionElement?.Value.Trim() ?? string.Empty;
+
+                if (string.IsNullOrEmpty(version))
+                {
+                    version = pr.Attribute("Version")?.Value.Trim() ?? string.Empty;
+                }
+
                 return new DependencyContext
                 {
                     Name = name,

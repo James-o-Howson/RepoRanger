@@ -42,4 +42,14 @@ public sealed class Source : BaseCreatedAuditableEntity<Guid>
         ArgumentNullException.ThrowIfNull(repositories);
         _repositories.AddRange(repositories);
     }
+
+    public void Delete()
+    {
+        foreach (var repository in Repositories)
+        {
+            repository.Delete();
+        }
+
+        _repositories.Clear();
+    }
 }

@@ -29,4 +29,15 @@ public class Project : BaseCreatedAuditableEntity<Guid>
         ArgumentNullException.ThrowIfNull(dependencies);
         _dependencies.AddRange(dependencies);
     }
+
+    internal void Delete()
+    {
+        foreach (var dependency in _dependencies)
+        {
+            dependency.Delete();
+        }
+        
+        _branches.Clear();
+        _dependencies.Clear();
+    }
 }

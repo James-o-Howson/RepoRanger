@@ -29,4 +29,14 @@ public class Branch : BaseCreatedAuditableEntity<Guid>
         
         _projects.AddRange(projects);
     }
+
+    internal void Delete()
+    {
+        foreach (var project in Projects)
+        {
+            project.Delete();
+        }
+        
+        _projects.Clear();
+    }
 }

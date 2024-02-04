@@ -52,4 +52,14 @@ public class Repository : BaseCreatedAuditableEntity<Guid>
 
         DefaultBranchId = branch.Id;
     }
+
+    internal void Delete()
+    {
+        foreach (var branch in Branches)
+        {
+            branch.Delete();
+        }
+
+        _branches.Clear();
+    }
 }
