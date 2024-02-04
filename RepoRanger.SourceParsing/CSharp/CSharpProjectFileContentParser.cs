@@ -14,9 +14,12 @@ internal sealed class CSharpProjectFileContentParser : IFileContentParser
     {
         _logger = logger;
     }
-
-    public bool CanParse(FileInfo fileInfo) => 
-        fileInfo.Extension == ".csproj";
+    
+    public bool CanParse(string filePath)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(filePath);
+        return filePath.EndsWith(".csproj");
+    }
 
     public async Task ParseAsync(string content, FileInfo fileInfo, BranchContext branchContext)
     {

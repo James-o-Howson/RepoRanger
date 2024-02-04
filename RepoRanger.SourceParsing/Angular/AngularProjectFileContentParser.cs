@@ -15,8 +15,11 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
         _logger = logger;
     }
 
-    public bool CanParse(FileInfo fileInfo) => 
-        fileInfo.Name == "package.json";
+    public bool CanParse(string filePath)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(filePath);
+        return filePath.EndsWith("package.json");
+    }
 
     public async Task ParseAsync(string content, FileInfo fileInfo, BranchContext branchContext)
     {
