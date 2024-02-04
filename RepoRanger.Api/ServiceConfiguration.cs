@@ -56,6 +56,15 @@ internal static class ServiceConfiguration
                     .WithDailyTimeIntervalSchedule(b => b.WithIntervalInSeconds(1))
                     .WithDescription(description);
             });
+            
+            options.ScheduleJob<OrphanKillerJob>(trigger =>
+            {
+                const string description = "Trigger scheduled every 5 minutes beginning on API startup";
+                trigger.WithIdentity("10 Minute Scheduled Trigger")
+                    .StartNow()
+                    .WithDailyTimeIntervalSchedule(b => b.WithIntervalInMinutes(10))
+                    .WithDescription(description);
+            });
         });
 
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);

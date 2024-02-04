@@ -33,6 +33,5 @@ public class Project : BaseCreatedAuditableEntity<Guid>
     internal void Delete()
     {
         _dependencies.Clear();
-        _branches.Clear();
     }
 }
