@@ -2,6 +2,8 @@
 
 internal sealed class SourceParserOptions
 {
+    public bool SourcesEnabledViaConfiguration { get; set; }
+    public Dictionary<string, bool> SourceEnabledByName { get; set; } = [];
     public List<SourceOptions> Sources { get; set; } = [];
 }
 

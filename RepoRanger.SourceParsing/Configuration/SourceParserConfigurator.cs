@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RepoRanger.Application.Sources.Parsing;
 using RepoRanger.SourceParsing.Services;
@@ -6,6 +7,7 @@ namespace RepoRanger.SourceParsing.Configuration;
 
 internal interface ISourceParserConfigurator
 {
+    void EnableSourcesViaAppSettings();
     void AddFileContentParser<TFileContentParser>()
         where TFileContentParser : class, IFileContentParser;
 
@@ -15,10 +17,17 @@ internal interface ISourceParserConfigurator
 internal sealed class SourceParserConfigurator : ISourceParserConfigurator
 {
     private readonly IServiceCollection _services;
-    
-    public SourceParserConfigurator(IServiceCollection services)
+    private readonly IConfiguration _configuration;
+
+    public SourceParserConfigurator(IServiceCollection services, IConfiguration configuration)
     {
         _services = services;
+        _configuration = configuration;
+    }
+
+    public void EnableSourcesViaAppSettings()
+    {
+        _services.Configure<SourceParserOptions>(s => s.SourcesEnabledViaConfiguration = true);
     }
 
     public void AddFileContentParser<TFileContentParser>()
@@ -30,7 +39,7 @@ internal sealed class SourceParserConfigurator : ISourceParserConfigurator
     
     public void AddSource(Action<ISourceBuilder> builder)
     {
-        var sourceBuilder = new SourceBuilder();
+        var sourceBuilder = new SourceBuilder(_services);
         builder.Invoke(sourceBuilder);
         var options = sourceBuilder.Build();
         

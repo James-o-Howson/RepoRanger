@@ -12,10 +12,10 @@ internal static class ServiceCollectionExtensions
         IConfiguration configuration,
         Action<ISourceParserConfigurator> configure)
     {
-        services.Configure<SourceParserOptions>(configuration.GetSection("SourceParserOptions"));
+        services.Configure<SourceParserOptions>(configuration.GetSection("SourceParsingOptions"));
         services.TryAddTransient<ISourceParser, SourceParserService>();
         
-        var configurator = new SourceParserConfigurator(services);
+        var configurator = new SourceParserConfigurator(services, configuration);
         configure.Invoke(configurator);
     }
 }
