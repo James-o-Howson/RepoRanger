@@ -5,6 +5,7 @@ namespace RepoRanger.SourceParsing.Configuration;
 internal interface ISourceBuilder
 {
     ISourceBuilder WithName(string name);
+    ISourceBuilder IsEnabled(bool isEnabled);
     ISourceBuilder WithWorkingDirectory(string path);
     ISourceBuilder ExcludingRepositories(IEnumerable<string> repositoryNames);
 }
@@ -16,6 +17,12 @@ internal sealed class SourceBuilder : ISourceBuilder
     public ISourceBuilder WithName(string name)
     {
         _sourceOptions.Name = name;
+        return this;
+    }
+    
+    public ISourceBuilder IsEnabled(bool isEnabled)
+    {
+        _sourceOptions.Enabled = isEnabled;
         return this;
     }
 

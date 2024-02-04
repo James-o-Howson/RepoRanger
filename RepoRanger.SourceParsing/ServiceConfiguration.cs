@@ -17,11 +17,13 @@ public static class ServiceConfiguration
             
             c.AddSource(source => source
                 .WithName("AzureDevOps")
+                .IsEnabled(true)
                 .ExcludingRepositories(["ReportingFramework"])
                 .WithWorkingDirectory(@"C:\Development\git"));
             
             c.AddSource(source => source
                 .WithName("AzureDevOps")
+                .IsEnabled(false)
                 .WithWorkingDirectory(@"C:\Development\git")
                 .ExcludingRepositories(["ReportingFramework"]));
         });
