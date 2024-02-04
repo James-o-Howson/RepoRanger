@@ -1,5 +1,4 @@
 ﻿using System.Xml.Linq;
-using System.Xml.XPath;
 using Microsoft.Extensions.Logging;
 using RepoRanger.Application.Sources.Parsing;
 using RepoRanger.Application.Sources.Parsing.Models;
@@ -87,7 +86,7 @@ internal sealed class CSharpProjectFileContentParser : IFileContentParser
             var value = GetElementValue(document, element);
             if (string.IsNullOrEmpty(value)) continue;
             
-            versions.Add($"{element}:{value.Trim()}");
+            versions.Add(value.Trim());
         }
 
         return string.Join(", ", versions);

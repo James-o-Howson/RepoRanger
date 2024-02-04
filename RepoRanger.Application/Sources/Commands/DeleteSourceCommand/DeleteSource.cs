@@ -26,6 +26,7 @@ internal sealed class DeleteSourceCommandHandler : IRequestHandler<DeleteSourceC
             .Include(s => s.Repositories)
             .ThenInclude(r => r.Branches)
             .ThenInclude(b => b.Projects)
+            .ThenInclude(p => p.Dependencies)
             .SingleOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
 
         if (source is null) throw new NotFoundException($"Delete Failed - Unable find Source with Id: {request.Id}.");

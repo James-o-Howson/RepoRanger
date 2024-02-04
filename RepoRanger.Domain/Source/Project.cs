@@ -32,12 +32,7 @@ public class Project : BaseCreatedAuditableEntity<Guid>
 
     internal void Delete()
     {
-        foreach (var dependency in _dependencies)
-        {
-            dependency.Delete();
-        }
-        
-        _branches.Clear();
         _dependencies.Clear();
+        _branches.Clear();
     }
 }
