@@ -14,6 +14,8 @@ namespace RepoRanger.Api.Jobs;
 [DisallowConcurrentExecution]
 internal sealed class RepoRangerJob : IJob
 {
+    internal static readonly JobKey JobKey = new(nameof(RepoRangerJob));
+    
     private readonly ISourceParser _sourceParser;
     private readonly ILogger<RepoRangerJob> _logger;
     private readonly QuartzOptions _quartzOptions;

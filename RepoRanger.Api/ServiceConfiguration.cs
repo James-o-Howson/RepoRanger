@@ -48,23 +48,13 @@ internal static class ServiceConfiguration
             options.UseSimpleTypeLoader();
             options.UseInMemoryStore();
 
-            options.ScheduleJob<RepoRangerJob>(trigger =>
-            {
-                const string description = "Trigger scheduled every 5 minutes beginning on API startup";
-                trigger.WithIdentity("10 Minute Scheduled Trigger")
-                    .StartNow()
-                    .WithDailyTimeIntervalSchedule(b => b.WithIntervalInSeconds(1))
-                    .WithDescription(description);
-            });
+            options.AddJob<RepoRangerJob>(RepoRangerJob.JobKey)
+                .AddTrigger(trigger => trigger.ForJob(RepoRangerJob.JobKey).StartNow()
+                    .WithSimpleSchedule(schedule => schedule.WithIntervalInMinutes(1).RepeatForever()));
             
-            options.ScheduleJob<OrphanKillerJob>(trigger =>
-            {
-                const string description = "Trigger scheduled every 5 minutes beginning on API startup";
-                trigger.WithIdentity("10 Minute Scheduled Trigger")
-                    .StartNow()
-                    .WithDailyTimeIntervalSchedule(b => b.WithIntervalInMinutes(10))
-                    .WithDescription(description);
-            });
+            options.AddJob<OrphanKillerJob>(OrphanKillerJob.JobKey)
+                .AddTrigger(trigger => trigger.ForJob(OrphanKillerJob.JobKey).StartNow()
+                    .WithSimpleSchedule(schedule => schedule.WithIntervalInMinutes(1).RepeatForever()));
         });
 
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);

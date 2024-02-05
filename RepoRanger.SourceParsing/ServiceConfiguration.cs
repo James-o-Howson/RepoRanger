@@ -18,7 +18,7 @@ public static class ServiceConfiguration
             
             c.AddSource(source => source
                 .WithName("AzureDevOps")
-                .ExcludingRepositories(["ReportingFramework"])
+                .ExcludingRepositories(["ReportingFramework", "Toms.Net Second"])
                 .WithWorkingDirectory(@"C:\Development\git"));
             
             c.AddSource(source => source

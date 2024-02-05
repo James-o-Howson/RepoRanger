@@ -1,24 +1,35 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Quartz;
 using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Persistence;
 
 namespace RepoRanger.Api.Jobs;
 
 [DisallowConcurrentExecution]
 internal sealed class OrphanKillerJob : IJob
 {
+    internal static readonly JobKey JobKey = new(nameof(OrphanKillerJob));
+    
     private readonly IApplicationDbContext _context;
+    private readonly ILogger<OrphanKillerJob> _logger;
 
-    public OrphanKillerJob(IApplicationDbContext context)
+    public OrphanKillerJob(IApplicationDbContext context, ILogger<OrphanKillerJob> logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task Execute(IJobExecutionContext context)
     {
-        await DeleteOrphanedDependenciesAsync(context);
-        await DeleteOrphanedProjectsAsync(context);
+        try
+        {
+            await DeleteOrphanedDependenciesAsync(context);
+            await DeleteOrphanedProjectsAsync(context);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Unexpected error while trying to delete orphaned records.");
+            context.Result = e;
+        }
     }
     
     private async Task DeleteOrphanedProjectsAsync(IJobExecutionContext context)
