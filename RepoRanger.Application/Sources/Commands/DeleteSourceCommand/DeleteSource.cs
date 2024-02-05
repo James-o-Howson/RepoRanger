@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Abstractions.Exceptions;
 using RepoRanger.Application.Abstractions.Interfaces;
+using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Application.Sources.Commands.DeleteSourceCommand;

@@ -1,7 +1,7 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Application.Abstractions.Interfaces;
+using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 
 namespace RepoRanger.Persistence.Services;
 

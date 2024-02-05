@@ -47,6 +47,36 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("DependencyProject");
                 });
 
+            modelBuilder.Entity("RepoRanger.Application.Abstractions.Models.SourceDetail", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("DefaultBranchId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("DefaultBranchName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("DependenciesCount")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("ParseTime")
+                        .HasColumnType("TEXT");
+
+                    b.Property<long>("ProjectsCount")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.ToTable((string)null);
+
+                    b.ToView("SourceDetail", (string)null);
+                });
+
             modelBuilder.Entity("RepoRanger.Domain.Source.Branch", b =>
                 {
                     b.Property<Guid>("Id")

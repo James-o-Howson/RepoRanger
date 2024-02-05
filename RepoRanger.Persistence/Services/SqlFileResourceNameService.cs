@@ -4,8 +4,8 @@ namespace RepoRanger.Persistence.Services;
 
 internal sealed class SqlFileResourceNameService : IResourceNameService
 {
-    private static readonly string? ResourceNamePrefix = typeof(SqlFileResourceNameService).Namespace;
+    private const string? ResourceNamePrefix = "RepoRanger.Persistence.Sql";
 
-    public string GetOrphanedDependencies { get; } = $"{ResourceNamePrefix}.GetOrphanedDependencies.sql";
-    public string GetOrphanedProjects { get; } = $"{ResourceNamePrefix}.GetOrphanedProjects.sql";
+    public string GetOrphanedDependencies => $"{ResourceNamePrefix}.GetOrphanedDependencies.sql";
+    public string GetOrphanedProjects => $"{ResourceNamePrefix}.GetOrphanedProjects.sql";
 }

@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using RepoRanger.Application.Abstractions.Interfaces;
+using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 using RepoRanger.Persistence.Abstractions;
 using RepoRanger.Persistence.Interceptors;
 using RepoRanger.Persistence.Services;

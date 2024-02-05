@@ -24,6 +24,10 @@
       <EmbeddedResource Include="Sql\GetOrphanedProjects.sql">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
+      <None Remove="Sql\V_SourceDetails.sql" />
+      <EmbeddedResource Include="Sql\V_SourceDetails.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

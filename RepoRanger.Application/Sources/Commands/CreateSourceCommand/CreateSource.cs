@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Application.Sources.Commands.Common.Mapping;
-using RepoRanger.Application.Sources.Commands.Common.Models;
+using RepoRanger.Application.Abstractions.Interfaces.Persistence;
+using RepoRanger.Application.Sources.Common.Mapping;
+using RepoRanger.Application.Sources.Common.Models;
 
 namespace RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 

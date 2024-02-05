@@ -1,4 +1,4 @@
-﻿using RepoRanger.Application.Sources.Commands.Common.Models;
+﻿using RepoRanger.Application.Sources.Common.Models;
 using RepoRanger.Application.Sources.Parsing.Models;
 
 namespace RepoRanger.Application.Sources.Parsing.Mapping;
