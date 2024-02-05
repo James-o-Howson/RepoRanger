@@ -3,8 +3,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RepoRanger.Application.Sources.Parsing;
 using RepoRanger.Application.Sources.Parsing.Models;
+using RepoRanger.SourceParsing.Abstractions.Options;
 
-namespace RepoRanger.SourceParsing.Services;
+namespace RepoRanger.SourceParsing;
 
 internal sealed class SourceParserService : ISourceParser
 {
@@ -33,7 +34,7 @@ internal sealed class SourceParserService : ISourceParser
     {
         _logger.LogInformation("Parsing Source {SourceName}", sourceOptions.Name);
         
-        var repositoryPaths = FindRepositories(sourceOptions.SourceRepositoryParentDirectory);
+        var repositoryPaths = FindRepositories(sourceOptions.WorkingDirectory);
 
         var repositoryContexts = await Task.WhenAll(repositoryPaths
             .Where(p => !sourceOptions.IsExcluded(p))

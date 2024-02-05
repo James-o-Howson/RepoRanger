@@ -11,4 +11,5 @@ public interface IApplicationDbContext
     DbSet<Dependency> Dependencies { get; set; }
     DbSet<Source> Sources { get; set; }
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    DbSet<TEntity> Set<TEntity>() where TEntity : class;
 }

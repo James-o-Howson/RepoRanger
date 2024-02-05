@@ -11,7 +11,7 @@ using RepoRanger.Persistence;
 namespace RepoRanger.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240203073813_Initial")]
+    [Migration("20240205061812_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -92,6 +92,9 @@ namespace RepoRanger.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")

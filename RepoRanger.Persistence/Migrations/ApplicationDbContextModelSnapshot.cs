@@ -89,6 +89,9 @@ namespace RepoRanger.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CreatedBy")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")

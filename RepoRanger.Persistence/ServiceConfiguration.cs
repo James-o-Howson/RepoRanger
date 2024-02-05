@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Persistence.Abstractions;
 using RepoRanger.Persistence.Interceptors;
+using RepoRanger.Persistence.Services;
 
 namespace RepoRanger.Persistence;
 
@@ -25,5 +26,7 @@ public static class ServiceConfiguration
         });
         
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        services.AddTransient<IResourceNameService, SqlFileResourceNameService>();
+        services.AddTransient<ISqlFileExecutorService, SqlFileExecutorService>();
     }
 }

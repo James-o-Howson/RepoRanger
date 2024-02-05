@@ -15,4 +15,15 @@
       <ProjectReference Include="..\RepoRanger.Domain\RepoRanger.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Sql\GetOrphanedDependencies.sql" />
+      <EmbeddedResource Include="Sql\GetOrphanedDependencies.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+      <None Remove="Sql\GetOrphanedProjects.sql" />
+      <EmbeddedResource Include="Sql\GetOrphanedProjects.sql">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

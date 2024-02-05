@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using RepoRanger.Application.Sources.Parsing;
+using RepoRanger.SourceParsing.Abstractions.Configuration;
+using RepoRanger.SourceParsing.Abstractions.Options;
 using RepoRanger.SourceParsing.Angular;
-using RepoRanger.SourceParsing.Configuration;
 using RepoRanger.SourceParsing.CSharp;
 
 namespace RepoRanger.SourceParsing;
@@ -12,19 +15,19 @@ public static class ServiceConfiguration
     {
         services.AddSourceParser(configuration, c =>
         {
-            c.EnableSourcesViaAppSettings();
             c.AddFileContentParser<CSharpProjectFileContentParser>();
             c.AddFileContentParser<AngularProjectFileContentParser>();
-            
-            c.AddSource(source => source
-                .WithName("AzureDevOps")
-                .ExcludingRepositories(["ReportingFramework", "Toms.Net Second"])
-                .WithWorkingDirectory(@"C:\Development\git"));
-            
-            c.AddSource(source => source
-                .WithName("Gitolite")
-                .WithWorkingDirectory(@"C:\Development\git")
-                .ExcludingRepositories(["ReportingFramework"]));
         });
+    }
+    
+    private static void AddSourceParser(this IServiceCollection services, 
+        IConfiguration configuration,
+        Action<ISourceParserConfigurator> configure)
+    {
+        services.Configure<SourceParserOptions>(configuration.GetSection("SourceParserOptions"));
+        services.TryAddTransient<ISourceParser, SourceParserService>();
+        
+        var configurator = new SourceParserConfigurator(services, configuration);
+        configure.Invoke(configurator);
     }
 }

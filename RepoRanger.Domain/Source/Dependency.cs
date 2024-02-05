@@ -21,4 +21,9 @@ public class Dependency : BaseCreatedAuditableEntity<Guid>
     public string Name { get; private set; }
     public string Version { get; private set; }
     public IReadOnlyCollection<Project> Projects => _projects;
+
+    public void Delete()
+    {
+        _projects.Clear();
+    }
 }

@@ -36,11 +36,11 @@ internal sealed class RepoRangerJob : IJob
     {
         try
         {
-            _logger.LogInformation("Azure Repo Cloner Job Starting");
+            _logger.LogInformation("Repo Ranger Job Starting");
 
             if (!_quartzOptions.RepoClonerJobEnabled)
             {
-                _logger.LogInformation("Azure Repo Cloner Job Disabled - Skipping");
+                _logger.LogInformation("Repo Ranger Job Disabled - Skipping");
                 return;
             }
 
@@ -48,7 +48,7 @@ internal sealed class RepoRangerJob : IJob
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Azure Repo Cloner Job - Error");
+            _logger.LogError(e, "Repo Ranger Job - Error");
             context.Result = e;
         }
     }
@@ -66,7 +66,7 @@ internal sealed class RepoRangerJob : IJob
     private async Task CreateAsync(SourceDto sourceDto)
     {
         var result = await _mediator.Send(new CreateSourceCommand(sourceDto.Name, sourceDto.Repositories));
-        _logger.LogInformation("Azure Repo Cloner Job Finished - Source created Id: {SourceId}", result);
+        _logger.LogInformation("Repo Ranger Job Finished - Source created Id: {SourceId}", result);
     }
 
     private async Task DeleteIfSourceExistsAsync(SourceDto sourceDto)
