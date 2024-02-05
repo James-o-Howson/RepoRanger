@@ -1,12 +1,16 @@
-﻿using System.Xml.Linq;
+﻿using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
 using RepoRanger.Application.Sources.Parsing;
 using RepoRanger.Application.Sources.Parsing.Models;
 
 namespace RepoRanger.SourceParsing.CSharp;
 
-internal sealed class CSharpProjectFileContentParser : IFileContentParser
+internal sealed partial class CSharpProjectFileContentParser : IFileContentParser
 {
+    [GeneratedRegex(@"\d+(?:\.\d+)+")]
+    private static partial Regex VersionRegex();
+    
     private readonly ILogger<CSharpProjectFileContentParser> _logger;
 
     public CSharpProjectFileContentParser(ILogger<CSharpProjectFileContentParser> logger)
@@ -41,6 +45,56 @@ internal sealed class CSharpProjectFileContentParser : IFileContentParser
     {
         var doc = XDocument.Parse(content);
 
+        var dependencyContexts = GetDependenciesFromPackageReferenceAttribute(doc).ToList();
+        dependencyContexts.AddRange(GetDependenciesFromReferenceAttribute(doc));
+        dependencyContexts.RemoveAll(d => string.IsNullOrEmpty(d.Version));
+        
+        return dependencyContexts;
+    }
+    
+    private static IEnumerable<DependencyContext> GetDependenciesFromReferenceAttribute(XDocument doc)
+    {
+        var dependencyViewModels = doc.Descendants()
+            .Where(e => e.Name.LocalName == "Reference")
+            .Select(pr =>
+            {
+                var include = pr.Attribute("Include")?.Value.Trim() ?? string.Empty;
+                var parts = include.Split(",");
+
+                var name = string.Empty;
+                var version = string.Empty;
+                
+                switch (parts.Length)
+                {
+                    case > 1:
+                        name = parts.First();
+                        version = parts[1].Trim()["Version=".Length..];
+                        break;
+                    case 1:
+                    {
+                        name = parts.First();
+                        var hintPath = pr.Elements().FirstOrDefault(e => e.Name.LocalName == "HintPath");
+                        if (hintPath is not null)
+                        {
+                            var matches = VersionRegex().Match(hintPath.Value.Trim());
+                            version = matches.Value;
+                        }
+
+                        break;
+                    }
+                }
+                    
+                return new DependencyContext
+                {
+                    Name = name,
+                    Version = version
+                };
+            });
+        return dependencyViewModels;
+    }
+
+    private static IEnumerable<DependencyContext> GetDependenciesFromPackageReferenceAttribute(XDocument doc)
+    {
         var dependencyViewModels = doc.Descendants()
             .Where(e => e.Name.LocalName == "PackageReference")
             .Select(pr =>
@@ -60,10 +114,9 @@ internal sealed class CSharpProjectFileContentParser : IFileContentParser
                     Version = version
                 };
             });
-
         return dependencyViewModels;
     }
-    
+
     private static async Task<string> GetDotNetVersionAsync(string csprojContent)
     {
         var document = await XDocument.LoadAsync(new StringReader(csprojContent), LoadOptions.None, CancellationToken.None);
