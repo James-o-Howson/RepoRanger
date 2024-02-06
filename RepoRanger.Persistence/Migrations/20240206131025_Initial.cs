@@ -149,14 +149,14 @@ namespace RepoRanger.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BranchProject_ProjectsId",
-                table: "BranchProject",
-                column: "ProjectsId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Branches_RepositoryId",
                 table: "Branches",
                 column: "RepositoryId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_BranchProject_ProjectsId",
+                table: "BranchProject",
+                column: "ProjectsId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DependencyProject_ProjectsId",

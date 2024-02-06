@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
+using RepoRanger.Application.Abstractions.Exceptions;
 using RepoRanger.Application.Sources.Parsing;
 using RepoRanger.Application.Sources.Parsing.Models;
 
@@ -18,7 +19,13 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
     public bool CanParse(string filePath)
     {
         ArgumentException.ThrowIfNullOrEmpty(filePath);
-        return filePath.EndsWith("package.json");
+        if (!filePath.EndsWith("package.json")) return false;
+
+        var directory = Path.GetDirectoryName(filePath);
+        if (string.IsNullOrEmpty(directory)) return false;
+
+        var workspaceIsSibling = Path.Exists(Path.Combine(directory, "angular.json"));
+        return workspaceIsSibling;
     }
 
     public async Task ParseAsync(string content, FileInfo fileInfo, BranchContext branchContext)

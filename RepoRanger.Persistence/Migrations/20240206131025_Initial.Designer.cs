@@ -11,7 +11,7 @@ using RepoRanger.Persistence;
 namespace RepoRanger.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240205131130_Initial")]
+    [Migration("20240206131025_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
