@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
-namespace RepoRanger.Api.Middleware;
+namespace RepoRanger.App.Middleware;
 
 internal sealed class GlobalExceptionHandler : IExceptionHandler
 {

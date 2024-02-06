@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RepoRanger.Api.Filters;
+using RepoRanger.App.Filters;
 
-namespace RepoRanger.Api.Controllers;
+namespace RepoRanger.App.Controllers;
 
 [ApiController]
 [ApiExceptionFilter]

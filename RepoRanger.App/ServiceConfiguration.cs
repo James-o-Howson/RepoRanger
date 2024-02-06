@@ -1,13 +1,13 @@
 ﻿using Quartz;
-using RepoRanger.Api.Jobs;
-using RepoRanger.Api.Middleware;
-using RepoRanger.Api.Services;
+using RepoRanger.App.Jobs;
+using RepoRanger.App.Middleware;
+using RepoRanger.App.Services;
 using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Persistence;
 using Serilog;
-using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
+using QuartzOptions = RepoRanger.App.Options.QuartzOptions;
 
-namespace RepoRanger.Api;
+namespace RepoRanger.App;
 
 internal static class ServiceConfiguration
 {
@@ -18,7 +18,7 @@ internal static class ServiceConfiguration
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks().AddDbContextCheck<ApplicationDbContext>();
-        services.AddSwaggerGen();
+        // services.AddSwaggerGen();
         services.AddHttpContextAccessor();
 
         services.AddScoped<ICurrentUserService, CurrentUserService>();

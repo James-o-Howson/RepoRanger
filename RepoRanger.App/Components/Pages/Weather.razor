@@ -1,42 +1,37 @@
 ﻿@page "/weather"
 @attribute [StreamRendering]
 
-<PageTitle>Sources</PageTitle>
+<PageTitle>Weather</PageTitle>
 
-<h1>Sources</h1>
+<h1>Weather</h1>
 
-<p>Sources such as our private Git server Gitolite or Azure Repositories used by the Repo Ranger whose repositories, branches
-    and dependencies will be scanned.</p>
+<p>This component demonstrates showing data.</p>
 
 @if (forecasts == null)
 {
-    <p>
-        <em>Loading...</em>
-    </p>
+    <p><em>Loading...</em></p>
 }
 else
 {
     <table class="table">
         <thead>
-        <tr>
-            <th>Name</th>
-            <th>Parse Time</th>
-            <th>Default Branch</th>
-            <th>Projects</th>
-            <th>Unique Dependencies</th>
-        </tr>
+            <tr>
+                <th>Date</th>
+                <th>Temp. (C)</th>
+                <th>Temp. (F)</th>
+                <th>Summary</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var forecast in forecasts)
-        {
-            <tr>
-                <td>@forecast.Date.ToShortDateString()</td>
-                <td>@forecast.TemperatureC</td>
-                <td>@forecast.TemperatureF</td>
-                <td>@forecast.Summary</td>
-                <td>@forecast.Summary</td>
-            </tr>
-        }
+            @foreach (var forecast in forecasts)
+            {
+                <tr>
+                    <td>@forecast.Date.ToShortDateString()</td>
+                    <td>@forecast.TemperatureC</td>
+                    <td>@forecast.TemperatureF</td>
+                    <td>@forecast.Summary</td>
+                </tr>
+            }
         </tbody>
     </table>
 }
@@ -66,5 +61,4 @@ else
         public string? Summary { get; set; }
         public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
     }
-
 }

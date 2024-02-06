@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RepoRanger.Application.Sources.Queries.GetSourceDetails;
 
-namespace RepoRanger.Api.Controllers;
+namespace RepoRanger.App.Controllers;
 
 public sealed class SourcesController : ApiControllerBase
 {

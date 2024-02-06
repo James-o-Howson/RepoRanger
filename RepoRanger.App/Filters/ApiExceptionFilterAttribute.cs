@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using RepoRanger.Application.Abstractions.Exceptions;
 
-namespace RepoRanger.Api.Filters;
+namespace RepoRanger.App.Filters;
 
 public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {

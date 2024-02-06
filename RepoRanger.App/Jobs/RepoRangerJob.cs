@@ -7,9 +7,9 @@ using RepoRanger.Application.Sources.Common.Models;
 using RepoRanger.Application.Sources.Parsing;
 using RepoRanger.Application.Sources.Parsing.Mapping;
 using RepoRanger.Application.Sources.Queries.GetByName;
-using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
+using QuartzOptions = RepoRanger.App.Options.QuartzOptions;
 
-namespace RepoRanger.Api.Jobs;
+namespace RepoRanger.App.Jobs;
 
 [DisallowConcurrentExecution]
 internal sealed class RepoRangerJob : IJob

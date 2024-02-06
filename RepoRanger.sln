@@ -1,22 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Api", "RepoRanger.Api\RepoRanger.Api.csproj", "{245D93AF-085E-441D-99C8-C3C2D300ADE0}"
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34525.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Infrastructure", "RepoRanger.Infrastructure\RepoRanger.Infrastructure.csproj", "{7DEB0DD2-C88A-44F4-B250-362D3DDDC628}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Infrastructure", "RepoRanger.Infrastructure\RepoRanger.Infrastructure.csproj", "{7DEB0DD2-C88A-44F4-B250-362D3DDDC628}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Application", "RepoRanger.Application\RepoRanger.Application.csproj", "{F04CFCDD-2B43-4A0B-9B6D-ED518B2181BF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Application", "RepoRanger.Application\RepoRanger.Application.csproj", "{F04CFCDD-2B43-4A0B-9B6D-ED518B2181BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Domain", "RepoRanger.Domain\RepoRanger.Domain.csproj", "{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Domain", "RepoRanger.Domain\RepoRanger.Domain.csproj", "{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Persistence", "RepoRanger.Persistence\RepoRanger.Persistence.csproj", "{7F43B6F7-08A1-45D2-B733-796833F12230}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Persistence", "RepoRanger.Persistence\RepoRanger.Persistence.csproj", "{7F43B6F7-08A1-45D2-B733-796833F12230}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{FCD76C69-4602-4A53-ADD2-D0E82D0F345F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.SourceParsing", "RepoRanger.SourceParsing\RepoRanger.SourceParsing.csproj", "{F1DF204B-4AA7-4B22-8C37-55D7A90D57DF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.SourceParsing", "RepoRanger.SourceParsing\RepoRanger.SourceParsing.csproj", "{F1DF204B-4AA7-4B22-8C37-55D7A90D57DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.App", "RepoRanger.App\RepoRanger.App.csproj", "{D26A46CD-1F85-4BE6-8257-0BA64FF0D8C2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.App", "RepoRanger.App\RepoRanger.App.csproj", "{819F90AD-5372-4E99-83F5-75FDDECE65EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -24,10 +25,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{245D93AF-085E-441D-99C8-C3C2D300ADE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{245D93AF-085E-441D-99C8-C3C2D300ADE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{245D93AF-085E-441D-99C8-C3C2D300ADE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{245D93AF-085E-441D-99C8-C3C2D300ADE0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{7DEB0DD2-C88A-44F4-B250-362D3DDDC628}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{7DEB0DD2-C88A-44F4-B250-362D3DDDC628}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DEB0DD2-C88A-44F4-B250-362D3DDDC628}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -48,16 +45,22 @@ Global
 		{F1DF204B-4AA7-4B22-8C37-55D7A90D57DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1DF204B-4AA7-4B22-8C37-55D7A90D57DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1DF204B-4AA7-4B22-8C37-55D7A90D57DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D26A46CD-1F85-4BE6-8257-0BA64FF0D8C2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D26A46CD-1F85-4BE6-8257-0BA64FF0D8C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D26A46CD-1F85-4BE6-8257-0BA64FF0D8C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D26A46CD-1F85-4BE6-8257-0BA64FF0D8C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{819F90AD-5372-4E99-83F5-75FDDECE65EC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{819F90AD-5372-4E99-83F5-75FDDECE65EC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{819F90AD-5372-4E99-83F5-75FDDECE65EC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{819F90AD-5372-4E99-83F5-75FDDECE65EC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{7F43B6F7-08A1-45D2-B733-796833F12230} = {FCD76C69-4602-4A53-ADD2-D0E82D0F345F}
 		{7DEB0DD2-C88A-44F4-B250-362D3DDDC628} = {FCD76C69-4602-4A53-ADD2-D0E82D0F345F}
 		{F04CFCDD-2B43-4A0B-9B6D-ED518B2181BF} = {B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}
 		{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08} = {B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}
+		{7F43B6F7-08A1-45D2-B733-796833F12230} = {FCD76C69-4602-4A53-ADD2-D0E82D0F345F}
 		{F1DF204B-4AA7-4B22-8C37-55D7A90D57DF} = {FCD76C69-4602-4A53-ADD2-D0E82D0F345F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F829DB12-3606-4221-8194-EE18B9DCBC43}
 	EndGlobalSection
 EndGlobal

@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using RepoRanger.Application.Abstractions.Interfaces;
 
-namespace RepoRanger.Api.Services;
+namespace RepoRanger.App.Services;
 
 internal sealed class CurrentUserService : ICurrentUserService
 {

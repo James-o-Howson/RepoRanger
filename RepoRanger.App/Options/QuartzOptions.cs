@@ -1,4 +1,4 @@
-﻿namespace RepoRanger.Api.Options;
+﻿namespace RepoRanger.App.Options;
 
 internal sealed class QuartzOptions
 {
