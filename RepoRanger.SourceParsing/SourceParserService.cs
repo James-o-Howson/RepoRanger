@@ -113,10 +113,10 @@ internal sealed class SourceParserService : ISourceParser
             Name = repo.Head.UpstreamBranchCanonicalName ?? repo.Head.CanonicalName,
             IsDefault = true
         };
-        
+
         var repositoryContext = new RepositoryContext
         {
-            Name = repo.Info.WorkingDirectory,
+            Name = new DirectoryInfo(repo.Info.WorkingDirectory).Name,
             RemoteUrl = repo.Network.Remotes["origin"].Url,
             BranchContexts = [branchContext]
         };
