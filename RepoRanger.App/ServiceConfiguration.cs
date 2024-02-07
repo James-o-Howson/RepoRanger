@@ -2,6 +2,7 @@
 using RepoRanger.App.Jobs;
 using RepoRanger.App.Middleware;
 using RepoRanger.App.Services;
+using RepoRanger.Application.Abstractions.Exceptions;
 using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Persistence;
 using Serilog;
@@ -13,6 +14,7 @@ internal static class ServiceConfiguration
 {
     public static void AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddRepoRangerHttpClient(configuration);
         services.AddQuartzServices(configuration);
         services.AddExceptionHandlerServices();
         services.AddControllers();
@@ -31,6 +33,18 @@ internal static class ServiceConfiguration
             .CreateLogger();
 
         SerilogHostBuilderExtensions.UseSerilog(hostBuilder);
+    }
+
+    private static void AddRepoRangerHttpClient(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddHttpClient<IRepoRangerService, RepoRangerService>(client =>
+        {
+            const string key = "RepoRangerBaseUrl";
+            var baseUrl = configuration.GetSection(key).Value;
+            if (baseUrl is null) throw new NotFoundException($"{nameof(baseUrl)} cannot be found in configuration section: {key}");
+            
+            client.BaseAddress = new Uri(baseUrl);
+        }).AddStandardResilienceHandler();
     }
     
     private static void AddExceptionHandlerServices(this IServiceCollection services)

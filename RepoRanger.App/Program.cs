@@ -30,7 +30,9 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 app.UseHealthChecks("/_health");
-app.MapControllers();
+
+app.MapControllerRoute("default", "api/{controller=Sources}/{action=Index}/{id?}");
+app.MapBlazorHub();
 
 app.UseStaticFiles();
 app.UseAntiforgery();
