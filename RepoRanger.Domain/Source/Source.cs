@@ -18,24 +18,6 @@ public sealed class Source : BaseCreatedAuditableEntity<Guid>
         Id = Guid.NewGuid();
         Name = name;
     }
-
-    public IReadOnlyCollection<Dependency> Dependencies() => 
-        Repositories
-            .SelectMany(r => r.Branches)
-            .SelectMany(b => b.Projects)
-            .SelectMany(p => p.Dependencies)
-            .ToList();
-
-    public IReadOnlyCollection<Project> Projects() => 
-        Repositories
-            .SelectMany(r => r.Branches)
-            .SelectMany(b => b.Projects)
-            .ToList();
-    
-    public IReadOnlyCollection<Branch> Branches() => 
-        Repositories
-            .SelectMany(r => r.Branches)
-            .ToList();
     
     public void AddRepositories(IEnumerable<Repository> repositories)
     {
