@@ -2,7 +2,6 @@
 using RepoRanger.Api.Jobs;
 using RepoRanger.Api.Middleware;
 using RepoRanger.Api.Services;
-using RepoRanger.Application.Abstractions.Exceptions;
 using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Persistence;
 using Serilog;

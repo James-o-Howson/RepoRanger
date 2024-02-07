@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 
 namespace RepoRanger.Application.Sources.Queries.GetByName;

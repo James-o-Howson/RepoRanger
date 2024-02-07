@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 using RepoRanger.Application.Sources.Common.Mapping;
 using RepoRanger.Application.Sources.Common.Models;
