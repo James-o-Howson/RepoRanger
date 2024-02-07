@@ -110,12 +110,18 @@ namespace RepoRanger.Persistence.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     IsDefault = table.Column<bool>(type: "INTEGER", nullable: false),
                     RepositoryId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DefaultRepositoryId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Branches", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Branches_Repositories_DefaultRepositoryId",
+                        column: x => x.DefaultRepositoryId,
+                        principalTable: "Repositories",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Branches_Repositories_RepositoryId",
                         column: x => x.RepositoryId,
@@ -149,14 +155,20 @@ namespace RepoRanger.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Branches_RepositoryId",
-                table: "Branches",
-                column: "RepositoryId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_BranchProject_ProjectsId",
                 table: "BranchProject",
                 column: "ProjectsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Branches_DefaultRepositoryId",
+                table: "Branches",
+                column: "DefaultRepositoryId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Branches_RepositoryId",
+                table: "Branches",
+                column: "RepositoryId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DependencyProject_ProjectsId",

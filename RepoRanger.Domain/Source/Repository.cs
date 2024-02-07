@@ -22,11 +22,10 @@ public class Repository : BaseCreatedAuditableEntity<Guid>
     public string RemoteUrl { get; private set; }
     public Guid SourceId { get; private set; }
     public Source Source { get; set; }
-    public Guid DefaultBranchId { get; private set; }
     public IReadOnlyCollection<Branch> Branches => _branches;
-
-    public string? DefaultBranchName => Branches.SingleOrDefault(b => b.Id == DefaultBranchId)?.Name;
-
+    public Guid DefaultBranchId { get; private set; }
+    public Branch DefaultBranch { get; private set; }
+    
     public void AddBranches(IList<Branch> branches)
     {
         ArgumentNullException.ThrowIfNull(branches);
@@ -54,6 +53,7 @@ public class Repository : BaseCreatedAuditableEntity<Guid>
         }
 
         DefaultBranchId = branch.Id;
+        DefaultBranch = branch;
     }
 
     internal void Delete()

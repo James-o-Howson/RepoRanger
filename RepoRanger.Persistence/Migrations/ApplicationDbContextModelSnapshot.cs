@@ -47,36 +47,6 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("DependencyProject");
                 });
 
-            modelBuilder.Entity("RepoRanger.Application.Abstractions.Models.SourceDetail", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("DefaultBranchId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DefaultBranchName")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("DependenciesCount")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("ParseTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<long>("ProjectsCount")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.ToTable((string)null);
-
-                    b.ToView("SourceDetail", (string)null);
-                });
-
             modelBuilder.Entity("RepoRanger.Domain.Source.Branch", b =>
                 {
                     b.Property<Guid>("Id")
@@ -92,6 +62,9 @@ namespace RepoRanger.Persistence.Migrations
                         .IsUnicode(true)
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("DefaultRepositoryId")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("IsDefault")
                         .HasColumnType("INTEGER");
 
@@ -103,6 +76,9 @@ namespace RepoRanger.Persistence.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("DefaultRepositoryId")
+                        .IsUnique();
 
                     b.HasIndex("RepositoryId");
 
@@ -258,6 +234,10 @@ namespace RepoRanger.Persistence.Migrations
             modelBuilder.Entity("RepoRanger.Domain.Source.Branch", b =>
                 {
                     b.HasOne("RepoRanger.Domain.Source.Repository", null)
+                        .WithOne("DefaultBranch")
+                        .HasForeignKey("RepoRanger.Domain.Source.Branch", "DefaultRepositoryId");
+
+                    b.HasOne("RepoRanger.Domain.Source.Repository", null)
                         .WithMany("Branches")
                         .HasForeignKey("RepositoryId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -266,16 +246,21 @@ namespace RepoRanger.Persistence.Migrations
 
             modelBuilder.Entity("RepoRanger.Domain.Source.Repository", b =>
                 {
-                    b.HasOne("RepoRanger.Domain.Source.Source", null)
+                    b.HasOne("RepoRanger.Domain.Source.Source", "Source")
                         .WithMany("Repositories")
                         .HasForeignKey("SourceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Source");
                 });
 
             modelBuilder.Entity("RepoRanger.Domain.Source.Repository", b =>
                 {
                     b.Navigation("Branches");
+
+                    b.Navigation("DefaultBranch")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RepoRanger.Domain.Source.Source", b =>

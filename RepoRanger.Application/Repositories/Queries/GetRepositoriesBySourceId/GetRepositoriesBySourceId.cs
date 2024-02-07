@@ -22,7 +22,7 @@ internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<Ge
     {
         var repositories = await _context.Repositories
             .AsNoTracking()
-            .Include(r => r.Branches)
+            .Include(r => r.DefaultBranch)
             .Where(r => r.SourceId == request.SourceId)
             .Select(r => new RepositoryVm
             {
@@ -30,7 +30,7 @@ internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<Ge
                 Name = r.Name,
                 RemoteUrl = r.RemoteUrl,
                 DefaultBranchId = r.DefaultBranchId,
-                DefaultBranchName = r.DefaultBranchName,
+                DefaultBranchName = r.DefaultBranch.Name,
                 ParseTime = r.Created
 
             }).ToListAsync(cancellationToken);

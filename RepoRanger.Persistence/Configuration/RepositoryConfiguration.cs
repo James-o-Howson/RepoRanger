@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Persistence.Configuration;
@@ -10,7 +11,13 @@ internal sealed class RepositoryConfiguration : GuidBaseCreatedAuditableEntityCo
         builder.HasMany(r => r.Branches)
             .WithOne()
             .HasForeignKey(b => b.RepositoryId)
-            .IsRequired();
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasOne(r => r.DefaultBranch)
+            .WithOne()
+            .HasForeignKey<Branch>("DefaultRepositoryId")
+            .IsRequired(false);
         
         base.Configure(builder);
     }
