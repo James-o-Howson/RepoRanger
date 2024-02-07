@@ -1,11 +1,7 @@
-﻿using RepoRanger.Application.Sources.Queries.GetSourceDetails;
+﻿using RepoRanger.Application.Abstractions.Interfaces;
+using RepoRanger.Application.Sources.Queries.GetSourceDetails;
 
 namespace RepoRanger.App.Services;
-
-public interface IRepoRangerService
-{
-    Task<SourceDetailsVm?> GetSourceDetailsAsync();
-}
 
 internal sealed class RepoRangerService : IRepoRangerService
 {
