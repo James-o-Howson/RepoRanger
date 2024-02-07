@@ -29,6 +29,7 @@ internal static class ServiceConfiguration
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
+            .WriteTo.File("Logs/RepoRanger_.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
 
         SerilogHostBuilderExtensions.UseSerilog(hostBuilder);
