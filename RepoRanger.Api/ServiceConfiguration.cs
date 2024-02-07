@@ -14,13 +14,12 @@ internal static class ServiceConfiguration
 {
     public static void AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddRepoRangerHttpClient(configuration);
         services.AddQuartzServices(configuration);
         services.AddExceptionHandlerServices();
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks().AddDbContextCheck<ApplicationDbContext>();
-        // services.AddSwaggerGen();
+        services.AddSwaggerGen();
         services.AddHttpContextAccessor();
 
         services.AddScoped<ICurrentUserService, CurrentUserService>();
@@ -33,18 +32,6 @@ internal static class ServiceConfiguration
             .CreateLogger();
 
         SerilogHostBuilderExtensions.UseSerilog(hostBuilder);
-    }
-
-    private static void AddRepoRangerHttpClient(this IServiceCollection services, IConfiguration configuration)
-    {
-        services.AddHttpClient<IRepoRangerService, RepoRangerService>(client =>
-        {
-            const string key = "RepoRangerBaseUrl";
-            var baseUrl = configuration.GetSection(key).Value;
-            if (baseUrl is null) throw new NotFoundException($"{nameof(baseUrl)} cannot be found in configuration section: {key}");
-            
-            client.BaseAddress = new Uri(baseUrl);
-        }).AddStandardResilienceHandler();
     }
     
     private static void AddExceptionHandlerServices(this IServiceCollection services)
