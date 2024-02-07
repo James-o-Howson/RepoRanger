@@ -28,6 +28,7 @@
       <Content Update="appsettings.Development.json">
         <DependentUpon>appsettings.json</DependentUpon>
       </Content>
+      <Content Remove="Logs\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -35,6 +36,18 @@
       <ProjectReference Include="..\RepoRanger.Infrastructure\RepoRanger.Infrastructure.csproj" />
       <ProjectReference Include="..\RepoRanger.Persistence\RepoRanger.Persistence.csproj" />
       <ProjectReference Include="..\RepoRanger.SourceParsing\RepoRanger.SourceParsing.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Remove="Logs\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Remove="Logs\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Logs\**" />
     </ItemGroup>
 
 </Project>
