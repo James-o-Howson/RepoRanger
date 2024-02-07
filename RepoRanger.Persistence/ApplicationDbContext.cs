@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
-using RepoRanger.Application.Abstractions.Models;
 using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Persistence;
@@ -17,7 +16,6 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Project> Projects { get; set; }
     public DbSet<Dependency> Dependencies { get; set; }
     public DbSet<Source> Sources { get; set; }
-    public DbSet<SourceDetail> SourceDetails { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

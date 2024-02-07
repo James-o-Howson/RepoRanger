@@ -8,8 +8,8 @@ internal sealed class SourceConfiguration : GuidBaseCreatedAuditableEntityConfig
     public override void Configure(EntityTypeBuilder<Source> builder)
     {
         builder.HasMany(r => r.Repositories)
-            .WithOne()
-            .HasForeignKey(b => b.SourceId)
+            .WithOne(r => r.Source)
+            .HasForeignKey(r => r.SourceId)
             .IsRequired();
         
         base.Configure(builder);
