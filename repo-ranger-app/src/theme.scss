@@ -1,0 +1,29 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+@use '@angular/material' as mat;
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$doj-purple: ( 50 : #ede0e7, 100 : #d2b3c4, 200 : #b4809c, 300 : #964d74, 400 : #802657, 500 : #690039, 600 : #610033, 700 : #56002c, 800 : #4c0024, 900 : #3b0017, A100 : #ff7199, A200 : #ff3e74, A400 : #ff0b4f, A700 : #f10043, contrast: ( 50 : #000000, 100 : #000000, 200 : #000000, 300 : #ffffff, 400 : #ffffff, 500 : #ffffff, 600 : #ffffff, 700 : #ffffff, 800 : #ffffff, 900 : #ffffff, A100 : #000000, A200 : #ffffff, A400 : #ffffff, A700 : #ffffff, ) );
+
+$doj-primary: mat.define-palette($doj-purple);
+$doj-accent: mat.define-palette(mat.$grey-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$doj-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$doj-theme: mat.define-light-theme(( color: ( primary: $doj-primary, accent: $doj-accent, warn: $doj-warn, ) ));
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($doj-theme);
