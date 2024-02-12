@@ -8,7 +8,7 @@ import { InformationDialogComponent, InformationDialogData } from './information
 export class InformationDialogService {
   constructor(private readonly dialog: MatDialog) { }
 
-  showInformationDialog(message: string, title?: string, icon?: string): MatDialogRef<InformationDialogComponent> {
+  show(message: string, title?: string, icon?: string): MatDialogRef<InformationDialogComponent> {
     return this.dialog.open(
       InformationDialogComponent,
       {

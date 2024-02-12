@@ -8,7 +8,7 @@ import { ErrorDialogComponent, ErrorDialogData } from './error-dialog.component'
 export class ErrorDialogService {
   constructor(private dialog: MatDialog) { }
 
-  showErrorDialog(message: string, title?: string, icon?: string): MatDialogRef<ErrorDialogComponent> {
+  show(message: string, title?: string, icon?: string): MatDialogRef<ErrorDialogComponent> {
     return this.dialog.open(
       ErrorDialogComponent,
       {

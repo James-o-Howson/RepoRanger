@@ -35,7 +35,7 @@ describe('ConfirmationDialogService', () => {
     it('should call dialog.open with default title, icon, confirmButtonText and declineButtonText if they are not supplied', () => {
       var dialogData = { title: 'Confirmation Message', message: 'Supplied Message', icon: 'question_mark', declineButtonText: 'Cancel', confirmButtonText: 'Confirm' }
 
-      service.showConfirmationDialog('Supplied Message');
+      service.show('Supplied Message');
 
       expect(dialog.open).toHaveBeenCalledWith(ConfirmationDialogComponent, { data:dialogData });
     });
@@ -43,7 +43,7 @@ describe('ConfirmationDialogService', () => {
     it('should call dialog.open with provided message, title, icon, confirmButtonText and declineButtonText overriding their default values', () => {
       var dialogData = { title: 'Supplied Title', message: 'Supplied Message', icon: 'Supplied Icon', declineButtonText: 'Supplied Decline Text', confirmButtonText: 'Supplied Confirm Text' }
 
-      service.showConfirmationDialog('Supplied Message','Supplied Title', "Supplied Confirm Text", "Supplied Decline Text", "Supplied Icon");
+      service.show('Supplied Message','Supplied Title', "Supplied Confirm Text", "Supplied Decline Text", "Supplied Icon");
 
       expect(dialog.open).toHaveBeenCalledWith(ConfirmationDialogComponent, { data: dialogData });
     });

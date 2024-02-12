@@ -8,7 +8,7 @@ import { ConfirmationDialogComponent, ConfirmationDialogData } from './confirmat
 export class ConfirmationDialogService {
   constructor(private readonly dialog: MatDialog) { }
 
-  showConfirmationDialog(message: string, title?: string, confirmButtonText?: string, declineButtonText?: string, icon?: string): MatDialogRef<ConfirmationDialogComponent> {
+  show(message: string, title?: string, confirmButtonText?: string, declineButtonText?: string, icon?: string): MatDialogRef<ConfirmationDialogComponent> {
     return this.dialog.open(
       ConfirmationDialogComponent,
       {

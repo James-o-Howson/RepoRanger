@@ -2,8 +2,6 @@ import { Component, Inject } from '@angular/core';
 import { MatDialogModule, MatDialogRef, MAT_DIALOG_DATA, MatDialogClose } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
-import { CommonModule } from '@angular/common';
-import { LayoutModule } from '@angular/cdk/layout';
 
 export interface InformationDialogData {
   title: string;
@@ -17,8 +15,6 @@ export interface InformationDialogData {
   templateUrl: './information-dialog.component.html',
   styleUrls: ['./information-dialog.component.scss'],
   imports: [
-    CommonModule,
-    LayoutModule,
     MatIconModule, 
     MatDialogClose, 
     MatButtonModule,

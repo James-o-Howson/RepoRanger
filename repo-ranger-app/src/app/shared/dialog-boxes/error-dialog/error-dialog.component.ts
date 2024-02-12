@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatDialogClose } from '@angular/material/dialog';
-import { MatIcon } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogRef, MAT_DIALOG_DATA, MatDialogClose, MatDialogModule } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
 
 export interface ErrorDialogData {
   title: string;
@@ -13,7 +14,11 @@ export interface ErrorDialogData {
   selector: 'app-error-dialog',
   templateUrl: './error-dialog.component.html',
   styleUrls: ['./error-dialog.component.scss'],
-  imports: [MatIcon, MatDialogClose]
+  imports: [
+    MatIconModule,
+    MatDialogClose,
+    MatButtonModule,
+    MatDialogModule]
 })
 export class ErrorDialogComponent {
   public title: string;
@@ -29,5 +34,3 @@ export class ErrorDialogComponent {
     this.icon = data.icon;
   }
 }
-
-

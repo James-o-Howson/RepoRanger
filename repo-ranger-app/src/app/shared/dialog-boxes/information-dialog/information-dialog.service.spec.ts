@@ -35,7 +35,7 @@ describe('InformationDialogService', () => {
     it('should call dialog.open with default title and default icon if title and icon not supplied', () => {
       var dialogData = { title: 'Information Message', message: 'Supplied Message', icon: 'info' }
 
-      service.showInformationDialog('Supplied Message');
+      service.show('Supplied Message');
 
       expect(dialog.open).toHaveBeenCalledWith(InformationDialogComponent, { data:dialogData });
     });
@@ -43,7 +43,7 @@ describe('InformationDialogService', () => {
     it('should call dialog.open with provided title and default icon if title provided and icon not supplied', () => {
       var dialogData = { title: 'Supplied Title', message: 'Supplied Message', icon: 'info' }
 
-      service.showInformationDialog('Supplied Message','Supplied Title');
+      service.show('Supplied Message','Supplied Title');
 
       expect(dialog.open).toHaveBeenCalledWith(InformationDialogComponent, { data: dialogData });
     });
@@ -51,7 +51,7 @@ describe('InformationDialogService', () => {
     it('should call dialog.open with provided title and provided icon if title and icon provided', () => {
       var dialogData = { title: 'Supplied Title', message: 'Supplied Message', icon: 'home' }
 
-      service.showInformationDialog('Supplied Message', 'Supplied Title','home');
+      service.show('Supplied Message', 'Supplied Title','home');
 
       expect(dialog.open).toHaveBeenCalledWith(InformationDialogComponent, { data: dialogData });
     });

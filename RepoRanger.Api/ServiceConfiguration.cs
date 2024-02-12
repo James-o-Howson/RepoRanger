@@ -13,6 +13,7 @@ internal static class ServiceConfiguration
 {
     public static void AddApiServices(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddCors();
         services.AddQuartzServices(configuration);
         services.AddExceptionHandlerServices();
         services.AddControllers();
