@@ -44,10 +44,7 @@ internal sealed class RepoRangerJob : IJob
                 return;
             }
 
-            var finished = false;
-            if (finished) return;
             await StartRanging();
-            finished = true;
         }
         catch (Exception e)
         {
