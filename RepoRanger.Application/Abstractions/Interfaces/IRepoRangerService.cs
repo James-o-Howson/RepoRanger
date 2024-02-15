@@ -5,6 +5,6 @@ namespace RepoRanger.Application.Abstractions.Interfaces;
 
 public interface IRepoRangerService
 {
-    Task<SourcesViewModel?> ListSources();
+    Task<SourcesVm?> ListSources();
     Task<RepositoriesVm?> GetRepositoriesAsync(GetRepositoriesBySourceIdQuery query);
 }

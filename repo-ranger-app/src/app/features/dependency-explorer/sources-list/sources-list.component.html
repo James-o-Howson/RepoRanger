@@ -1,0 +1,5 @@
+<mat-select placeholder="Sources" [(value)]="selectedSource" multiple (selectionChange)="sourceChanged()">
+    @for (source of sources; track source) {
+        <mat-option [value]="source.id">{{source.name}}</mat-option>
+    }
+</mat-select>

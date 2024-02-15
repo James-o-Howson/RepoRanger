@@ -25,7 +25,12 @@ public class Repository : BaseCreatedAuditableEntity<Guid>
     public IReadOnlyCollection<Branch> Branches => _branches;
     public Guid DefaultBranchId { get; private set; }
     public Branch DefaultBranch { get; private set; }
-    
+
+    public IEnumerable<Dependency> Dependencies => Branches
+        .SelectMany(b => b.Projects)
+        .SelectMany(p => p.Dependencies)
+        .ToList();
+
     public void AddBranches(IList<Branch> branches)
     {
         ArgumentNullException.ThrowIfNull(branches);

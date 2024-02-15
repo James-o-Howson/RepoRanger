@@ -1,7 +1,7 @@
 import { ErrorHandler, Injectable, NgZone } from "@angular/core";
-import { ErrorDialogService } from "../shared/dialog-boxes/error-dialog/error-dialog.service";
 import { Observable } from "rxjs";
 import { HttpErrorResponse } from "@angular/common/http";
+import { ErrorDialogService } from "./services/dialogs/error-dialog.service";
 
 @Injectable({
     providedIn: 'root'
@@ -13,6 +13,9 @@ export class ErrorHandlerService implements ErrorHandler {
     public dialogClosed: Observable<any> | undefined;
 
     handleError(error: any): void {
+
+        console.error(error);
+
         switch (error) {
             case error instanceof HttpErrorResponse: 
                 this.handleHttpErrorResponse(error);

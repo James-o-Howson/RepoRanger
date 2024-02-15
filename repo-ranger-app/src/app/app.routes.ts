@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { RepositoriesComponent } from './components/repositories/repositories.component';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { SettingsComponent } from './components/settings/settings.component';
+import { DependencyExplorerComponent } from './features/dependency-explorer/dependency-explorer.component';
+import { SettingsComponent } from './features/settings/settings.component';
+import { PageNotFoundComponent } from './shared/components/page-not-found/page-not-found.component';
 
 export const routes: Routes = [
-    {path: 'repositories', component: RepositoriesComponent},
+    {path: 'repositories', component: DependencyExplorerComponent},
     {path: 'settings', component: SettingsComponent},
-    {path: '', component: RepositoriesComponent},
+    {path: '', component: DependencyExplorerComponent},
     {path: '**', component: PageNotFoundComponent}
 ];

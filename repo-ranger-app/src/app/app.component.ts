@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { HeaderComponent } from "./components/header/header.component";
 import { CommonModule } from '@angular/common';
-import { InformationDialogService } from './shared/dialog-boxes/information-dialog/information-dialog.service';
 import { ApiModule } from './generated';
 import { HttpClientModule } from '@angular/common/http';
 import { MatTableModule } from '@angular/material/table';
+import { InformationDialogService } from './core/services/dialogs/information-dialog.service';
+import { HeaderComponent } from './shared/components/header/header.component';
 
 @Component({
   standalone: true,

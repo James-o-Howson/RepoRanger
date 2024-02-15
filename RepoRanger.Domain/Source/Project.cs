@@ -29,6 +29,8 @@ public class Project : BaseCreatedAuditableEntity<Guid>
         ArgumentNullException.ThrowIfNull(dependencies);
         _dependencies.AddRange(dependencies);
     }
+    
+    
 
     internal void Delete()
     {

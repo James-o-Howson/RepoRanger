@@ -1,4 +1,4 @@
-import { ApplicationConfig, ErrorHandler } from '@angular/core';
+import { ApplicationConfig, ErrorHandler, isDevMode } from '@angular/core';
 import { provideRouter } from '@angular/router';
 
 import { routes } from './app.routes';
@@ -10,8 +10,8 @@ import { ErrorHandlerService } from './core/error-handler.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    provideRouter(routes), 
-    provideAnimationsAsync(), 
+    provideRouter(routes),
+    provideAnimationsAsync(),
     ...DATETIME_CONFIG_PROVIDERS,
     provideHttpClient(),
     { provide: BASE_PATH, useValue: "https://localhost:7263" },

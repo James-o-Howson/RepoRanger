@@ -13,12 +13,12 @@ internal sealed class RepoRangerService : IRepoRangerService
         _httpClient = httpClient;
     }
 
-    public async Task<SourcesViewModel?> ListSources()
+    public async Task<SourcesVm?> ListSources()
     {
         var response = await _httpClient.GetAsync("/api/sources/");
     
         if (!response.IsSuccessStatusCode) return null;
-        return await response.Content.ReadFromJsonAsync<SourcesViewModel>();
+        return await response.Content.ReadFromJsonAsync<SourcesVm>();
     }   
     
     public async Task<RepositoriesVm?> GetRepositoriesAsync(GetRepositoriesBySourceIdQuery query)

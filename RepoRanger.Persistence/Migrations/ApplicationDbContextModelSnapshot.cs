@@ -104,11 +104,21 @@ namespace RepoRanger.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid?>("RepositoryId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("SourceId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Version")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("RepositoryId");
+
+                    b.HasIndex("SourceId");
 
                     b.ToTable("Dependencies");
                 });
@@ -244,6 +254,17 @@ namespace RepoRanger.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RepoRanger.Domain.Source.Dependency", b =>
+                {
+                    b.HasOne("RepoRanger.Domain.Source.Repository", null)
+                        .WithMany("Dependencies")
+                        .HasForeignKey("RepositoryId");
+
+                    b.HasOne("RepoRanger.Domain.Source.Source", null)
+                        .WithMany("Dependencies")
+                        .HasForeignKey("SourceId");
+                });
+
             modelBuilder.Entity("RepoRanger.Domain.Source.Repository", b =>
                 {
                     b.HasOne("RepoRanger.Domain.Source.Source", "Source")
@@ -261,10 +282,14 @@ namespace RepoRanger.Persistence.Migrations
 
                     b.Navigation("DefaultBranch")
                         .IsRequired();
+
+                    b.Navigation("Dependencies");
                 });
 
             modelBuilder.Entity("RepoRanger.Domain.Source.Source", b =>
                 {
+                    b.Navigation("Dependencies");
+
                     b.Navigation("Repositories");
                 });
 #pragma warning restore 612, 618
