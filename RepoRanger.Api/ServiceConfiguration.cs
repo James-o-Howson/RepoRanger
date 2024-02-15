@@ -52,7 +52,7 @@ internal static class ServiceConfiguration
 
             options.AddJob<RepoRangerJob>(RepoRangerJob.JobKey)
                 .AddTrigger(trigger => trigger.ForJob(RepoRangerJob.JobKey).StartNow()
-                    .WithSimpleSchedule(schedule => schedule.WithIntervalInMinutes(10).RepeatForever()));
+                    .WithSimpleSchedule(schedule => schedule.WithIntervalInMinutes(60).RepeatForever()));
         });
 
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
