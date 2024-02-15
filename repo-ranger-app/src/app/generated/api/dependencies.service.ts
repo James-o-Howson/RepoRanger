@@ -20,6 +20,8 @@ import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
 import { DependencyVmPaginatedList } from '../model/dependency-vm-paginated-list';
+// @ts-ignore
+import { SearchDependenciesWithPaginationQuery } from '../model/search-dependencies-with-pagination-query';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -92,30 +94,14 @@ export class DependenciesService {
     }
 
     /**
-     * @param projectId 
-     * @param pageNumber 
-     * @param pageSize 
+     * @param searchDependenciesWithPaginationQuery 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDependenciesGet(projectId?: string, pageNumber?: number, pageSize?: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<DependencyVmPaginatedList>;
-    public apiDependenciesGet(projectId?: string, pageNumber?: number, pageSize?: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DependencyVmPaginatedList>>;
-    public apiDependenciesGet(projectId?: string, pageNumber?: number, pageSize?: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DependencyVmPaginatedList>>;
-    public apiDependenciesGet(projectId?: string, pageNumber?: number, pageSize?: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-
-        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (projectId !== undefined && projectId !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>projectId, 'ProjectId');
-        }
-        if (pageNumber !== undefined && pageNumber !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>pageNumber, 'PageNumber');
-        }
-        if (pageSize !== undefined && pageSize !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>pageSize, 'PageSize');
-        }
+    public apiDependenciesPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<DependencyVmPaginatedList>;
+    public apiDependenciesPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DependencyVmPaginatedList>>;
+    public apiDependenciesPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DependencyVmPaginatedList>>;
+    public apiDependenciesPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -144,6 +130,17 @@ export class DependenciesService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json',
+            'text/json',
+            'application/*+json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -156,10 +153,10 @@ export class DependenciesService {
         }
 
         let localVarPath = `/api/Dependencies`;
-        return this.httpClient.request<DependencyVmPaginatedList>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<DependencyVmPaginatedList>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                params: localVarQueryParameters,
+                body: searchDependenciesWithPaginationQuery,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

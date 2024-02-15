@@ -5,5 +5,6 @@ export * from './project-vm';
 export * from './projects-vm';
 export * from './repositories-vm';
 export * from './repository-vm';
+export * from './search-dependencies-with-pagination-query';
 export * from './source-vm';
 export * from './sources-vm';

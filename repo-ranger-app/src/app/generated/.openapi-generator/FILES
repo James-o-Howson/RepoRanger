@@ -18,6 +18,7 @@ model/project-vm.ts
 model/projects-vm.ts
 model/repositories-vm.ts
 model/repository-vm.ts
+model/search-dependencies-with-pagination-query.ts
 model/source-vm.ts
 model/sources-vm.ts
 param.ts
