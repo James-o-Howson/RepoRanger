@@ -48,8 +48,11 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
 
     private static IEnumerable<Dependency> GetDependencies(PackageJson package)
     {
-        var dependencies = package.DevDependencies.Select(kvp => new Dependency(kvp.Key, kvp.Value)).ToList();
-        dependencies.AddRange(package.Dependencies.Select(kvp => new Dependency(kvp.Key, kvp.Value ?? string.Empty)));
+        var dependencies = package.DevDependencies
+            .Select(entry => new Dependency(entry.Key, entry.Value))
+            .ToList();
+        dependencies.AddRange(package.Dependencies
+            .Select(entry => new Dependency(entry.Key, entry.Value ?? string.Empty)));
 
         return dependencies;
     }
