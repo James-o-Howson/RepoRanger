@@ -98,10 +98,10 @@ export class DependenciesService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiDependenciesSearchDependenciesWithPaginationPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<DependencyVmPaginatedList>;
-    public apiDependenciesSearchDependenciesWithPaginationPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DependencyVmPaginatedList>>;
-    public apiDependenciesSearchDependenciesWithPaginationPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DependencyVmPaginatedList>>;
-    public apiDependenciesSearchDependenciesWithPaginationPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public apiDependenciesSearchPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<DependencyVmPaginatedList>;
+    public apiDependenciesSearchPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<DependencyVmPaginatedList>>;
+    public apiDependenciesSearchPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<DependencyVmPaginatedList>>;
+    public apiDependenciesSearchPost(searchDependenciesWithPaginationQuery?: SearchDependenciesWithPaginationQuery, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -152,7 +152,7 @@ export class DependenciesService {
             }
         }
 
-        let localVarPath = `/api/Dependencies/SearchDependenciesWithPagination`;
+        let localVarPath = `/api/Dependencies/Search`;
         return this.httpClient.request<DependencyVmPaginatedList>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
