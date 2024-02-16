@@ -2,6 +2,6 @@
 
 public interface IResourceNameService
 {
-    string GetOrphanedDependencies { get; }
-    string GetOrphanedProjects { get; }
+    string GetOrphanedDependenciesResourceName { get; }
+    string GetOrphanedProjectsResourceName { get; }
 }

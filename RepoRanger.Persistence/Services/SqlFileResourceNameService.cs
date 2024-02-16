@@ -6,6 +6,6 @@ internal sealed class SqlFileResourceNameService : IResourceNameService
 {
     private const string? ResourceNamePrefix = "RepoRanger.Persistence.Sql";
 
-    public string GetOrphanedDependencies => $"{ResourceNamePrefix}.GetOrphanedDependencies.sql";
-    public string GetOrphanedProjects => $"{ResourceNamePrefix}.GetOrphanedProjects.sql";
+    public string GetOrphanedDependenciesResourceName => $"{ResourceNamePrefix}.GetOrphanedDependencies.sql";
+    public string GetOrphanedProjectsResourceName => $"{ResourceNamePrefix}.GetOrphanedProjects.sql";
 }
