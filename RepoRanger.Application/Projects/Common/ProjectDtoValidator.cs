@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using RepoRanger.Application.Sources.Commands.Common.Models;
+using RepoRanger.Application.Dependencies.Common;
 
-namespace RepoRanger.Application.Sources.Commands.Common.Validators;
+namespace RepoRanger.Application.Projects.Common;
 
 internal sealed class ProjectDtoValidator : AbstractValidator<ProjectDto>
 {

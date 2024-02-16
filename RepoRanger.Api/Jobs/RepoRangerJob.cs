@@ -1,10 +1,9 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Options;
 using Quartz;
-using RepoRanger.Application.Sources.Commands.Common.Mapping;
-using RepoRanger.Application.Sources.Commands.Common.Models;
 using RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 using RepoRanger.Application.Sources.Commands.DeleteSourceCommand;
+using RepoRanger.Application.Sources.Common;
 using RepoRanger.Application.Sources.Parsing;
 using RepoRanger.Application.Sources.Queries.GetByName;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;

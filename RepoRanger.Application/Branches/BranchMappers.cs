@@ -1,9 +1,9 @@
-﻿using RepoRanger.Application.Sources.Commands.Common.Models;
+﻿using RepoRanger.Application.Projects.Common;
 using RepoRanger.Domain.Source;
 
-namespace RepoRanger.Application.Sources.Commands.Common.Mapping;
+namespace RepoRanger.Application.Branches;
 
-internal static class BranchMappingExtensions
+internal static class BranchMappers
 {
     public static IEnumerable<Branch> ToEntities(this IEnumerable<BranchDto> dtos)
     {

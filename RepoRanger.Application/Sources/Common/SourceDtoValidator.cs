@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
-using RepoRanger.Application.Sources.Commands.Common.Models;
+using RepoRanger.Application.Repositories.Common;
 
-namespace RepoRanger.Application.Sources.Commands.Common.Validators;
+namespace RepoRanger.Application.Sources.Common;
 
 internal sealed class SourceDtoValidator : AbstractValidator<SourceDto>
 {

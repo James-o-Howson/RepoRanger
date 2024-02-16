@@ -1,9 +1,8 @@
-﻿using RepoRanger.Application.Sources.Commands.Common.Models;
-using RepoRanger.Domain.Source;
+﻿using RepoRanger.Domain.Source;
 
-namespace RepoRanger.Application.Sources.Commands.Common.Mapping;
+namespace RepoRanger.Application.Dependencies.Common;
 
-internal static class DependencyMappingExtensions
+internal static class DependencyMappers
 {
     public static IEnumerable<Dependency> ToEntities(this IEnumerable<DependencyDto> dtos)
     {

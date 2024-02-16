@@ -1,9 +1,9 @@
-﻿using RepoRanger.Application.Sources.Commands.Common.Models;
+﻿using RepoRanger.Application.Repositories.Common;
 using RepoRanger.Domain.Source;
 
-namespace RepoRanger.Application.Sources.Commands.Common.Mapping;
+namespace RepoRanger.Application.Sources.Common;
 
-public static class SourceMappingExtensions
+public static class SourceMappers
 {
     public static Source ToEntity(this SourceDto dto)
     {

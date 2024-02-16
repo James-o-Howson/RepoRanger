@@ -1,9 +1,9 @@
-﻿using RepoRanger.Application.Sources.Commands.Common.Models;
+﻿using RepoRanger.Application.Dependencies.Common;
 using RepoRanger.Domain.Source;
 
-namespace RepoRanger.Application.Sources.Commands.Common.Mapping;
+namespace RepoRanger.Application.Projects.Common;
 
-internal static class ProjectMappingExtensions
+internal static class ProjectMappers
 {
     public static IEnumerable<Project> ToEntities(this IEnumerable<ProjectDto> dtos)
     {
