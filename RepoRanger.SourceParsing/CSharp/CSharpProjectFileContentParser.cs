@@ -49,7 +49,7 @@ internal sealed partial class CSharpProjectFileContentParser : IFileContentParse
         return dependencyContexts;
     }
     
-    private static IEnumerable<Dependency> GetDependenciesFromReferenceAttribute(XDocument doc)
+    private static IEnumerable<Dependency> GetDependenciesFromReferenceAttribute(XContainer doc)
     {
         var dependencyViewModels = doc.Descendants()
             .Where(e => e.Name.LocalName == "Reference")
@@ -87,7 +87,7 @@ internal sealed partial class CSharpProjectFileContentParser : IFileContentParse
         return dependencyViewModels;
     }
 
-    private static IEnumerable<Dependency> GetDependenciesFromPackageReferenceAttribute(XDocument doc)
+    private static IEnumerable<Dependency> GetDependenciesFromPackageReferenceAttribute(XContainer doc)
     {
         var dependencyViewModels = doc.Descendants()
             .Where(e => e.Name.LocalName == "PackageReference")
