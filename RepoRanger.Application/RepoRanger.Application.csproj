@@ -18,4 +18,8 @@
       <ProjectReference Include="..\RepoRanger.Domain\RepoRanger.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Sources\Parsing\Mapping\" />
+    </ItemGroup>
+
 </Project>

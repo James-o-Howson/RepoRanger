@@ -30,8 +30,6 @@ public class Project : BaseCreatedAuditableEntity<Guid>
         _dependencies.AddRange(dependencies);
     }
     
-    
-
     internal void Delete()
     {
         foreach (var dependency in _dependencies)

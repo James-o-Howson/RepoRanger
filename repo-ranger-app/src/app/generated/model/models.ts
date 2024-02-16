@@ -1,6 +1,5 @@
 export * from './dependency-vm';
 export * from './dependency-vm-paginated-list';
-export * from './get-repositories-by-source-id-query';
 export * from './project-vm';
 export * from './projects-vm';
 export * from './repositories-vm';

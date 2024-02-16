@@ -1,15 +1,16 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
+using RepoRanger.Application.Repositories.ViewModels;
 
 namespace RepoRanger.Application.Repositories.Queries.GetRepositoriesBySourceId;
 
 public sealed record GetRepositoriesBySourceIdQuery : IRequest<RepositoriesVm>
 {
-    public Guid SourceId { get; set; }
+    public Guid? SourceId { get; init; }
 }
 
-internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<GetRepositoriesBySourceIdQuery,  RepositoriesVm>
+internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<GetRepositoriesBySourceIdQuery, RepositoriesVm>
 {
     private readonly IApplicationDbContext _context;
 

@@ -1,9 +1,9 @@
-﻿using RepoRanger.Application.Sources.Parsing.Models;
+﻿using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Application.Sources.Parsing;
 
 public interface IFileContentParser
 {
     bool CanParse(string filePath);
-    Task ParseAsync(string content, FileInfo fileInfo, BranchContext branchContext);
+    Task ParseAsync(string content, FileInfo fileInfo, Branch branch);
 }

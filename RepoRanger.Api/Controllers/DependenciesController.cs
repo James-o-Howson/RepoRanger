@@ -6,7 +6,7 @@ namespace RepoRanger.Api.Controllers;
 
 public sealed class DependenciesController : ApiControllerBase
 {
-    [HttpPost("search")]
+    [HttpPost("[action]")]
     public async Task<ActionResult<PaginatedList<DependencyVm>>> SearchDependenciesWithPagination(SearchDependenciesWithPaginationQuery query) 
         => await Mediator.Send(query);
 }

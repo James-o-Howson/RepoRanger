@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Options;
 using Quartz;
+using RepoRanger.Application.Sources.Commands.Common.Mapping;
+using RepoRanger.Application.Sources.Commands.Common.Models;
 using RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 using RepoRanger.Application.Sources.Commands.DeleteSourceCommand;
-using RepoRanger.Application.Sources.Common.Models;
 using RepoRanger.Application.Sources.Parsing;
-using RepoRanger.Application.Sources.Parsing.Mapping;
 using RepoRanger.Application.Sources.Queries.GetByName;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
 
@@ -55,8 +55,8 @@ internal sealed class RepoRangerJob : IJob
 
     private async Task StartRanging()
     {
-        var sourceContexts = await _sourceParser.ParseAsync();
-        foreach (var sourceDto in sourceContexts.ToDtos())
+        var sources = await _sourceParser.ParseAsync();
+        foreach (var sourceDto in sources.ToDtos())
         {
             await DeleteIfSourceExistsAsync(sourceDto);
             await CreateAsync(sourceDto);
@@ -71,7 +71,10 @@ internal sealed class RepoRangerJob : IJob
 
     private async Task DeleteIfSourceExistsAsync(SourceDto sourceDto)
     {
-        var existing = await _mediator.Send(new GetByNameQuery(sourceDto.Name));
+        var existing = await _mediator.Send(new GetByNameQuery
+        {
+            Name = sourceDto.Name
+        });
 
         if (existing is not null)
         {

@@ -2,7 +2,7 @@
 using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
 using RepoRanger.Application.Sources.Parsing;
-using RepoRanger.Application.Sources.Parsing.Models;
+using RepoRanger.Domain.Source;
 
 namespace RepoRanger.SourceParsing.CSharp;
 
@@ -24,24 +24,21 @@ internal sealed partial class CSharpProjectFileContentParser : IFileContentParse
         return filePath.EndsWith(".csproj");
     }
 
-    public async Task ParseAsync(string content, FileInfo fileInfo, BranchContext branchContext)
+    public async Task ParseAsync(string content, FileInfo fileInfo, Branch branch)
     {
         _logger.LogInformation("Parsing CSharp Project {CsprojFilePath}", fileInfo.FullName);
         
-        var projectContext = new ProjectContext
-        {
-            Name = fileInfo.Name,
-            Version = await GetDotNetVersionAsync(content)
-        };
+        var project = new Project(fileInfo.Name, await GetDotNetVersionAsync(content));
 
-        var dependencyContexts = GetDependencyContexts(content);
-        projectContext.DependencyContexts.AddRange(dependencyContexts);
-        branchContext.ProjectContexts.Add(projectContext);
+        var dependencies = GetDependencyContexts(content);
+        project.AddDependencies(dependencies);
         
-        _logger.LogInformation("Finished Parsing CSharp Project {CsprojFilePath}. Dependencies found = {DependencyCount}", fileInfo.FullName, projectContext.DependencyContexts.Count);
+        branch.AddProjects([project]);
+        
+        _logger.LogInformation("Finished Parsing CSharp Project {CsprojFilePath}. Dependencies found = {DependencyCount}", fileInfo.FullName, project.Dependencies.Count);
     }
 
-    private static IEnumerable<DependencyContext> GetDependencyContexts(string content)
+    private static IEnumerable<Dependency> GetDependencyContexts(string content)
     {
         var doc = XDocument.Parse(content);
 
@@ -52,7 +49,7 @@ internal sealed partial class CSharpProjectFileContentParser : IFileContentParse
         return dependencyContexts;
     }
     
-    private static IEnumerable<DependencyContext> GetDependenciesFromReferenceAttribute(XDocument doc)
+    private static IEnumerable<Dependency> GetDependenciesFromReferenceAttribute(XDocument doc)
     {
         var dependencyViewModels = doc.Descendants()
             .Where(e => e.Name.LocalName == "Reference")
@@ -84,16 +81,13 @@ internal sealed partial class CSharpProjectFileContentParser : IFileContentParse
                     }
                 }
                     
-                return new DependencyContext
-                {
-                    Name = name,
-                    Version = version
-                };
+                return new Dependency(name, version);
             });
+        
         return dependencyViewModels;
     }
 
-    private static IEnumerable<DependencyContext> GetDependenciesFromPackageReferenceAttribute(XDocument doc)
+    private static IEnumerable<Dependency> GetDependenciesFromPackageReferenceAttribute(XDocument doc)
     {
         var dependencyViewModels = doc.Descendants()
             .Where(e => e.Name.LocalName == "PackageReference")
@@ -108,11 +102,7 @@ internal sealed partial class CSharpProjectFileContentParser : IFileContentParse
                     version = pr.Attribute("Version")?.Value.Trim() ?? string.Empty;
                 }
 
-                return new DependencyContext
-                {
-                    Name = name,
-                    Version = version
-                };
+                return new Dependency(name, version);
             });
         return dependencyViewModels;
     }

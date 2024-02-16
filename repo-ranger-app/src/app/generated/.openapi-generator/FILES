@@ -12,7 +12,6 @@ git_push.sh
 index.ts
 model/dependency-vm-paginated-list.ts
 model/dependency-vm.ts
-model/get-repositories-by-source-id-query.ts
 model/models.ts
 model/project-vm.ts
 model/projects-vm.ts

@@ -4,7 +4,10 @@ using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 
 namespace RepoRanger.Application.Sources.Queries.GetByName;
 
-public sealed record GetByNameQuery(string Name) : IRequest<SourcePreviewDto?>;
+public sealed record GetByNameQuery : IRequest<SourcePreviewDto?>
+{
+    public string Name { get; init; } = string.Empty;
+};
 
 internal sealed class GetByNameQueryHandler : IRequestHandler<GetByNameQuery, SourcePreviewDto?>
 {

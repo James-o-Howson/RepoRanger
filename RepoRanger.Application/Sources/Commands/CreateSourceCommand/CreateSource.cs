@@ -1,11 +1,11 @@
 ﻿using MediatR;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
-using RepoRanger.Application.Sources.Common.Mapping;
-using RepoRanger.Application.Sources.Common.Models;
+using RepoRanger.Application.Sources.Commands.Common.Mapping;
+using RepoRanger.Application.Sources.Commands.Common.Models;
 
 namespace RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 
-public sealed record CreateSourceCommand(string Name, IEnumerable<RepositoryDto> Repositories)
+public sealed record CreateSourceCommand(string Name, IEnumerable<RepositoryDto> Repositories) 
     : SourceDto(Name, Repositories), IRequest<Guid>;
 
 internal sealed class CreateSourceCommandHandler : IRequestHandler<CreateSourceCommand, Guid>

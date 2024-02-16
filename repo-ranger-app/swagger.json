@@ -5,7 +5,7 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Dependencies": {
+    "/api/Dependencies/SearchDependenciesWithPagination": {
       "post": {
         "tags": [
           "Dependencies"
@@ -60,6 +60,45 @@
         ],
         "parameters": [
           {
+            "name": "query",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "$ref": "#/components/schemas/ListProjectsQuery"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsVm"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsVm"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsVm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Projects/GetByRepositoryId": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "parameters": [
+          {
             "name": "RepositoryId",
             "in": "query",
             "style": "form",
@@ -102,29 +141,60 @@
       }
     },
     "/api/Repositories": {
-      "post": {
+      "get": {
         "tags": [
           "Repositories"
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetRepositoriesBySourceIdQuery"
-              }
-            },
-            "text/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetRepositoriesBySourceIdQuery"
-              }
-            },
-            "application/*+json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetRepositoriesBySourceIdQuery"
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "$ref": "#/components/schemas/ListRepositoriesQuery"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepositoriesVm"
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepositoriesVm"
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepositoriesVm"
+                }
               }
             }
           }
-        },
+        }
+      }
+    },
+    "/api/Repositories/GetBySourceId": {
+      "get": {
+        "tags": [
+          "Repositories"
+        ],
+        "parameters": [
+          {
+            "name": "SourceId",
+            "in": "query",
+            "style": "form",
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "Success",
@@ -244,14 +314,12 @@
         },
         "additionalProperties": false
       },
-      "GetRepositoriesBySourceIdQuery": {
+      "ListProjectsQuery": {
         "type": "object",
-        "properties": {
-          "sourceId": {
-            "type": "string",
-            "format": "uuid"
-          }
-        },
+        "additionalProperties": false
+      },
+      "ListRepositoriesQuery": {
+        "type": "object",
         "additionalProperties": false
       },
       "ListSourcesQuery": {
@@ -272,6 +340,10 @@
           "version": {
             "type": "string",
             "nullable": true
+          },
+          "dependencyCount": {
+            "type": "integer",
+            "format": "int32"
           }
         },
         "additionalProperties": false

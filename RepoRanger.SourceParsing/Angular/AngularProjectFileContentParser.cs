@@ -2,12 +2,14 @@
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using RepoRanger.Application.Sources.Parsing;
-using RepoRanger.Application.Sources.Parsing.Models;
+using RepoRanger.Domain.Source;
 
 namespace RepoRanger.SourceParsing.Angular;
 
 internal sealed class AngularProjectFileContentParser : IFileContentParser
 {
+    private static readonly JsonSerializerOptions JsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
+
     private readonly ILogger<AngularProjectFileContentParser> _logger;
 
     public AngularProjectFileContentParser(ILogger<AngularProjectFileContentParser> logger)
@@ -27,41 +29,27 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
         return workspaceIsSibling;
     }
 
-    public async Task ParseAsync(string content, FileInfo fileInfo, BranchContext branchContext)
+    public async Task ParseAsync(string content, FileInfo fileInfo, Branch branch)
     {
         _logger.LogInformation("Parsing package.json {PackageJsonPath}", fileInfo.FullName);
         
         var package = await JsonSerializer.DeserializeAsync<PackageJson>(
             new MemoryStream(Encoding.UTF8.GetBytes(content)),
-            new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+            JsonSerializerOptions);
         
         if (package is null) throw new ArgumentException($"Cannot deserialize {nameof(content)} into ${typeof(PackageJson)}", content);
 
-        var projectContext = new ProjectContext
-        {
-            Name = package.Name,
-            Version = FindAngularVersion(package)
-        };
+        var project = new Project(package.Name, FindAngularVersion(package));
+        project.AddDependencies(GetDependencies(package));
+        branch.AddProjects([project]);
         
-        projectContext.DependencyContexts.AddRange(GetDependencies(package));
-        branchContext.ProjectContexts.Add(projectContext);
-        
-        _logger.LogInformation("Finished Parsing package.json {PackageJsonPath}. Dependencies found = {DependencyCount}", fileInfo.FullName, projectContext.DependencyContexts.Count);
+        _logger.LogInformation("Finished Parsing package.json {PackageJsonPath}. Dependencies found = {DependencyCount}", fileInfo.FullName, project.Dependencies.Count);
     }
 
-    private static IEnumerable<DependencyContext> GetDependencies(PackageJson package)
+    private static IEnumerable<Dependency> GetDependencies(PackageJson package)
     {
-        var dependencies = package.DevDependencies.Select(kvp => new DependencyContext
-        {
-            Name = kvp.Key,
-            Version = kvp.Value
-        }).ToList();
-        
-        dependencies.AddRange(package.Dependencies.Select(kvp => new DependencyContext
-        {
-            Name = kvp.Key,
-            Version = kvp.Value ?? string.Empty
-        }));
+        var dependencies = package.DevDependencies.Select(kvp => new Dependency(kvp.Key, kvp.Value)).ToList();
+        dependencies.AddRange(package.Dependencies.Select(kvp => new Dependency(kvp.Key, kvp.Value ?? string.Empty)));
 
         return dependencies;
     }

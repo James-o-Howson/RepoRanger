@@ -1,8 +1,8 @@
-﻿using RepoRanger.Application.Sources.Parsing.Models;
+﻿using RepoRanger.Domain.Source;
 
 namespace RepoRanger.Application.Sources.Parsing;
 
 public interface ISourceParser
 {
-    Task<IEnumerable<SourceContext>> ParseAsync();
+    Task<IEnumerable<Source>> ParseAsync();
 }
