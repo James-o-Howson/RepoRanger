@@ -11,7 +11,6 @@ public class Dependency : BaseCreatedAuditableEntity<Guid>
     public Dependency(string name, string version)
     {
         ArgumentException.ThrowIfNullOrEmpty(name);
-        ArgumentException.ThrowIfNullOrEmpty(version);
         
         Id = Guid.NewGuid();
         Name = name;

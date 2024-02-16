@@ -110,7 +110,7 @@ internal sealed class SourceParserService : ISourceParser
 
         var repositoryName = new DirectoryInfo(repo.Info.WorkingDirectory).Name;
         var repository = new Repository(repositoryName, repo.Network.Remotes["origin"].Url);
-        repository.AddBranches([branch]);
+        repository.AddBranch(branch);
         
         return repository;
     }

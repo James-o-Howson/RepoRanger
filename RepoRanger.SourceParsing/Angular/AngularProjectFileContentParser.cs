@@ -41,7 +41,7 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
 
         var project = new Project(package.Name, FindAngularVersion(package));
         project.AddDependencies(GetDependencies(package));
-        branch.AddProjects([project]);
+        branch.AddProject(project);
         
         _logger.LogInformation("Finished Parsing package.json {PackageJsonPath}. Dependencies found = {DependencyCount}", fileInfo.FullName, project.Dependencies.Count);
     }

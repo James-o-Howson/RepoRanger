@@ -49,6 +49,8 @@ internal sealed class SearchDependenciesWithPaginationQueryHandler : IRequestHan
                 Name = d.Name,
                 Version = d.Version
             })
+            .OrderBy(d => d.Name)
+            .ThenBy(d => d.Version)
             .PaginatedListAsync(request.PageNumber, request.PageSize);
     }
     

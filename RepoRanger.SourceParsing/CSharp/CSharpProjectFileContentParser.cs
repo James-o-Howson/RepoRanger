@@ -33,7 +33,7 @@ internal sealed partial class CSharpProjectFileContentParser : IFileContentParse
         var dependencies = GetDependencyContexts(content);
         project.AddDependencies(dependencies);
         
-        branch.AddProjects([project]);
+        branch.AddProject(project);
         
         _logger.LogInformation("Finished Parsing CSharp Project {CsprojFilePath}. Dependencies found = {DependencyCount}", fileInfo.FullName, project.Dependencies.Count);
     }

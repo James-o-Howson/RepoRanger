@@ -23,6 +23,12 @@ public class Branch : BaseCreatedAuditableEntity<Guid>
     public Guid RepositoryId { get; private set; }
     public IReadOnlyCollection<Project> Projects => _projects;
 
+    public void AddProject(Project project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        _projects.Add(project);
+    }
+    
     public void AddProjects(IEnumerable<Project> projects)
     {
         ArgumentNullException.ThrowIfNull(projects);

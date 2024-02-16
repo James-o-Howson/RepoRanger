@@ -31,27 +31,28 @@ public class Repository : BaseCreatedAuditableEntity<Guid>
         .SelectMany(p => p.Dependencies)
         .ToList();
 
+    public void AddBranch(Branch branch)
+    {
+        ArgumentNullException.ThrowIfNull(branch);
+        AddBranches(new List<Branch> { branch });
+    }
+    
     public void AddBranches(IList<Branch> branches)
     {
         ArgumentNullException.ThrowIfNull(branches);
         
         var defaults = branches.Where(b => b.IsDefault).ToList();
-        switch (defaults.Count)
-        {
-            case > 1: 
-                throw new ArgumentException("Cannot set more than 1 default branch per repository", nameof(branches));
-            case 1:
-                SetDefaultBranch(defaults.Single());
-                break;
-        }
-        
+        if (defaults.Count > 1) throw new ArgumentException("Cannot set more than 1 default branch per repository", nameof(branches));
+
         _branches.AddRange(branches);
+        if (defaults.Count == 1) TrySetDefaultBranch(defaults.Single());
     }
     
-    private void SetDefaultBranch(Branch branch)
+    private void TrySetDefaultBranch(Branch branch)
     {
         ArgumentNullException.ThrowIfNull(branch);
         ArgumentNullException.ThrowIfNull(branch.Id);
+        
         if (Branches.All(b => b.Id != branch.Id))
         {
             _branches.Add(branch);

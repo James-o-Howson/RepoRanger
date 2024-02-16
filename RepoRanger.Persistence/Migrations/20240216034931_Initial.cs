@@ -201,6 +201,12 @@ namespace RepoRanger.Persistence.Migrations
                 name: "IX_Repositories_SourceId",
                 table: "Repositories",
                 column: "SourceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Sources_Name",
+                table: "Sources",
+                column: "Name",
+                unique: true);
         }
 
         /// <inheritdoc />
