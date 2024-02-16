@@ -1,6 +1,6 @@
 ﻿using RepoRanger.Domain.Common;
 
-namespace RepoRanger.Domain.Source;
+namespace RepoRanger.Domain.Entities;
 
 public class Dependency : BaseCreatedAuditableEntity<Guid>
 {

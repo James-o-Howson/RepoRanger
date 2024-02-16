@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using RepoRanger.Application.Sources.Parsing;
-using RepoRanger.Domain.Source;
+using RepoRanger.Domain.Entities;
 using RepoRanger.SourceParsing.Abstractions.Options;
 
 namespace RepoRanger.SourceParsing.Services;

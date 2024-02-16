@@ -2,7 +2,7 @@
 using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
 using RepoRanger.Application.Sources.Parsing;
-using RepoRanger.Domain.Source;
+using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.SourceParsing.CSharp;
 

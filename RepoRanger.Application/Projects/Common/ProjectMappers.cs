@@ -1,5 +1,5 @@
 ﻿using RepoRanger.Application.Dependencies.Common;
-using RepoRanger.Domain.Source;
+using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Projects.Common;
 
