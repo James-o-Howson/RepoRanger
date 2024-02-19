@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using RepoRanger.Application.Abstractions.Interfaces;
+using RepoRanger.Application.Common.Interfaces;
 using RepoRanger.Domain.Common;
 
 namespace RepoRanger.Persistence.Interceptors;

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using RepoRanger.Application.Abstractions.Exceptions;
+using RepoRanger.Application.Common.Exceptions;
 
 namespace RepoRanger.Api.Filters;
 

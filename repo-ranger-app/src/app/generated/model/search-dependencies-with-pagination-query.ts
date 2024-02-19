@@ -9,13 +9,21 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { PaginatedFilter } from './paginated-filter';
+import { SortOrder } from './sort-order';
 
 
 export interface SearchDependenciesWithPaginationQuery { 
     pageNumber?: number;
     pageSize?: number;
+    sortField?: string | null;
+    sortOrder?: SortOrder;
+    filters?: { [key: string]: Array<PaginatedFilter>; } | null;
     sourceIds?: Array<string> | null;
     repositoryIds?: Array<string> | null;
     projectIds?: Array<string> | null;
 }
+export namespace SearchDependenciesWithPaginationQuery {
+}
+
 

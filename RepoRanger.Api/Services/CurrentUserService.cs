@@ -1,5 +1,5 @@
 ﻿using System.Security.Claims;
-using RepoRanger.Application.Abstractions.Interfaces;
+using RepoRanger.Application.Common.Interfaces;
 
 namespace RepoRanger.Api.Services;
 

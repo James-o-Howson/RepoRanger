@@ -12,12 +12,16 @@ git_push.sh
 index.ts
 model/dependency-vm-paginated-list.ts
 model/dependency-vm.ts
+model/filter-operator.ts
+model/match-mode.ts
 model/models.ts
+model/paginated-filter.ts
 model/project-vm.ts
 model/projects-vm.ts
 model/repositories-vm.ts
 model/repository-vm.ts
 model/search-dependencies-with-pagination-query.ts
+model/sort-order.ts
 model/source-vm.ts
 model/sources-vm.ts
 param.ts

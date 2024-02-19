@@ -13,8 +13,8 @@ import { DependencyVm } from './dependency-vm';
 
 
 export interface DependencyVmPaginatedList { 
-    items?: Array<DependencyVm> | null;
-    pageNumber?: number;
+    readonly items?: Array<DependencyVm> | null;
+    readonly pageNumber?: number;
     readonly totalPages?: number;
     readonly totalCount?: number;
     readonly hasPreviousPage?: boolean;

@@ -1,4 +1,4 @@
-﻿using RepoRanger.Application.Abstractions.Interfaces;
+﻿using RepoRanger.Application.Common.Interfaces;
 
 namespace RepoRanger.Infrastructure.Services;
 

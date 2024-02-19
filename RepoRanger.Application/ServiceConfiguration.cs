@@ -2,7 +2,7 @@
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
-using RepoRanger.Application.Abstractions.Behaviours;
+using RepoRanger.Application.Common.Behaviours;
 
 namespace RepoRanger.Application;
 

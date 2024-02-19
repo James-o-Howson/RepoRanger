@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Application.Abstractions.Interfaces.Persistence;
+using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Persistence;

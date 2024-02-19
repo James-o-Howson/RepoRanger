@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Application.Abstractions.Interfaces.Persistence;
+using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Application.Projects.ViewModels;
 
 namespace RepoRanger.Application.Projects.Queries.ListProjects;

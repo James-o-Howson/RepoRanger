@@ -1,8 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Application.Abstractions.Exceptions;
-using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Application.Abstractions.Interfaces.Persistence;
+using RepoRanger.Application.Common.Exceptions;
+using RepoRanger.Application.Common.Interfaces;
+using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Sources.Commands.DeleteSourceCommand;

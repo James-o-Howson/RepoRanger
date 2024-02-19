@@ -287,11 +287,13 @@
             "items": {
               "$ref": "#/components/schemas/DependencyVm"
             },
-            "nullable": true
+            "nullable": true,
+            "readOnly": true
           },
           "pageNumber": {
             "type": "integer",
-            "format": "int32"
+            "format": "int32",
+            "readOnly": true
           },
           "totalPages": {
             "type": "integer",
@@ -314,6 +316,14 @@
         },
         "additionalProperties": false
       },
+      "FilterOperator": {
+        "enum": [
+          0,
+          1
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
       "ListProjectsQuery": {
         "type": "object",
         "additionalProperties": false
@@ -324,6 +334,34 @@
       },
       "ListSourcesQuery": {
         "type": "object",
+        "additionalProperties": false
+      },
+      "MatchMode": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "PaginatedFilter": {
+        "type": "object",
+        "properties": {
+          "matchMode": {
+            "$ref": "#/components/schemas/MatchMode"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/FilterOperator"
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
+          }
+        },
         "additionalProperties": false
       },
       "ProjectVm": {
@@ -415,6 +453,23 @@
             "type": "integer",
             "format": "int32"
           },
+          "sortField": {
+            "type": "string",
+            "nullable": true
+          },
+          "sortOrder": {
+            "$ref": "#/components/schemas/SortOrder"
+          },
+          "filters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PaginatedFilter"
+              }
+            },
+            "nullable": true
+          },
           "sourceIds": {
             "type": "array",
             "items": {
@@ -441,6 +496,14 @@
           }
         },
         "additionalProperties": false
+      },
+      "SortOrder": {
+        "enum": [
+          0,
+          1
+        ],
+        "type": "integer",
+        "format": "int32"
       },
       "SourceVm": {
         "type": "object",

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Application.Abstractions.Interfaces.Persistence;
-using RepoRanger.Application.Abstractions.Pagination;
+using RepoRanger.Application.Common.Interfaces.Persistence;
+using RepoRanger.Application.Common.Pagination;
 using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Dependencies.Queries.SearchDependenciesWithPagination;
@@ -24,8 +24,20 @@ internal sealed class SearchDependenciesWithPaginationQueryHandler : IRequestHan
 
     public async Task<PaginatedList<DependencyVm>> Handle(SearchDependenciesWithPaginationQuery request, CancellationToken cancellationToken)
     {
+        return await GetDependencies(request)
+            .ApplyFilters(request.Filters)
+            .Select(d => new DependencyVm
+            {
+                Id = d.Id,
+                Name = d.Name,
+                Version = d.Version
+            })
+            .ToPaginatedListAsync(request, cancellationToken);
+    }
+
+    private IQueryable<Dependency> GetDependencies(SearchDependenciesWithPaginationQuery request)
+    {
         IQueryable<Dependency> query;
-        
         if (request.ProjectIds != null && request.ProjectIds.Count != 0)
         {
             query = QueryProjectDependencies(request.ProjectIds);
@@ -40,18 +52,10 @@ internal sealed class SearchDependenciesWithPaginationQueryHandler : IRequestHan
         }
         else
         {
-            query = _context.Dependencies.AsNoTracking();
+            query = _context.Dependencies;
         }
 
-        return await query.Select(d => new DependencyVm
-            {
-                Id = d.Id,
-                Name = d.Name,
-                Version = d.Version
-            })
-            .OrderBy(d => d.Name)
-            .ThenBy(d => d.Version)
-            .PaginatedListAsync(request.PageNumber, request.PageSize);
+        return query;
     }
     
     private IQueryable<Dependency> QueryProjectDependencies(IReadOnlyCollection<Guid> projectIds) =>

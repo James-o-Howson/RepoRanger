@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
-using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Application.Abstractions.Interfaces.Persistence;
-using RepoRanger.Persistence.Abstractions;
+using RepoRanger.Application.Common.Interfaces;
+using RepoRanger.Application.Common.Interfaces.Persistence;
+using RepoRanger.Persistence.Common;
 using RepoRanger.Persistence.Interceptors;
 using RepoRanger.Persistence.Services;
 

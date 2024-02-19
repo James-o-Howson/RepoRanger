@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using RepoRanger.Application.Abstractions.Pagination;
+using RepoRanger.Application.Common.Pagination;
 
 namespace RepoRanger.Application.Dependencies.Queries.SearchDependenciesWithPagination;
 

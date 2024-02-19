@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Application.Abstractions.Interfaces.Persistence;
+using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Application.Repositories.ViewModels;
 
 namespace RepoRanger.Application.Repositories.Queries.GetRepositoriesBySourceId;

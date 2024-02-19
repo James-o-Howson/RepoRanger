@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RepoRanger.Application.Abstractions.Interfaces;
+using RepoRanger.Application.Common.Interfaces;
 using RepoRanger.Infrastructure.Services;
 
 namespace RepoRanger.Infrastructure;
