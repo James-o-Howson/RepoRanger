@@ -1,23 +1,15 @@
+import { DependencyVm } from './../../generated/model/dependency-vm';
 import { Component } from '@angular/core';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { RepositoriesListComponent } from './repositories-list/repositories-list.component';
-import { SourcesListComponent } from './sources-list/sources-list.component';
 import { RepositoryVm, SourceVm } from '../../generated';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { AbstractControl, FormBuilder, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { DependencyTableComponent } from './dependency-table/dependency-table.component';
 
 @Component({
   selector: 'app-dependency-explorer',
   standalone: true,
   templateUrl: './dependency-explorer.component.html',
   styleUrl: './dependency-explorer.component.scss',
-  imports: [
-    RepositoriesListComponent,
-    SourcesListComponent,
-    MatExpansionModule,
-    MatFormFieldModule,
-    ReactiveFormsModule,
-  ],
+  imports: [DependencyTableComponent],
 })
 export class DependencyExplorerComponent {
   source: SourceVm = {};
