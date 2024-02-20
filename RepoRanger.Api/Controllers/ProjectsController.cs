@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RepoRanger.Application.Projects.Queries.GetProjectsByRepositoryId;
+using RepoRanger.Application.Projects.Queries.GetProjectsByRepositoryIds;
 using RepoRanger.Application.Projects.Queries.ListProjects;
 using RepoRanger.Application.Projects.ViewModels;
 
@@ -13,6 +13,6 @@ public sealed class ProjectsController : ApiControllerBase
         => await Mediator.Send(query);
     
     [HttpGet("[action]")]
-    public async Task<ActionResult<ProjectsVm>> GetByRepositoryId([FromQuery] GetProjectsByRepositoryIdQuery query) 
+    public async Task<ActionResult<ProjectsVm>> GetByRepositoryIds([FromQuery] GetProjectsByRepositoryIdsQuery query) 
         => await Mediator.Send(query);
 }

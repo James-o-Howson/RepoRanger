@@ -1,9 +1,13 @@
-<!-- <mat-toolbar color="primary" flex>
-  <span class="logo"><img src="./assets/logo.svg" alt="Department of Justice Logo" /></span>
-  <span class="title">{{title}}</span>
-  <div class="buttons">
-    <button mat-icon-button aria-label="settings button" (click)="onOpenSettings()">
-      <mat-icon>settings</mat-icon>
-    </button>
+<p-toolbar [style]="{ 'background-color': 'var(--primary-color)' }">
+  <div class="p-toolbar-group-start">
+    <span class="logo">
+      <img src="./assets/logo.svg" alt="Department of Justice Logo"/>
+    </span>
   </div>
-</mat-toolbar> -->
+  <div class="p-toolbar-group-center">
+    <span class="title">{{ title }}</span>
+  </div>
+  <div class="p-toolbar-group-end">
+    <p-button icon="pi pi-cog" (click)="onOpenSettings()" />
+  </div>
+</p-toolbar>

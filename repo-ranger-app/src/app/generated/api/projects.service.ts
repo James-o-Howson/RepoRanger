@@ -161,20 +161,22 @@ export class ProjectsService {
     }
 
     /**
-     * @param repositoryId 
+     * @param repositoryIds 
      * @param defaultBranchOnly 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public apiProjectsGetByRepositoryIdGet(repositoryId?: string, defaultBranchOnly?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<ProjectsVm>;
-    public apiProjectsGetByRepositoryIdGet(repositoryId?: string, defaultBranchOnly?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProjectsVm>>;
-    public apiProjectsGetByRepositoryIdGet(repositoryId?: string, defaultBranchOnly?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProjectsVm>>;
-    public apiProjectsGetByRepositoryIdGet(repositoryId?: string, defaultBranchOnly?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public apiProjectsGetByRepositoryIdsGet(repositoryIds?: Array<string>, defaultBranchOnly?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<ProjectsVm>;
+    public apiProjectsGetByRepositoryIdsGet(repositoryIds?: Array<string>, defaultBranchOnly?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProjectsVm>>;
+    public apiProjectsGetByRepositoryIdsGet(repositoryIds?: Array<string>, defaultBranchOnly?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProjectsVm>>;
+    public apiProjectsGetByRepositoryIdsGet(repositoryIds?: Array<string>, defaultBranchOnly?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'text/plain' | 'application/json' | 'text/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
-        if (repositoryId !== undefined && repositoryId !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>repositoryId, 'RepositoryId');
+        if (repositoryIds) {
+            repositoryIds.forEach((element) => {
+                localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                  <any>element, 'RepositoryIds');
+            })
         }
         if (defaultBranchOnly !== undefined && defaultBranchOnly !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
@@ -219,7 +221,7 @@ export class ProjectsService {
             }
         }
 
-        let localVarPath = `/api/Projects/GetByRepositoryId`;
+        let localVarPath = `/api/Projects/GetByRepositoryIds`;
         return this.httpClient.request<ProjectsVm>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,

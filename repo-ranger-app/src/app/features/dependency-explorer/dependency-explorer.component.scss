@@ -1,0 +1,15 @@
+.container {
+  display: flex; /* Use flexbox for layout */
+  height: 100%; /* Ensure container takes full height */
+}
+
+.left-control {
+  flex: 0 0 35%; /* Set the left control to occupy 45% of the container */
+  padding: 20px; /* Add padding as needed */
+}
+
+.right-control {
+  flex: 1; /* Allow the right control to take up remaining space */
+  padding: 20px; /* Add padding as needed */
+  overflow-y: auto; /* Add vertical scroll if content overflows */
+}

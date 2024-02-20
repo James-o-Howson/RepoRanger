@@ -92,19 +92,22 @@
         }
       }
     },
-    "/api/Projects/GetByRepositoryId": {
+    "/api/Projects/GetByRepositoryIds": {
       "get": {
         "tags": [
           "Projects"
         ],
         "parameters": [
           {
-            "name": "RepositoryId",
+            "name": "RepositoryIds",
             "in": "query",
             "style": "form",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "uuid"
+              }
             }
           },
           {
@@ -382,6 +385,14 @@
           "dependencyCount": {
             "type": "integer",
             "format": "int32"
+          },
+          "repositoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "repositoryName": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

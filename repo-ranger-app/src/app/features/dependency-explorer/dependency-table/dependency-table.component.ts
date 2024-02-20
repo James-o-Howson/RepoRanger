@@ -1,3 +1,5 @@
+import { SelectedDependencyService } from './selected-dependency.service';
+import { CardModule } from 'primeng/card';
 import { Component, OnInit } from '@angular/core';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
 import {
@@ -14,7 +16,6 @@ import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
-import { StyleClassModule } from 'primeng/styleclass';
 import { FilterMetadata } from 'primeng/api/filtermetadata';
 
 @Component({
@@ -26,7 +27,7 @@ import { FilterMetadata } from 'primeng/api/filtermetadata';
     PaginatorModule,
     InputTextModule,
     FormsModule,
-    StyleClassModule,
+    CardModule,
   ],
   templateUrl: './dependency-table.component.html',
   styleUrl: './dependency-table.component.scss',
@@ -35,11 +36,14 @@ export class DependencyTableComponent implements OnInit {
   pageSize: number = 25;
   totalRecords: number = 0;
   loading: boolean = false;
-
   paginatedDependencies!: DependencyVmPaginatedList;
   items!: DependencyVm[];
+  selectedDependency: DependencyVm | null = null;
 
-  constructor(private readonly dependenciesService: DependenciesService) {}
+  constructor(
+    private readonly dependenciesService: DependenciesService,
+    private readonly selectedDependencyService: SelectedDependencyService
+  ) {}
 
   ngOnInit(): void {
     this.loading = true;
@@ -82,6 +86,10 @@ export class DependencyTableComponent implements OnInit {
 
   clear(table: Table) {
     table.clear();
+  }
+
+  selectedDependencyChanged(selectedDependency: DependencyVm | null) {
+    this.selectedDependencyService.setSelectedDependency(selectedDependency);
   }
 
   private calculatePageNumber(first: number | undefined): number {
@@ -130,14 +138,15 @@ export class DependencyTableComponent implements OnInit {
 
       let paginatedFilters: Array<PaginatedFilter>;
       if (Array.isArray(value)) {
-        paginatedFilters = value.filter(filter => filter.value !== null)
-        .map((filter) => ({
-          matchMode: this.getMatchMode(filter.matchMode),
-          operator: this.getOperator(filter.operator),
-          value: filter.value,
-        }));
+        paginatedFilters = value
+          .filter((filter) => filter.value !== null)
+          .map((filter) => ({
+            matchMode: this.getMatchMode(filter.matchMode),
+            operator: this.getOperator(filter.operator),
+            value: filter.value,
+          }));
       } else {
-        if(value === null) continue;
+        if (value === null) continue;
         paginatedFilters = [
           {
             matchMode: this.getMatchMode(value.matchMode),
@@ -147,7 +156,7 @@ export class DependencyTableComponent implements OnInit {
         ];
       }
 
-      if(paginatedFilters.length === 0) continue;
+      if (paginatedFilters.length === 0) continue;
 
       result[this.getFieldName(key)] = paginatedFilters;
     }

@@ -16,5 +16,7 @@ export interface ProjectVm {
     name?: string | null;
     version?: string | null;
     dependencyCount?: number;
+    repositoryId?: string;
+    repositoryName?: string | null;
 }
 

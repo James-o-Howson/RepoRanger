@@ -30,7 +30,7 @@ public class Repository : BaseCreatedAuditableEntity<Guid>
         .SelectMany(b => b.Projects)
         .SelectMany(p => p.Dependencies)
         .ToList();
-
+    
     public void AddBranch(Branch branch)
     {
         ArgumentNullException.ThrowIfNull(branch);
