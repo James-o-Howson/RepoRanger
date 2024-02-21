@@ -66,7 +66,8 @@ namespace RepoRanger.Persistence.Migrations
                         name: "FK_Branches_Repositories_RepositoryId",
                         column: x => x.RepositoryId,
                         principalTable: "Repositories",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

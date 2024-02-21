@@ -218,7 +218,9 @@ namespace RepoRanger.Persistence.Migrations
                 {
                     b.HasOne("RepoRanger.Domain.Entities.Repository", "Repository")
                         .WithOne("DefaultBranch")
-                        .HasForeignKey("RepoRanger.Domain.Entities.Branch", "RepositoryId");
+                        .HasForeignKey("RepoRanger.Domain.Entities.Branch", "RepositoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Repository");
                 });

@@ -17,7 +17,7 @@ internal sealed class RepositoryConfiguration : GuidBaseCreatedAuditableEntityCo
         builder.HasOne(r => r.DefaultBranch)
             .WithOne(b => b.Repository)
             .HasForeignKey<Branch>(b => b.RepositoryId)
-            .IsRequired(false);
+            .OnDelete(DeleteBehavior.Cascade);
         
         base.Configure(builder);
     }

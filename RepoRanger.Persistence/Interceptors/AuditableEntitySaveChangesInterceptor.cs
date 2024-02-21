@@ -31,7 +31,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         return base.SavingChangesAsync(eventData, result, cancellationToken);
     }
 
-    public void UpdateEntities(DbContext? context)
+    private void UpdateEntities(DbContext? context)
     {
         if (context == null) return;
 
@@ -43,7 +43,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     {
         foreach (var entry in context.ChangeTracker.Entries<ICreatedAuditableEntity>())
         {
-            if (entry.State != EntityState.Added) continue;
+            if (!entry.IsCreated()) continue;
             
             entry.Entity.CreatedBy = _currentUserService.UserId;
             entry.Entity.Created = _dateTime.Now;
@@ -54,11 +54,10 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     {
         foreach (var entry in context.ChangeTracker.Entries<IModifiedAuditableEntity>())
         {
-            if (entry.State == EntityState.Added || entry.State == EntityState.Modified || entry.HasChangedOwnedEntities())
-            {
-                entry.Entity.LastModifiedBy = _currentUserService.UserId;
-                entry.Entity.LastModified = _dateTime.Now;
-            }
+            if (!entry.IsModified()) continue;
+            
+            entry.Entity.LastModifiedBy = _currentUserService.UserId;
+            entry.Entity.LastModified = _dateTime.Now;
         }
     }
 }

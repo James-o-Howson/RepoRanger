@@ -11,7 +11,7 @@ using RepoRanger.Persistence;
 namespace RepoRanger.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240221051205_Initial")]
+    [Migration("20240221060951_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -221,7 +221,9 @@ namespace RepoRanger.Persistence.Migrations
                 {
                     b.HasOne("RepoRanger.Domain.Entities.Repository", "Repository")
                         .WithOne("DefaultBranch")
-                        .HasForeignKey("RepoRanger.Domain.Entities.Branch", "RepositoryId");
+                        .HasForeignKey("RepoRanger.Domain.Entities.Branch", "RepositoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Repository");
                 });
