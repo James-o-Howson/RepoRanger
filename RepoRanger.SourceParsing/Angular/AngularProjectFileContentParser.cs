@@ -62,6 +62,6 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
         const string angularVersionKey = "@angular/core";
         _ = packageJson.Dependencies.TryGetValue(angularVersionKey, out var version);
 
-        return version ?? string.Empty;
+        return string.IsNullOrEmpty(version) ? "Angular" : $"Angular {version}";
     }
 }

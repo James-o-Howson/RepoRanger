@@ -1,10 +1,18 @@
 <div *ngIf="dependency$ | async as dependency">
     <p-panel header="{{ dependency.name }} ({{ dependency.version }})">
 
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Debitis repellendus non nemo cumque, dolores officia numquam deleniti unde, quaerat molestias labore aperiam aspernatur accusamus alias neque itaque nesciunt! Iusto, voluptatibus.
+        <div class="flex align-items-start gap-1" >
+            <p-checkbox [(ngModel)]="specificVersionOnly" [binary]="true" label="Version {{ dependency.version }} only"></p-checkbox>
+        </div>
+
+        <p-divider type="solid">
+            <b>Contained In</b>
+            </p-divider>
+        
+            <p-tree [value]="repositoryTreeNodes" class="w-full md:w-30rem" selectionMode="single" [(selection)]="selectedTreeNode"></p-tree>
     
         <p-divider type="solid">
-        <b>Projects</b>
+        <b>Details</b>
         </p-divider>
     
         <p class="m-0">
@@ -12,13 +20,5 @@
         officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio cumque nihil impedit quo minus.
         </p>
     
-        <p-divider type="solid">
-        <b>Repositories</b>
-        </p-divider>
-    
-        <p class="m-0">
-        Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis
-        voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat. Donec vel volutpat ipsum. Integer nunc magna, posuere ut tincidunt eget, egestas vitae sapien. Morbi dapibus luctus odio.
-        </p>
     </p-panel>
 </div>

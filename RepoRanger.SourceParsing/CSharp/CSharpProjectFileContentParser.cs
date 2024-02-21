@@ -132,7 +132,9 @@ internal sealed partial class CSharpProjectFileContentParser : IFileContentParse
             versions.Add(value.Trim());
         }
 
-        return string.Join(", ", versions);
+        var version = string.Join(", ", versions);
+        
+        return $"Dotnet {version}";
     }
 
     private static string? GetElementValue(XContainer document, string elementName)
