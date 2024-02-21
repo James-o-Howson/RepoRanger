@@ -15,6 +15,5 @@ export interface ProjectDetailVm {
     id?: string;
     name?: string | null;
     version?: string | null;
-    totalDependencies?: number;
 }
 

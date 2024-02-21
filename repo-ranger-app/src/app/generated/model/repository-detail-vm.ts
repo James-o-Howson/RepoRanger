@@ -16,6 +16,5 @@ export interface RepositoryDetailVm {
     id?: string;
     name?: string | null;
     projects?: Array<ProjectDetailVm> | null;
-    totalProjects?: number;
 }
 
