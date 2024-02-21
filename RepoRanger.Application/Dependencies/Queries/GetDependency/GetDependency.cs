@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Common.Exceptions;
 using RepoRanger.Application.Common.Interfaces.Persistence;
+using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Dependencies.Queries.GetDependency;
 
@@ -42,13 +43,7 @@ internal sealed class GetDependencyQueryHandler : IRequestHandler<GetDependencyQ
                     Id = p.RepositoryId,
                     Name = p.Repository.Name,
                     TotalProjects = p.Repository.Projects.Count,
-                    Projects = d.Projects.Select(p => new ProjectDetailVm
-                    {
-                        Id = p.Id,
-                        Name = p.Name,
-                        Version = p.Version,
-                        TotalDependencies = p.Dependencies.Count
-                    })
+                    Projects = GetProjectsForRepository(p.RepositoryId, d.Projects)
                 })
             })
             .FirstOrDefaultAsync(d => d.Id == request.Id, cancellationToken);
@@ -57,6 +52,15 @@ internal sealed class GetDependencyQueryHandler : IRequestHandler<GetDependencyQ
         
         return dependency;
     }
+
+    private static IEnumerable<ProjectDetailVm> GetProjectsForRepository(Guid repositoryId, IEnumerable<Project> projects) => 
+        projects.Where(p => p.RepositoryId == repositoryId).Select(p => new ProjectDetailVm
+        {
+            Id = p.Id,
+            Name = p.Name,
+            Version = p.Version,
+            TotalDependencies = p.Dependencies.Count
+        });
 }
 
 public class ProjectDetailVm
