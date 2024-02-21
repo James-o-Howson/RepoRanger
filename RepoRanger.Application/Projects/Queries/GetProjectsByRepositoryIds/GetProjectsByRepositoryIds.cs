@@ -9,7 +9,6 @@ namespace RepoRanger.Application.Projects.Queries.GetProjectsByRepositoryIds;
 public sealed record GetProjectsByRepositoryIdsQuery : IRequest<ProjectsVm>
 {
     public List<Guid> RepositoryIds { get; init; }
-    public bool DefaultBranchOnly { get; init; } = true;
 }
 
 internal sealed class GetProjectsByRepositoryIdsQueryHandler : IRequestHandler<GetProjectsByRepositoryIdsQuery, ProjectsVm>
@@ -26,10 +25,7 @@ internal sealed class GetProjectsByRepositoryIdsQueryHandler : IRequestHandler<G
         var repositories = await _context.Repositories
             .AsNoTracking()
             .Include(r => r.DefaultBranch)
-                .ThenInclude(b => b.Projects)
-                .ThenInclude(p => p.Dependencies)
-            .Include(r => r.Branches)
-                .ThenInclude(b => b.Projects)
+            .Include(b => b.Projects)
                 .ThenInclude(p => p.Dependencies)
             .Where(r => request.RepositoryIds.Contains(r.Id))
             .ToListAsync(cancellationToken);
@@ -37,9 +33,7 @@ internal sealed class GetProjectsByRepositoryIdsQueryHandler : IRequestHandler<G
         var projectVms = new List<ProjectVm>();
         foreach (var repository in repositories)
         {
-            projectVms.AddRange(request.DefaultBranchOnly
-                ? repository.DefaultBranch.Projects.Select(p => ToProjectVm(p, repository))
-                : repository.Branches.SelectMany(b => b.Projects).Select(p => ToProjectVm(p, repository)));
+            projectVms.AddRange(repository.Projects.Select(p => ToProjectVm(p, repository)));
         }
 
         return new ProjectsVm

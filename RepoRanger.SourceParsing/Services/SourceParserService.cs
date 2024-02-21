@@ -76,7 +76,7 @@ internal sealed class SourceParserService : ISourceParser
             .AsParallel()
             .WithDegreeOfParallelism(Environment.ProcessorCount);
         
-        var parseFileTasks = filePaths.Select(filePath => ParseFileAsync(filePath, repository.DefaultBranch));
+        var parseFileTasks = filePaths.Select(filePath => ParseFileAsync(filePath, repository));
         await Task.WhenAll(parseFileTasks);
         
         _logger.LogInformation("Finished Parsing Repository {RepositoryName}", repository.Name);
@@ -84,7 +84,7 @@ internal sealed class SourceParserService : ISourceParser
         return repository;
     }
     
-    private async Task ParseFileAsync(string filePath, Branch branch)
+    private async Task ParseFileAsync(string filePath, Repository repository)
     {
         _logger.LogDebug("Checking file {filePath}", filePath);
 
@@ -97,7 +97,7 @@ internal sealed class SourceParserService : ISourceParser
             var content = await File.ReadAllTextAsync(filePath);
             var fileInfo = new FileInfo(filePath);
             
-            await fileContentParser.ParseAsync(content, fileInfo, branch);
+            await fileContentParser.ParseAsync(content, fileInfo, repository);
         }
     }
     
@@ -109,8 +109,8 @@ internal sealed class SourceParserService : ISourceParser
         var branch = new Branch(branchName, true);
 
         var repositoryName = new DirectoryInfo(repo.Info.WorkingDirectory).Name;
-        var repository = new Repository(repositoryName, repo.Network.Remotes["origin"].Url);
-        repository.AddBranch(branch);
+        var repository = new Repository(repositoryName, repo.Network.Remotes["origin"].Url, branch);
+        repository.SetDefaultBranch(branch);
         
         return repository;
     }

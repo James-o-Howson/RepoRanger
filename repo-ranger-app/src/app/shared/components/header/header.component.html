@@ -1,4 +1,4 @@
-<p-toolbar [style]="{ 'background-color': 'var(--primary-color)' }">
+<p-toolbar [style]="{ 'border-radius': '2rem', 'background-image': 'linear-gradient(to right, var(--primary-500), var(--primary-800))' }">
   <div class="p-toolbar-group-start">
     <span class="logo">
       <img src="./assets/logo.svg" alt="Department of Justice Logo"/>
@@ -8,6 +8,8 @@
     <span class="title">{{ title }}</span>
   </div>
   <div class="p-toolbar-group-end">
-    <p-button icon="pi pi-cog" (click)="onOpenSettings()" />
+    <button (click)="onOpenSettings()" class="p-link inline-flex justify-content-center align-items-center text-white h-3rem w-3rem border-circle hover:bg-white-alpha-10 transition-all transition-duration-200">
+      <i class="pi pi-cog text-2xl"></i>
+    </button>
   </div>
 </p-toolbar>

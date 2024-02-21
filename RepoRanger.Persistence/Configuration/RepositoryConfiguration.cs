@@ -8,15 +8,15 @@ internal sealed class RepositoryConfiguration : GuidBaseCreatedAuditableEntityCo
 {
     public override void Configure(EntityTypeBuilder<Repository> builder)
     {
-        builder.HasMany(r => r.Branches)
-            .WithOne()
+        builder.HasMany(r => r.Projects)
+            .WithOne(p => p.Repository)
             .HasForeignKey(b => b.RepositoryId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne(r => r.DefaultBranch)
-            .WithOne()
-            .HasForeignKey<Branch>("DefaultRepositoryId")
+            .WithOne(b => b.Repository)
+            .HasForeignKey<Branch>(b => b.RepositoryId)
             .IsRequired(false);
         
         base.Configure(builder);

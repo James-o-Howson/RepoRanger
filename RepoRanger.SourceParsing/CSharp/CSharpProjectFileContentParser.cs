@@ -24,7 +24,7 @@ internal sealed partial class CSharpProjectFileContentParser : IFileContentParse
         return filePath.EndsWith(".csproj");
     }
 
-    public async Task ParseAsync(string content, FileInfo fileInfo, Branch branch)
+    public async Task ParseAsync(string content, FileInfo fileInfo, Repository repository)
     {
         _logger.LogInformation("Parsing CSharp Project {CsprojFilePath}", fileInfo.FullName);
         
@@ -33,7 +33,7 @@ internal sealed partial class CSharpProjectFileContentParser : IFileContentParse
         var dependencies = GetDependencyContexts(content);
         project.AddDependencies(dependencies);
         
-        branch.AddProject(project);
+        repository.AddProject(project);
         
         _logger.LogInformation("Finished Parsing CSharp Project {CsprojFilePath}. Dependencies found = {DependencyCount}", fileInfo.FullName, project.Dependencies.Count);
     }

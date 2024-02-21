@@ -4,11 +4,11 @@ namespace RepoRanger.Domain.Entities;
 
 public class Repository : BaseCreatedAuditableEntity<Guid>
 {
-    private readonly List<Branch> _branches = [];
+    private readonly List<Project> _projects = [];
     
     private Repository() { }
 
-    public Repository(string name, string remoteUrl)
+    public Repository(string name, string remoteUrl, Branch defaultBranch)
     {
         ArgumentException.ThrowIfNullOrEmpty(name);
         ArgumentException.ThrowIfNullOrEmpty(remoteUrl);
@@ -16,59 +16,51 @@ public class Repository : BaseCreatedAuditableEntity<Guid>
         Id = Guid.NewGuid();
         Name = name;
         RemoteUrl = remoteUrl;
+        SetDefaultBranch(defaultBranch);
     }
 
     public string Name { get; private set; }
     public string RemoteUrl { get; private set; }
     public Guid SourceId { get; private set; }
     public Source Source { get; set; }
-    public IReadOnlyCollection<Branch> Branches => _branches;
     public Guid DefaultBranchId { get; private set; }
     public Branch DefaultBranch { get; private set; }
+    
+    public IReadOnlyCollection<Project> Projects => _projects;
 
-    public IEnumerable<Dependency> Dependencies => Branches
-        .SelectMany(b => b.Projects)
+    public IEnumerable<Dependency> Dependencies => Projects
         .SelectMany(p => p.Dependencies)
         .ToList();
     
-    public void AddBranch(Branch branch)
-    {
-        ArgumentNullException.ThrowIfNull(branch);
-        AddBranches(new List<Branch> { branch });
-    }
-    
-    public void AddBranches(IList<Branch> branches)
-    {
-        ArgumentNullException.ThrowIfNull(branches);
-        
-        var defaults = branches.Where(b => b.IsDefault).ToList();
-        if (defaults.Count > 1) throw new ArgumentException("Cannot set more than 1 default branch per repository", nameof(branches));
-
-        _branches.AddRange(branches);
-        if (defaults.Count == 1) TrySetDefaultBranch(defaults.Single());
-    }
-    
-    private void TrySetDefaultBranch(Branch branch)
+    public void SetDefaultBranch(Branch branch)
     {
         ArgumentNullException.ThrowIfNull(branch);
         ArgumentNullException.ThrowIfNull(branch.Id);
         
-        if (Branches.All(b => b.Id != branch.Id))
-        {
-            _branches.Add(branch);
-        }
-
         DefaultBranchId = branch.Id;
         DefaultBranch = branch;
+    }
+    
+    public void AddProject(Project project)
+    {
+        ArgumentNullException.ThrowIfNull(project);
+        _projects.Add(project);
+    }
+    
+    public void AddProjects(IEnumerable<Project> projects)
+    {
+        ArgumentNullException.ThrowIfNull(projects);
+        
+        _projects.AddRange(projects);
     }
 
     internal void Delete()
     {
-        foreach (var branch in Branches)
+        foreach (var branch in Projects)
         {
             branch.Delete();
         }
 
-        _branches.Clear();
+        _projects.Clear();
     }
 }

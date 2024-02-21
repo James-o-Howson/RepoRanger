@@ -1,4 +1,6 @@
-﻿using RepoRanger.Application.Branches;
+﻿
+using RepoRanger.Application.Branches;
+using RepoRanger.Application.Projects.Common;
 using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Repositories.Common;
@@ -15,8 +17,8 @@ internal static class RepositoryMappers
     {
         ArgumentNullException.ThrowIfNull(dto);
         
-        var repository = new Repository(dto.Name, dto.RemoteUrl);
-        repository.AddBranches(dto.Branches.ToEntities().ToList());
+        var repository = new Repository(dto.Name, dto.RemoteUrl, dto.Branch.ToEntity());
+        repository.AddProjects(dto.Projects.ToEntities().ToList());
 
         return repository;
     }
@@ -30,6 +32,6 @@ internal static class RepositoryMappers
     private static RepositoryDto ToDto(this Repository repository)
     {
         ArgumentNullException.ThrowIfNull(repository);
-        return new RepositoryDto(repository.Name, repository.RemoteUrl, repository.Branches.ToDtos());
+        return new RepositoryDto(repository.Name, repository.RemoteUrl, repository.DefaultBranch.ToDto(), repository.Projects.ToDtos());
     }
 }

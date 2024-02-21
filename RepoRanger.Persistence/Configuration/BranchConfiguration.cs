@@ -7,9 +7,6 @@ internal sealed class BranchConfiguration : GuidBaseCreatedAuditableEntityConfig
 {
     public override void Configure(EntityTypeBuilder<Branch> builder)
     {
-        builder.HasMany(b => b.Projects)
-            .WithMany(p => p.Branches);
-        
         base.Configure(builder);
     }
 }

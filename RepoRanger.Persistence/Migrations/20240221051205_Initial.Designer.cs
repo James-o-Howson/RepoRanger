@@ -11,7 +11,7 @@ using RepoRanger.Persistence;
 namespace RepoRanger.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240216034931_Initial")]
+    [Migration("20240221051205_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -19,21 +19,6 @@ namespace RepoRanger.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
-
-            modelBuilder.Entity("BranchProject", b =>
-                {
-                    b.Property<Guid>("BranchesId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("ProjectsId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("BranchesId", "ProjectsId");
-
-                    b.HasIndex("ProjectsId");
-
-                    b.ToTable("BranchProject");
-                });
 
             modelBuilder.Entity("DependencyProject", b =>
                 {
@@ -50,7 +35,7 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("DependencyProject");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Source.Branch", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Branch", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -65,9 +50,6 @@ namespace RepoRanger.Persistence.Migrations
                         .IsUnicode(true)
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid?>("DefaultRepositoryId")
-                        .HasColumnType("TEXT");
-
                     b.Property<bool>("IsDefault")
                         .HasColumnType("INTEGER");
 
@@ -80,15 +62,13 @@ namespace RepoRanger.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("DefaultRepositoryId")
+                    b.HasIndex("RepositoryId")
                         .IsUnique();
-
-                    b.HasIndex("RepositoryId");
 
                     b.ToTable("Branches");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Source.Dependency", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Dependency", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -126,7 +106,7 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("Dependencies");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Source.Project", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Project", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -145,16 +125,21 @@ namespace RepoRanger.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("RepositoryId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Version")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("RepositoryId");
+
                     b.ToTable("Projects");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Source.Repository", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Repository", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -190,7 +175,7 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("Repositories");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Source.Source", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Source", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -217,63 +202,55 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("Sources");
                 });
 
-            modelBuilder.Entity("BranchProject", b =>
-                {
-                    b.HasOne("RepoRanger.Domain.Source.Branch", null)
-                        .WithMany()
-                        .HasForeignKey("BranchesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RepoRanger.Domain.Source.Project", null)
-                        .WithMany()
-                        .HasForeignKey("ProjectsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DependencyProject", b =>
                 {
-                    b.HasOne("RepoRanger.Domain.Source.Dependency", null)
+                    b.HasOne("RepoRanger.Domain.Entities.Dependency", null)
                         .WithMany()
                         .HasForeignKey("DependenciesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("RepoRanger.Domain.Source.Project", null)
+                    b.HasOne("RepoRanger.Domain.Entities.Project", null)
                         .WithMany()
                         .HasForeignKey("ProjectsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Source.Branch", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Branch", b =>
                 {
-                    b.HasOne("RepoRanger.Domain.Source.Repository", null)
+                    b.HasOne("RepoRanger.Domain.Entities.Repository", "Repository")
                         .WithOne("DefaultBranch")
-                        .HasForeignKey("RepoRanger.Domain.Source.Branch", "DefaultRepositoryId");
+                        .HasForeignKey("RepoRanger.Domain.Entities.Branch", "RepositoryId");
 
-                    b.HasOne("RepoRanger.Domain.Source.Repository", null)
-                        .WithMany("Branches")
-                        .HasForeignKey("RepositoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Repository");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Source.Dependency", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Dependency", b =>
                 {
-                    b.HasOne("RepoRanger.Domain.Source.Repository", null)
+                    b.HasOne("RepoRanger.Domain.Entities.Repository", null)
                         .WithMany("Dependencies")
                         .HasForeignKey("RepositoryId");
 
-                    b.HasOne("RepoRanger.Domain.Source.Source", null)
+                    b.HasOne("RepoRanger.Domain.Entities.Source", null)
                         .WithMany("Dependencies")
                         .HasForeignKey("SourceId");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Source.Repository", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Project", b =>
                 {
-                    b.HasOne("RepoRanger.Domain.Source.Source", "Source")
+                    b.HasOne("RepoRanger.Domain.Entities.Repository", "Repository")
+                        .WithMany("Projects")
+                        .HasForeignKey("RepositoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Repository");
+                });
+
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Repository", b =>
+                {
+                    b.HasOne("RepoRanger.Domain.Entities.Source", "Source")
                         .WithMany("Repositories")
                         .HasForeignKey("SourceId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -282,17 +259,17 @@ namespace RepoRanger.Persistence.Migrations
                     b.Navigation("Source");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Source.Repository", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Repository", b =>
                 {
-                    b.Navigation("Branches");
-
                     b.Navigation("DefaultBranch")
                         .IsRequired();
 
                     b.Navigation("Dependencies");
+
+                    b.Navigation("Projects");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Source.Source", b =>
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Source", b =>
                 {
                     b.Navigation("Dependencies");
 

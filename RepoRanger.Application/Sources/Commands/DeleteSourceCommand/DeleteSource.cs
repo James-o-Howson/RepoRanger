@@ -29,14 +29,12 @@ internal sealed class DeleteSourceCommandHandler : IRequestHandler<DeleteSourceC
     {
         await DeleteSourceAsync(request, cancellationToken);
         await DeleteOrphanedDependenciesAsync(cancellationToken);
-        await DeleteOrphanedProjectsAsync(cancellationToken);
     }
 
     private async Task DeleteSourceAsync(DeleteSourceCommand request, CancellationToken cancellationToken)
     {
         var source = await _context.Sources
             .Include(s => s.Repositories)
-            .ThenInclude(r => r.Branches)
             .ThenInclude(b => b.Projects)
             .ThenInclude(p => p.Dependencies)
             .SingleOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
@@ -47,18 +45,6 @@ internal sealed class DeleteSourceCommandHandler : IRequestHandler<DeleteSourceC
         _context.Sources.Remove(source);
         await _context.SaveChangesAsync(cancellationToken);
     }
-
-    private async Task DeleteOrphanedProjectsAsync(CancellationToken cancellationToken)
-    {
-        var orphanedProjects = _sqlFileExecutorService
-            .ExecuteEmbeddedResource<Project>(_resourceNameService.GetOrphanedProjectsResourceName)
-            .ToList();
-        
-        _context.Projects.RemoveRange(orphanedProjects);
-    
-        await _context.SaveChangesAsync(cancellationToken);
-    }
-    
     private async Task DeleteOrphanedDependenciesAsync(CancellationToken cancellationToken)
     {
         var orphanedDependencies = _sqlFileExecutorService

@@ -5,7 +5,7 @@ import { DividerModule } from 'primeng/divider';
 import { DependencyVm } from '../../../generated';
 import { SelectedDependencyService } from '../dependency-table/selected-dependency.service';
 import { Observable } from 'rxjs';
-import { CommonModule, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dependency-details-view',

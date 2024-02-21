@@ -1,21 +1,17 @@
 import { PanelModule } from 'primeng/panel';
-import { DependencyVm } from './../../generated/model/dependency-vm';
 import { Component, OnInit } from '@angular/core';
 import { ProjectVm, ProjectsService, ProjectsVm, RepositoriesService, RepositoriesVm, RepositoryVm, SourceVm } from '../../generated';
 import {
-  AbstractControl,
-  FormBuilder,
-  FormControl,
   FormsModule,
-  ReactiveFormsModule,
 } from '@angular/forms';
 import { DependencyTableComponent } from './dependency-table/dependency-table.component';
-import { SplitterModule } from 'primeng/splitter';
 import { CardModule } from 'primeng/card';
+import { ChipModule } from 'primeng/chip';
 import { MultiSelectChangeEvent, MultiSelectModule } from 'primeng/multiselect';
 import { InputTextModule } from 'primeng/inputtext';
 import { AccordionModule } from 'primeng/accordion';
 import { DependencyDetailsViewComponent } from './dependency-details-view/dependency-details-view.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dependency-explorer',
@@ -30,7 +26,9 @@ import { DependencyDetailsViewComponent } from './dependency-details-view/depend
     InputTextModule,
     FormsModule,
     AccordionModule,
-    DependencyDetailsViewComponent
+    DependencyDetailsViewComponent,
+    ChipModule,
+    CommonModule
   ],
 })
 export class DependencyExplorerComponent implements OnInit {
@@ -99,6 +97,28 @@ export class DependencyExplorerComponent implements OnInit {
     this.selectedProjects = $event.value;
   }
 
+  hasSelectedRepositories(): boolean { 
+    return this.selectedRepositories.length > 0;
+  }
+
+  hasSelectedProjects(): boolean { 
+    return this.selectedProjects.length > 0;
+  }
+
+  repositoriesChipOverflowCount(): number {
+    let count: number = this.selectedRepositories.length;
+    return count > 3 ? count - 3 : 0;
+  }
+
+  projectsChipOverflowCount(): number {
+    let count: number = this.selectedProjects.length;
+    return count > 3 ? count - 3 : 0;
+  }
+
+  chipOverflowCountText(count: number): string {
+    return count == 1 ? '1 other...' : `${count} others...`;
+  }
+
   private ToggleFilterIcon() {
     if (this.hasSelectedRepositories() || this.hasSelectedProjects()) {
       this.filterIcon = 'pi-filter-fill';
@@ -106,13 +126,5 @@ export class DependencyExplorerComponent implements OnInit {
     else {
       this.filterIcon = 'pi-filter';
     }
-  }
-
-  private hasSelectedRepositories(): boolean {
-    return this.selectedRepositories.length > 0;
-  }
-
-  private hasSelectedProjects(): boolean {
-    return this.selectedProjects.length > 0;
   }
 }

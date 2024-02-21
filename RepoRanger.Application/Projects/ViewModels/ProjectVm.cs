@@ -7,5 +7,5 @@ public sealed class ProjectVm
     public string Version { get; init; }
     public int DependencyCount { get; init; }
     public Guid RepositoryId { get; init; }
-    public string RepositoryName { get; init; }
+    public string RepositoryName { get; set; }
 }

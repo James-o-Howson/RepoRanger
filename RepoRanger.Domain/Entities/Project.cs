@@ -4,7 +4,6 @@ namespace RepoRanger.Domain.Entities;
 
 public class Project : BaseCreatedAuditableEntity<Guid>
 {
-    private readonly List<Branch> _branches = [];
     private readonly List<Dependency> _dependencies = [];
     
     private Project() { }
@@ -21,8 +20,10 @@ public class Project : BaseCreatedAuditableEntity<Guid>
 
     public string Name { get; private set; }
     public string Version { get; private set; }
-    public IReadOnlyCollection<Branch> Branches => _branches;
     public IReadOnlyCollection<Dependency> Dependencies => _dependencies;
+
+    public Guid RepositoryId { get; private set; }
+    public Repository Repository { get; private set; }
 
     public void AddDependencies(IEnumerable<Dependency> dependencies)
     {
@@ -38,6 +39,5 @@ public class Project : BaseCreatedAuditableEntity<Guid>
         }
         
         _dependencies.Clear();
-        _branches.Clear();
     }
 }

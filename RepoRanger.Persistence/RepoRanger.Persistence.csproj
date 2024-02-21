@@ -21,9 +21,6 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </EmbeddedResource>
       <None Remove="Sql\GetOrphanedProjects.sql" />
-      <EmbeddedResource Include="Sql\GetOrphanedProjects.sql">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </EmbeddedResource>
       <None Remove="Sql\V_SourceDetails.sql" />
     </ItemGroup>
 

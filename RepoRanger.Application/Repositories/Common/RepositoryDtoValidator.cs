@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using RepoRanger.Application.Branches;
+using RepoRanger.Application.Projects.Common;
 
 namespace RepoRanger.Application.Repositories.Common;
 
@@ -13,10 +14,13 @@ internal sealed class RepositoryDtoValidator : AbstractValidator<RepositoryDto>
         RuleFor(r => r.RemoteUrl)
             .NotEmpty();
         
-        RuleFor(r => r.Branches)
+        RuleFor(r => r.Branch)
+            .SetValidator(new BranchDtoValidator());
+        
+        RuleFor(b => b.Projects)
             .Must(r => r.Any());
 
-        RuleForEach(r => r.Branches)
-            .SetValidator(new BranchDtoValidator());
+        RuleForEach(b => b.Projects)
+            .SetValidator(new ProjectDtoValidator());
     }
 }

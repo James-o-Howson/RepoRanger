@@ -66,8 +66,7 @@ internal sealed class SearchDependenciesWithPaginationQueryHandler : IRequestHan
     
     private IQueryable<Dependency> QueryRepositoryDependencies(IReadOnlyCollection<Guid> repositoryIds) =>
         _context.Repositories
-            .Include(r => r.Branches)
-            .ThenInclude(b => b.Projects)
+            .Include(b => b.Projects)
             .ThenInclude(p => p.Dependencies)
             .Where(r => repositoryIds.Contains(r.Id))
             .SelectMany(r => r.Dependencies);
@@ -75,7 +74,6 @@ internal sealed class SearchDependenciesWithPaginationQueryHandler : IRequestHan
     private IQueryable<Dependency> QuerySourceDependencies(IReadOnlyCollection<Guid> sourceIds) =>
         _context.Sources
             .Include(r => r.Repositories)
-            .ThenInclude(r => r.Branches)
             .ThenInclude(b => b.Projects)
             .ThenInclude(p => p.Dependencies)
             .Where(r => sourceIds.Contains(r.Id))

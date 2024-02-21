@@ -12,21 +12,6 @@ namespace RepoRanger.Persistence.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Projects",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    Version = table.Column<string>(type: "TEXT", nullable: false),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Projects", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Sources",
                 columns: table => new
                 {
@@ -71,7 +56,6 @@ namespace RepoRanger.Persistence.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     IsDefault = table.Column<bool>(type: "INTEGER", nullable: false),
                     RepositoryId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    DefaultRepositoryId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
                 },
@@ -79,16 +63,10 @@ namespace RepoRanger.Persistence.Migrations
                 {
                     table.PrimaryKey("PK_Branches", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Branches_Repositories_DefaultRepositoryId",
-                        column: x => x.DefaultRepositoryId,
-                        principalTable: "Repositories",
-                        principalColumn: "Id");
-                    table.ForeignKey(
                         name: "FK_Branches_Repositories_RepositoryId",
                         column: x => x.RepositoryId,
                         principalTable: "Repositories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -119,25 +97,23 @@ namespace RepoRanger.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "BranchProject",
+                name: "Projects",
                 columns: table => new
                 {
-                    BranchesId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    ProjectsId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Version = table.Column<string>(type: "TEXT", nullable: false),
+                    RepositoryId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_BranchProject", x => new { x.BranchesId, x.ProjectsId });
+                    table.PrimaryKey("PK_Projects", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BranchProject_Branches_BranchesId",
-                        column: x => x.BranchesId,
-                        principalTable: "Branches",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_BranchProject_Projects_ProjectsId",
-                        column: x => x.ProjectsId,
-                        principalTable: "Projects",
+                        name: "FK_Projects_Repositories_RepositoryId",
+                        column: x => x.RepositoryId,
+                        principalTable: "Repositories",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -167,20 +143,10 @@ namespace RepoRanger.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_BranchProject_ProjectsId",
-                table: "BranchProject",
-                column: "ProjectsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Branches_DefaultRepositoryId",
-                table: "Branches",
-                column: "DefaultRepositoryId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Branches_RepositoryId",
                 table: "Branches",
-                column: "RepositoryId");
+                column: "RepositoryId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Dependencies_RepositoryId",
@@ -198,6 +164,11 @@ namespace RepoRanger.Persistence.Migrations
                 column: "ProjectsId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Projects_RepositoryId",
+                table: "Projects",
+                column: "RepositoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Repositories_SourceId",
                 table: "Repositories",
                 column: "SourceId");
@@ -213,13 +184,10 @@ namespace RepoRanger.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "BranchProject");
+                name: "Branches");
 
             migrationBuilder.DropTable(
                 name: "DependencyProject");
-
-            migrationBuilder.DropTable(
-                name: "Branches");
 
             migrationBuilder.DropTable(
                 name: "Dependencies");

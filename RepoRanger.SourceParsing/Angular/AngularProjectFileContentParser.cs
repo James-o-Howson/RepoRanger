@@ -29,7 +29,7 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
         return workspaceIsSibling;
     }
 
-    public async Task ParseAsync(string content, FileInfo fileInfo, Branch branch)
+    public async Task ParseAsync(string content, FileInfo fileInfo, Repository repository)
     {
         _logger.LogInformation("Parsing package.json {PackageJsonPath}", fileInfo.FullName);
         
@@ -41,7 +41,7 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
 
         var project = new Project(package.Name, FindAngularVersion(package));
         project.AddDependencies(GetDependencies(package));
-        branch.AddProject(project);
+        repository.AddProject(project);
         
         _logger.LogInformation("Finished Parsing package.json {PackageJsonPath}. Dependencies found = {DependencyCount}", fileInfo.FullName, project.Dependencies.Count);
     }

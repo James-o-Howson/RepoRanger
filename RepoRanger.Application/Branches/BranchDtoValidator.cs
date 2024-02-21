@@ -9,11 +9,5 @@ internal sealed class BranchDtoValidator : AbstractValidator<BranchDto>
     {
         RuleFor(b => b.Name)
             .NotEmpty();
-        
-        RuleFor(b => b.Projects)
-            .Must(r => r.Any());
-
-        RuleForEach(b => b.Projects)
-            .SetValidator(new ProjectDtoValidator());
     }
 }
