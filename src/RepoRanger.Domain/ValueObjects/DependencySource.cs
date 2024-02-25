@@ -5,10 +5,6 @@ namespace RepoRanger.Domain.ValueObjects;
 
 public sealed class DependencySource : ValueObject
 {
-    static DependencySource()
-    {
-    }
-
     private DependencySource()
     {
     }
@@ -29,8 +25,8 @@ public sealed class DependencySource : ValueObject
 
         return source;
     }
-    
-    public string Value { get; init; }
+
+    public string Value { get; init; } = null!;
     
     public static DependencySource Nuget => new("Nuget");
     public static DependencySource Npm => new("npm");
@@ -51,7 +47,7 @@ public sealed class DependencySource : ValueObject
         return Value;
     }
     
-    protected static IEnumerable<DependencySource> SupportedSources
+    private static IEnumerable<DependencySource> SupportedSources
     {
         get
         {

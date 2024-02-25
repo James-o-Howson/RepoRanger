@@ -2,4 +2,4 @@
 
 namespace RepoRanger.Application.Sources.Common;
 
-public record SourceDto(string Name, IEnumerable<RepositoryDto> Repositories);
+public record SourceDto(string Name, string Location, IEnumerable<RepositoryDto> Repositories);

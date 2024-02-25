@@ -64,7 +64,7 @@ internal sealed class RepoRangerJob : IJob
 
     private async Task CreateAsync(SourceDto sourceDto)
     {
-        var result = await _mediator.Send(new CreateSourceCommand(sourceDto.Name, sourceDto.Repositories));
+        var result = await _mediator.Send(new CreateSourceCommand(sourceDto.Name, sourceDto.Location, sourceDto.Repositories));
         _logger.LogInformation("Repo Ranger Job Finished - Source created Id: {SourceId}", result);
     }
 

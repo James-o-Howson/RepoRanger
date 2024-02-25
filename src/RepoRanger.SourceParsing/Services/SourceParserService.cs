@@ -34,13 +34,13 @@ internal sealed class SourceParserService : ISourceParser
     {
         _logger.LogInformation("Parsing Source {SourceName}", sourceOptions.Name);
         
-        var repositoryPaths = FindRepositories(sourceOptions.WorkingDirectory);
+        var repositoryPaths = FindRepositories(sourceOptions.Location);
 
         var repositories = await Task.WhenAll(repositoryPaths
             .Where(p => !sourceOptions.IsExcluded(p))
             .Select(ParseRepositoryAsync));
 
-        var source = new Source(sourceOptions.Name);
+        var source = new Source(sourceOptions.Name, sourceOptions.Location);
         source.AddRepositories(repositories);
         
         _logger.LogInformation("Finished Parsing Source {SourceName}", sourceOptions.Name);

@@ -195,6 +195,10 @@ namespace RepoRanger.Persistence.Migrations
                         .IsUnicode(true)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Location")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -220,7 +224,7 @@ namespace RepoRanger.Persistence.Migrations
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.DependencyInstance", b =>
                 {
-                    b.HasOne("RepoRanger.Domain.Entities.Dependency", "Dependency")
+                    b.HasOne("RepoRanger.Domain.Entities.Dependency", null)
                         .WithMany("DependencyInstances")
                         .HasForeignKey("DependencyName")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -237,7 +241,7 @@ namespace RepoRanger.Persistence.Migrations
                         .HasForeignKey("RepositoryId");
 
                     b.HasOne("RepoRanger.Domain.Entities.Source", null)
-                        .WithMany("Dependencies")
+                        .WithMany("DependencyInstances")
                         .HasForeignKey("SourceId");
 
                     b.OwnsOne("RepoRanger.Domain.ValueObjects.DependencySource", "Source", b1 =>
@@ -256,8 +260,6 @@ namespace RepoRanger.Persistence.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("DependencyInstanceId");
                         });
-
-                    b.Navigation("Dependency");
 
                     b.Navigation("Project");
 
@@ -329,7 +331,7 @@ namespace RepoRanger.Persistence.Migrations
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.Source", b =>
                 {
-                    b.Navigation("Dependencies");
+                    b.Navigation("DependencyInstances");
 
                     b.Navigation("Repositories");
                 });

@@ -7,8 +7,8 @@ using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 
-public sealed record CreateSourceCommand(string Name, IEnumerable<RepositoryDto> Repositories) 
-    : SourceDto(Name, Repositories), IRequest<Guid>;
+public sealed record CreateSourceCommand(string Name, string Location, IEnumerable<RepositoryDto> Repositories) 
+    : SourceDto(Name, Location, Repositories), IRequest<Guid>;
 
 internal sealed class CreateSourceCommandHandler : IRequestHandler<CreateSourceCommand, Guid>
 {

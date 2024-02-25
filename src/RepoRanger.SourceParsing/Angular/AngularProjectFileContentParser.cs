@@ -67,6 +67,13 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
         return version ?? string.Empty;
     }
 
-    private DependencyInstance CreateDependencyInstance(string dependencyName, string? version) =>
-        new(DependencySource.Npm, dependencyName, version ?? string.Empty);
+    private DependencyInstance CreateDependencyInstance(string dependencyName, string? version)
+    {
+        if (dependencyName.Length > 0 && dependencyName[0] == '@')
+        {
+            dependencyName = dependencyName[1..];
+        }
+        
+        return new DependencyInstance(DependencySource.Npm, dependencyName, version ?? string.Empty);
+    }
 }

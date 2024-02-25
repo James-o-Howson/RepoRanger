@@ -5,10 +5,6 @@ namespace RepoRanger.Domain.ValueObjects;
 
 public sealed class ProjectType : ValueObject
 {
-    static ProjectType()
-    {
-    }
-
     private ProjectType()
     {
     }
@@ -30,8 +26,8 @@ public sealed class ProjectType : ValueObject
         return source;
     }
     
-    public string Value { get; init; }
-    
+    public string Value { get; init; } = null!;
+
     public static ProjectType Dotnet => new("Dotnet");
     public static ProjectType Angular => new("Angular");
     
@@ -50,7 +46,7 @@ public sealed class ProjectType : ValueObject
         return Value;
     }
     
-    protected static IEnumerable<ProjectType> SupportedSources
+    private static IEnumerable<ProjectType> SupportedSources
     {
         get
         {

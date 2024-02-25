@@ -29,7 +29,7 @@ internal sealed partial class CSharpProjectFileContentParser : IFileContentParse
     {
         _logger.LogInformation("Parsing CSharp Project {CsprojFilePath}", fileInfo.FullName);
         
-        var project = new Project(ProjectType.Angular, fileInfo.Name, await GetDotNetVersionAsync(content));
+        var project = new Project(ProjectType.Dotnet, fileInfo.Name, await GetDotNetVersionAsync(content));
 
         var dependencies = GetDependencyContexts(content);
         project.AddDependencies(dependencies);

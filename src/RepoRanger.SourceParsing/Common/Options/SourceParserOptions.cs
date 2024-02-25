@@ -8,7 +8,7 @@ internal sealed class SourceParserOptions
 public class SourceOptions
 {
     public string Name { get; set; } = string.Empty;
-    public string WorkingDirectory { get; set; }  = string.Empty;
+    public string Location { get; set; }  = string.Empty;
     public bool Enabled { get; set; }
     public IEnumerable<string> ExcludedRepositories { get; set; } = new List<string>();
 

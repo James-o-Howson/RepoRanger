@@ -8,16 +8,18 @@ public sealed class Source : ICreatedAuditableEntity
     
     private Source() { }
 
-    public Source(string name)
+    public Source(string name, string location)
     {
         ArgumentException.ThrowIfNullOrWhiteSpace(name);
         
         Id = Guid.NewGuid();
         Name = name;
+        Location = location;
     }
     
     public Guid Id { get; private set; }
     public string Name { get; private set; }
+    public string Location { get; private set; }
     public IReadOnlyCollection<Repository> Repositories => _repositories;
     public DateTime Created { get; set; }
     public string? CreatedBy { get; set; }

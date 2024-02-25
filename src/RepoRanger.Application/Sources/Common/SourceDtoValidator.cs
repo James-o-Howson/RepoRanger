@@ -9,6 +9,9 @@ internal sealed class SourceDtoValidator : AbstractValidator<SourceDto>
     {
         RuleFor(s => s.Name)
             .NotEmpty();
+        
+        RuleFor(s => s.Location)
+            .NotEmpty();
 
         RuleFor(s => s.Repositories)
             .Must(r => r.Any());

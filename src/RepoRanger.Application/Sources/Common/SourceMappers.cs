@@ -9,7 +9,7 @@ public static class SourceMappers
     {
         ArgumentNullException.ThrowIfNull(dto);
         
-        var source = new Source(dto.Name);
+        var source = new Source(dto.Name, dto.Location);
         source.AddRepositories(dto.Repositories.ToEntities());
         return source;
     }
@@ -24,6 +24,6 @@ public static class SourceMappers
     {
         ArgumentNullException.ThrowIfNull(source);
 
-        return new SourceDto(source.Name, source.Repositories.ToDtos());
+        return new SourceDto(source.Name, source.Location, source.Repositories.ToDtos());
     }
 }
