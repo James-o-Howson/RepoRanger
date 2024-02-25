@@ -1,0 +1,27 @@
+<div *ngIf="dependency$ | async as dependency">
+    <p-panel header="{{ dependency.name }} ({{ dependency.version }})">
+
+        <div class="flex align-items-start gap-1" >
+            <p-checkbox [(ngModel)]="specificVersionOnly" [binary]="true" 
+                label="Version {{ dependency.version }} only"
+                (ngModelChange)="specificVersionOnlyChanged($event)" />
+        </div>
+
+        <p-divider type="solid">
+            <b>Contained In</b>
+            </p-divider>
+        
+            <p-tree [value]="repositoryTreeNodes" [filter]="true" filterPlaceholder="Filter" class="w-full md:w-30rem" selectionMode="single" [(selection)]="selectedTreeNode"></p-tree>
+    
+        <p-divider type="solid">
+        <b>{{getSelectedTreeNodeDetailsLabel()}}</b>
+        </p-divider>
+    
+        <div *ngIf="selectedTreeNodeIsRepository()">
+            Repository Details
+        </div>
+        <div *ngIf="selectedTreeNodeIsProject()">
+            Project Details
+        </div>
+    </p-panel>
+</div>
