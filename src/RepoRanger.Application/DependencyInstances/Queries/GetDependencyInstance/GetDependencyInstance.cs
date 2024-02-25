@@ -6,12 +6,12 @@ using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.DependencyInstances.Queries.GetDependencyInstance;
 
-public sealed record GetDependencyQuery : IRequest<DependencyInstanceDetailVm>
+public sealed record GetDependencyInstanceQuery : IRequest<DependencyInstanceDetailVm>
 {
     public Guid Id { get; init; }
 }
 
-internal sealed class GetDependencyInstanceQueryHandler : IRequestHandler<GetDependencyQuery, DependencyInstanceDetailVm>
+internal sealed class GetDependencyInstanceQueryHandler : IRequestHandler<GetDependencyInstanceQuery, DependencyInstanceDetailVm>
 {
     private readonly IApplicationDbContext _context;
 
@@ -20,7 +20,7 @@ internal sealed class GetDependencyInstanceQueryHandler : IRequestHandler<GetDep
         _context = context;
     }
 
-    public async Task<DependencyInstanceDetailVm> Handle(GetDependencyQuery request, CancellationToken cancellationToken)
+    public async Task<DependencyInstanceDetailVm> Handle(GetDependencyInstanceQuery request, CancellationToken cancellationToken)
     {
         var dependencyInstance = await _context.DependencyInstances
             .Include(d => d.Project)

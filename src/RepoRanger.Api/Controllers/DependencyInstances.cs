@@ -5,10 +5,10 @@ using RepoRanger.Application.DependencyInstances.Queries.SearchDependencyInstanc
 
 namespace RepoRanger.Api.Controllers;
 
-public sealed class DependenciesController : ApiControllerBase
+public sealed class DependencyInstances : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<DependencyInstanceDetailVm>> Get([FromQuery] GetDependencyQuery query)
+    public async Task<ActionResult<DependencyInstanceDetailVm>> Get([FromQuery] GetDependencyInstanceQuery query)
         => await Mediator.Send(query);
     
     [HttpPost("[action]")]

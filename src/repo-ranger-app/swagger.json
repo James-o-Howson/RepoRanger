@@ -5,10 +5,10 @@
     "version": "1.0"
   },
   "paths": {
-    "/api/Dependencies": {
+    "/api/DependencyInstances": {
       "get": {
         "tags": [
-          "Dependencies"
+          "DependencyInstances"
         ],
         "parameters": [
           {
@@ -45,10 +45,10 @@
         }
       }
     },
-    "/api/Dependencies/Search": {
+    "/api/DependencyInstances/Search": {
       "post": {
         "tags": [
-          "Dependencies"
+          "DependencyInstances"
         ],
         "requestBody": {
           "content": {

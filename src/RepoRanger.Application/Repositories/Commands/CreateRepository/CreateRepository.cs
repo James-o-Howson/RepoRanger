@@ -5,9 +5,9 @@ namespace RepoRanger.Application.Repositories.Commands.CreateRepository;
 
 public sealed record CreateRepositoryCommand : IRequest<Guid>
 {
-    public string Name { get; set; }
-    public string RemoteUrl { get; set; }
-    public string BranchName { get; set; }
+    public string Name { get; set; } = string.Empty;
+    public string RemoteUrl { get; set; } = string.Empty;
+    public string BranchName { get; set; } = string.Empty;
     public bool BranchIsDefault { get; set; } = true;
 }
 
