@@ -50,11 +50,7 @@ internal sealed class RepoRangerJob : IJob
 
     private async Task StartRanging()
     {
-        var sources = await _sourceParserService.ParseAsync();
-
-        foreach (var source in sources)
-        {
-            _logger.LogInformation("Repo Ranger Job Finished - Source created Id: {SourceId}", source.Id);
-        }
+        await _sourceParserService.ParseAsync();
+        _logger.LogInformation("Repo Ranger Job Finished");
     }
 }

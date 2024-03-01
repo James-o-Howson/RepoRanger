@@ -35,15 +35,13 @@ internal sealed class SourceParserService : ISourceParserService
         _context = ParsingContext.Create(sourceFileParsers);
     }
 
-    private IEnumerable<SourceOptions> EnabledSourceOptions => _options.Sources.Where(s => s.Enabled);
+    private IEnumerable<SourceOptions> EnabledSourceOptions => 
+        _options.Sources.Where(s => s.Enabled);
 
-    public async Task<IEnumerable<Source>> ParseAsync()
-    {
-        IEnumerable<Task<Source>> parseTasks = EnabledSourceOptions.Select(ParseSourceAsync);
-        return await Task.WhenAll(parseTasks);
-    }
+    public async Task ParseAsync() => 
+        await Task.WhenAll(EnabledSourceOptions.Select(ParseSourceAsync));
 
-    private async Task<Source> ParseSourceAsync(SourceOptions sourceOptions)
+    private async Task ParseSourceAsync(SourceOptions sourceOptions)
     {
         _logger.LogInformation("Parsing Source {SourceName}", sourceOptions.Name);
 
@@ -56,8 +54,7 @@ internal sealed class SourceParserService : ISourceParserService
 
         _context.StopParsing();
 
-        _logger.LogInformation("Finished Parsing Source {SourceName}", sourceOptions.Name);
-        return source;
+        _logger.LogInformation("Finished Parsing Source {SourceName}:{Id}", sourceOptions.Name, source.Id);
     }
 
     private async Task<Source> CreateOrUpdateSourceAsync(string name, string location)
@@ -65,7 +62,7 @@ internal sealed class SourceParserService : ISourceParserService
         SourcePreviewDto? existing = await _mediator.Send(new GetSourceByNameQuery { Name = name });
 
         int id;
-        if (existing is null)
+        if (existing != null)
         {
             id = await _mediator.Send(new CreateSourceCommand { Name = name, Location = location });
         }
