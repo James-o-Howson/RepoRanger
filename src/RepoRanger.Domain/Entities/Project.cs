@@ -9,14 +9,28 @@ public class Project : ICreatedAuditableEntity
     
     private Project() { }
     
-    public static Project Create(ProjectType type, string name, string version, params Metadata[] metadata) => new()
+    public static Project Create(ProjectType type, string name, string version, IEnumerable<Metadata>? metadata)
     {
-        Name = name,
-        Type = type,
-        Version = version,
-        Metadata = metadata.ToList()
-    };
+        var project = new Project
+        {
+            Name = name,
+            Type = type,
+            Version = version,
+            Metadata = metadata?.ToList() ?? []
+        };
+        
+        return project;
+    }
     
+    public static Project Create(ProjectType type, string name, string version, IEnumerable<Metadata>? metadata, 
+        IEnumerable<DependencyInstance>? dependencyInstances)
+    {
+        var project = Create(type, name, version, metadata);
+        if(dependencyInstances != null) project.AddDependencyInstances(dependencyInstances);
+        
+        return project;
+    }
+
     public int Id { get; set; }
     public List<Metadata> Metadata { get; private set; } = []; 
     public ProjectType Type { get; private set; } = null!;
@@ -28,7 +42,7 @@ public class Project : ICreatedAuditableEntity
     public DateTime Created { get; set; }
     public string? CreatedBy { get; set; }
 
-    public void AddDependencies(IEnumerable<DependencyInstance> dependencies)
+    public void AddDependencyInstances(IEnumerable<DependencyInstance> dependencies)
     {
         ArgumentNullException.ThrowIfNull(dependencies);
         _dependencyInstances.AddRange(dependencies);

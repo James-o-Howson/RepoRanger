@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using RepoRanger.Application.Common.Exceptions;
 using RepoRanger.Application.Common.Interfaces.Persistence;
+using RepoRanger.Application.Repositories.Common;
 
 namespace RepoRanger.Application.Sources.Commands.UpdateSourceCommand;
 
@@ -8,6 +9,7 @@ public sealed record UpdateSourceCommand : IRequest<int>
 {
     public int Id { get; init; }
     public string Location { get; init; } = string.Empty; 
+    public IReadOnlyCollection<RepositoryDto> Repositories { get; init; } = null!;
 }
 
 internal sealed class UpdateSourceCommandHandler : IRequestHandler<UpdateSourceCommand, int>

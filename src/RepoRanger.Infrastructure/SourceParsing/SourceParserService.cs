@@ -38,10 +38,37 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
     private IEnumerable<SourceOptions> EnabledSourceOptions => 
         _options.Sources.Where(s => s.Enabled);
 
-    public async Task ParseAsync() => 
-        await Task.WhenAll(EnabledSourceOptions.Select(ParseSourceAsync));
+    public async Task ParseAsync()
+    {
+        var sources = await Task.WhenAll(EnabledSourceOptions.Select(ParseSourceAsync));
 
-    private async Task ParseSourceAsync(SourceOptions sourceOptions)
+        foreach (var source in sources)
+        {
+            await CreateOrUpdate(source);
+        }
+    }
+
+    private async Task CreateOrUpdate(Source source)
+    {
+        if (!source.HasId)
+        {
+            await _mediator.Send(new CreateSourceCommand
+            {
+                Name = source.Name,
+                Location = source.Location
+            });
+        }
+        else
+        {
+            await _mediator.Send(new UpdateSourceCommand
+            {
+                Id = source.Id,
+                Location = source.Location
+            });
+        }
+    }
+
+    private async Task<Source> ParseSourceAsync(SourceOptions sourceOptions)
     {
         _logger.LogInformation("Parsing Source {SourceName}", sourceOptions.Name);
 
@@ -51,6 +78,8 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
         source.AddRepositories(repositories);
 
         _logger.LogInformation("Finished Parsing Source {SourceName}:{Id}", sourceOptions.Name, source.Id);
+
+        return source;
     }
 
     private async Task<Source> GetSource(string name, string location)

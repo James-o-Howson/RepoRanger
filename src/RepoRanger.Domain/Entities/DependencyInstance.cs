@@ -7,7 +7,7 @@ public class DependencyInstance : ICreatedAuditableEntity
 {
     private DependencyInstance() { }
 
-    public static DependencyInstance CreateInstance(DependencySource source, string dependencyName, string version) => new()
+    public static DependencyInstance Create(DependencySource source, string dependencyName, string version) => new()
     {
         Source = source,
         DependencyName = dependencyName,

@@ -8,13 +8,27 @@ public class Repository : ICreatedAuditableEntity
     
     private Repository() { }
     
-    public static Repository Create(string name, string remoteUrl, string defaultBranch) => new()
+    public static Repository Create(string name, string remoteUrl, string defaultBranch)
     {
-        Name = name,
-        RemoteUrl = remoteUrl,
-        DefaultBranch = defaultBranch
-    };
+        var repository = new Repository
+        {
+            Name = name,
+            RemoteUrl = remoteUrl,
+            DefaultBranch = defaultBranch
+        };
+        
+        return repository;
+    }
     
+    public static Repository Create(string name, string remoteUrl, string defaultBranch, 
+        IEnumerable<Project> projects)
+    {
+        var repository = Create(name, remoteUrl, defaultBranch);
+        repository.AddProjects(projects);
+        
+        return repository;
+    }
+
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string RemoteUrl { get; set; } = string.Empty;
@@ -29,11 +43,9 @@ public class Repository : ICreatedAuditableEntity
         .SelectMany(p => p.DependencyInstances)
         .ToList();
     
-    public void AddProjects(List<Project> projects)
+    public void AddProjects(IEnumerable<Project> projects)
     {
         ArgumentNullException.ThrowIfNull(projects);
-        if (projects.Count == 0) throw new ArgumentException("Cannot be empty.");
-        
         _projects.AddRange(projects);
     }
     

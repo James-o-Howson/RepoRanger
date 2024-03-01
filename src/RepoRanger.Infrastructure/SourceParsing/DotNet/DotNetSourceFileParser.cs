@@ -64,7 +64,7 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
             var project = Project.Create(ProjectType.Dotnet, definition.Name, 
                 await GetDotNetVersionAsync(definition.Content), GetMetadata(definition, fileInfo));
         
-            project.AddDependencies(dependencyInstances);
+            project.AddDependencyInstances(dependencyInstances);
             projects.Add(project);
             
             _logger.LogInformation("Finished Parsing C# Project {CsprojFilePath}. Dependencies found = {DependencyCount}",

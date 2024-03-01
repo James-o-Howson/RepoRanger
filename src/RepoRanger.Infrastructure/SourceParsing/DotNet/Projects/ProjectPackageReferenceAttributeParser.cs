@@ -28,7 +28,7 @@ internal sealed class ProjectPackageReferenceAttributeParser : IProjectParser
                     version = pr.Attribute("Version")?.Value.Trim() ?? string.Empty;
                 }
 
-                return DependencyInstance.CreateInstance(DependencySource.Nuget, name, version);
+                return DependencyInstance.Create(DependencySource.Nuget, name, version);
             });
         
         return dependencyViewModels;
