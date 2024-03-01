@@ -5,30 +5,27 @@ using Microsoft.Extensions.Options;
 using RepoRanger.Application.Repositories.Commands.CreateRepository;
 using RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 using RepoRanger.Application.Sources.Commands.UpdateSourceCommand;
-using RepoRanger.Application.Sources.Parsing;
 using RepoRanger.Application.Sources.Queries.GetByName;
 using RepoRanger.Domain.Common.Interfaces;
-using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.Sources;
 using RepoRanger.Domain.Sources.Repositories;
-using RepoRanger.SourceParsing.Common.Options;
 
-namespace RepoRanger.SourceParsing.Services;
+namespace RepoRanger.Infrastructure.SourceParsing;
 
-internal sealed class GitParserService : IGitParserService
+internal sealed class SourceParserService : ISourceParserService
 {
     private readonly ParsingContext _context;
     
     private readonly IMediator _mediator;
     private readonly SourceParserOptions _options;
-    private readonly ILogger<GitParserService> _logger;
+    private readonly ILogger<SourceParserService> _logger;
     private readonly IGitRepositoryParser _gitRepositoryParser;
 
     private IEnumerable<SourceOptions> EnabledSourceOptions => _options.Sources.Where(s => s.Enabled);
 
-    public GitParserService(IEnumerable<ISourceFileParser> fileContentParsers,
+    public SourceParserService(IEnumerable<ISourceFileParser> fileContentParsers,
         IOptions<SourceParserOptions> options,
-        ILogger<GitParserService> logger, 
+        ILogger<SourceParserService> logger, 
         IMediator mediator, IGitRepositoryParser gitRepositoryParser)
     {
         ConcurrentBag<ISourceFileParser> sourceFileParsers = new(fileContentParsers);

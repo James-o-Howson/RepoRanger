@@ -1,14 +1,12 @@
 ﻿using System.Text.RegularExpressions;
 using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
-using RepoRanger.Application.Sources.Parsing;
-using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Interfaces;
 using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.ValueObjects;
-using RepoRanger.SourceParsing.DotNet.Projects;
+using RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
 
-namespace RepoRanger.SourceParsing.DotNet;
+namespace RepoRanger.Infrastructure.SourceParsing.DotNet;
 
 internal sealed partial class DotNetSourceFileParser : ISourceFileParser
 {

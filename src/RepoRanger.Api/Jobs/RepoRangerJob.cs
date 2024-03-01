@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Options;
 using Quartz;
-using RepoRanger.Application.Sources.Parsing;
+using RepoRanger.Domain.Sources;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
 
 namespace RepoRanger.Api.Jobs;
@@ -11,7 +11,7 @@ internal sealed class RepoRangerJob : IJob
 {
     internal static readonly JobKey JobKey = new(nameof(RepoRangerJob));
     
-    private readonly IGitParserService _gitParserService;
+    private readonly ISourceParserService _sourceParserService;
     private readonly ILogger<RepoRangerJob> _logger;
     private readonly QuartzOptions _quartzOptions;
     private readonly IMediator _mediator;
@@ -19,11 +19,11 @@ internal sealed class RepoRangerJob : IJob
     public RepoRangerJob(ILogger<RepoRangerJob> logger,
         IOptions<QuartzOptions> options,
         IMediator mediator, 
-        IGitParserService gitParserService)
+        ISourceParserService sourceParserService)
     {
         _logger = logger;
         _mediator = mediator;
-        _gitParserService = gitParserService;
+        _sourceParserService = sourceParserService;
         _quartzOptions = options.Value;
     }
 
@@ -50,7 +50,7 @@ internal sealed class RepoRangerJob : IJob
 
     private async Task StartRanging()
     {
-        var sources = await _gitParserService.ParseAsync();
+        var sources = await _sourceParserService.ParseAsync();
 
         foreach (var source in sources)
         {

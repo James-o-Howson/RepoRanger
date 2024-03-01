@@ -1,13 +1,11 @@
 ﻿using System.Text;
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
-using RepoRanger.Application.Sources.Parsing;
-using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Interfaces;
 using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.ValueObjects;
 
-namespace RepoRanger.SourceParsing.Angular;
+namespace RepoRanger.Infrastructure.SourceParsing.Angular;
 
 internal sealed class AngularProjectSourceFileParser : ISourceFileParser
 {

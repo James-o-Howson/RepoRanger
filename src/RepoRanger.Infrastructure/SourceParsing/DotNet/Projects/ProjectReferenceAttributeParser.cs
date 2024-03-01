@@ -3,7 +3,7 @@ using System.Xml.Linq;
 using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.ValueObjects;
 
-namespace RepoRanger.SourceParsing.DotNet.Projects;
+namespace RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
 
 internal sealed partial class ProjectReferenceAttributeParser : IProjectParser
 {

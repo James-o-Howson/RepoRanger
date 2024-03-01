@@ -1,4 +1,4 @@
-﻿namespace RepoRanger.SourceParsing.DotNet.Projects;
+﻿namespace RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
 
 public class ProjectDefinition
 {
