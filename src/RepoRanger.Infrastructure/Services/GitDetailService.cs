@@ -1,6 +1,6 @@
 ﻿using RepoRanger.Domain.Sources.Repositories.Git;
 
-namespace RepoRanger.SourceParsing.Services;
+namespace RepoRanger.Infrastructure.Services;
 
 internal sealed class GitDetailService : IGitDetailService
 {

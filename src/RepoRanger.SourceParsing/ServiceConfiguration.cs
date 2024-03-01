@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using RepoRanger.Application.Sources.Parsing;
-using RepoRanger.Domain.Sources.Repositories.Git;
 using RepoRanger.SourceParsing.Angular;
 using RepoRanger.SourceParsing.Common.Configuration;
 using RepoRanger.SourceParsing.Common.Options;
@@ -17,7 +16,6 @@ public static class ServiceConfiguration
 {
     public static void AddSourceParsingServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddTransient<IGitDetailService, GitDetailService>();
         services.AddTransient<IProjectParser, ProjectPackageReferenceAttributeParser>();
         services.AddTransient<IProjectParser, ProjectReferenceAttributeParser>();
         

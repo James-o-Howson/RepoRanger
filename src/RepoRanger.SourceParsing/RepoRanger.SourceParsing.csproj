@@ -16,8 +16,4 @@
       <ProjectReference Include="..\RepoRanger.Application\RepoRanger.Application.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <PackageReference Include="LibGit2Sharp" Version="0.29.0" />
-    </ItemGroup>
-
 </Project>

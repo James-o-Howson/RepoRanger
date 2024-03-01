@@ -53,10 +53,7 @@ internal sealed class GitParserService : IGitParserService
         var source = await CreateOrUpdateSourceAsync(sourceOptions.Name, sourceOptions.Location);
         
         _context.StartParsing(source.Id);
-        
-        var repositories = await ParseRepositoriesAsync(sourceOptions);
-        source.AddRepositories(repositories);
-        
+        await ParseRepositoriesAsync(sourceOptions);
         _context.StopParsing();
         
         _logger.LogInformation("Finished Parsing Source {SourceName}", sourceOptions.Name);
@@ -94,15 +91,18 @@ internal sealed class GitParserService : IGitParserService
         return Source.CreateExisting(id, name, location);
     }
 
-    private async Task<Repository[]> ParseRepositoriesAsync(SourceOptions sourceOptions)
+    private async Task ParseRepositoriesAsync(SourceOptions sourceOptions)
     {
         var paths = sourceOptions.LocationInfo.GetGitDirectories();
         
         var repositories = await Task.WhenAll(paths
             .Where(p => !sourceOptions.IsExcluded(p))
             .Select(ParseRepositoryAsync));
-        
-        return repositories;
+
+        foreach (var repository in repositories)
+        {
+            await CreateOrUpdateRepository(repository);
+        }
     }
     
     private async Task<Repository> ParseRepositoryAsync(string gitRepositoryPath)
@@ -115,6 +115,15 @@ internal sealed class GitParserService : IGitParserService
         var repository = await _gitRepositoryParser.ParseAsync(_context);
         
         _context.EnsureParsingContextValid();
+        
+        
+        _logger.LogInformation("Finished Parsing Repository {RepositoryName}", _context.GitRepositoryName);
+
+        return repository;
+    }
+
+    private async Task CreateOrUpdateRepository(Repository repository)
+    {
         await _mediator.Send(new CreateRepositoryCommand
         {
             Name = repository.Name,
@@ -122,9 +131,5 @@ internal sealed class GitParserService : IGitParserService
             BranchName = repository.DefaultBranch,
             SourceId = _context.SourceId!.Value
         });
-        
-        _logger.LogInformation("Finished Parsing Repository {RepositoryName}", _context.GitRepositoryName);
-
-        return repository;
     }
 }
