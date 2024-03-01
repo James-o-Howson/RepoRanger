@@ -29,7 +29,6 @@ public static class ServiceConfiguration
         });
     }
     
-    
     private static void AddSourceParser(this IServiceCollection services, 
         IConfiguration configuration,
         Action<ISourceParserConfigurator> configure)
