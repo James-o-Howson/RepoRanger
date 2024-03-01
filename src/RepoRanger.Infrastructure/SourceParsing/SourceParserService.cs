@@ -45,9 +45,9 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
     {
         _logger.LogInformation("Parsing Source {SourceName}", sourceOptions.Name);
 
-        Source source = await GetSource(sourceOptions.Name, sourceOptions.Location);
+        var source = await GetSource(sourceOptions.Name, sourceOptions.Location);
 
-        IEnumerable<Repository> repositories = await ParseRepositoriesAsync(sourceOptions);
+        var repositories = await ParseRepositoriesAsync(sourceOptions);
         source.AddRepositories(repositories);
 
         _logger.LogInformation("Finished Parsing Source {SourceName}:{Id}", sourceOptions.Name, source.Id);
@@ -55,7 +55,7 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
 
     private async Task<Source> GetSource(string name, string location)
     {
-        SourcePreviewDto? existing = await _mediator.Send(new GetSourceByNameQuery { Name = name });
+        var existing = await _mediator.Send(new GetSourceByNameQuery { Name = name });
         var source = Source.Create(name, location);
         
         if (existing != null) source.Id = existing.Id;
@@ -65,7 +65,7 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
 
     private async Task<IEnumerable<Repository>> ParseRepositoriesAsync(SourceOptions sourceOptions)
     {
-        IEnumerable<string> paths = sourceOptions.LocationInfo.GetGitDirectories();
+        var paths = sourceOptions.LocationInfo.GetGitDirectories();
 
         return await Task.WhenAll(paths
             .Where(p => !sourceOptions.IsExcluded(p))
@@ -78,7 +78,7 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
 
         _logger.LogInformation("Parsing Repository {RepositoryName}", _context.GitRepositoryName);
 
-        Repository repository = await _repositoryParser.ParseAsync(_context);
+        var repository = await _repositoryParser.ParseAsync(_context);
 
         _logger.LogInformation("Finished Parsing Repository {RepositoryName}", _context.GitRepositoryName);
 
