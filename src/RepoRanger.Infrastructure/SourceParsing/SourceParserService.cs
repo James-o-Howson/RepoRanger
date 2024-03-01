@@ -2,13 +2,12 @@
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RepoRanger.Application.Repositories.Commands.CreateRepository;
 using RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 using RepoRanger.Application.Sources.Commands.UpdateSourceCommand;
 using RepoRanger.Application.Sources.Queries.GetByName;
 using RepoRanger.Domain.Common.Interfaces;
-using RepoRanger.Domain.Sources;
-using RepoRanger.Domain.Sources.Repositories;
+using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.SourceParsing;
 
 namespace RepoRanger.Infrastructure.SourceParsing;
 
@@ -19,19 +18,19 @@ internal sealed class SourceParserService : ISourceParserService
     private readonly IMediator _mediator;
     private readonly SourceParserOptions _options;
     private readonly ILogger<SourceParserService> _logger;
-    private readonly IGitRepositoryParser _gitRepositoryParser;
+    private readonly IRepositoryParser _repositoryParser;
 
     private IEnumerable<SourceOptions> EnabledSourceOptions => _options.Sources.Where(s => s.Enabled);
 
     public SourceParserService(IEnumerable<ISourceFileParser> fileContentParsers,
         IOptions<SourceParserOptions> options,
         ILogger<SourceParserService> logger, 
-        IMediator mediator, IGitRepositoryParser gitRepositoryParser)
+        IMediator mediator, IRepositoryParser repositoryParser)
     {
         ConcurrentBag<ISourceFileParser> sourceFileParsers = new(fileContentParsers);
         _logger = logger;
         _mediator = mediator;
-        _gitRepositoryParser = gitRepositoryParser;
+        _repositoryParser = repositoryParser;
         _options = options.Value;
 
         _context = ParsingContext.Create(sourceFileParsers);
@@ -50,7 +49,10 @@ internal sealed class SourceParserService : ISourceParserService
         var source = await CreateOrUpdateSourceAsync(sourceOptions.Name, sourceOptions.Location);
         
         _context.StartParsing(source.Id);
-        await ParseRepositoriesAsync(sourceOptions);
+        
+        var repositories = await ParseRepositoriesAsync(sourceOptions);
+        source.AddRepositories(repositories);
+        
         _context.StopParsing();
         
         _logger.LogInformation("Finished Parsing Source {SourceName}", sourceOptions.Name);
@@ -88,45 +90,26 @@ internal sealed class SourceParserService : ISourceParserService
         return Source.CreateExisting(id, name, location);
     }
 
-    private async Task ParseRepositoriesAsync(SourceOptions sourceOptions)
+    private async Task<IEnumerable<Repository>> ParseRepositoriesAsync(SourceOptions sourceOptions)
     {
         var paths = sourceOptions.LocationInfo.GetGitDirectories();
         
-        var repositories = await Task.WhenAll(paths
+        return await Task.WhenAll(paths
             .Where(p => !sourceOptions.IsExcluded(p))
             .Select(ParseRepositoryAsync));
 
-        foreach (var repository in repositories)
-        {
-            await CreateOrUpdateRepository(repository);
-        }
     }
     
-    private async Task<Repository> ParseRepositoryAsync(string gitRepositoryPath)
+    private async Task<Repository> ParseRepositoryAsync(string repositoryPath)
     {
-        var gitRepository = new DirectoryInfo(gitRepositoryPath);
-        _context.GitDirectory = gitRepository;
+        _context.GitDirectory = new DirectoryInfo(repositoryPath);
         
         _logger.LogInformation("Parsing Repository {RepositoryName}", _context.GitRepositoryName);
 
-        var repository = await _gitRepositoryParser.ParseAsync(_context);
-        
-        _context.EnsureParsingContextValid();
-        
+        var repository = await _repositoryParser.ParseAsync(_context);
         
         _logger.LogInformation("Finished Parsing Repository {RepositoryName}", _context.GitRepositoryName);
 
         return repository;
-    }
-
-    private async Task CreateOrUpdateRepository(Repository repository)
-    {
-        await _mediator.Send(new CreateRepositoryCommand
-        {
-            Name = repository.Name,
-            RemoteUrl = repository.RemoteUrl,
-            BranchName = repository.DefaultBranch,
-            SourceId = _context.SourceId!.Value
-        });
     }
 }

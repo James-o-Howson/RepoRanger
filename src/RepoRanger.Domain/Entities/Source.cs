@@ -1,8 +1,6 @@
 ﻿using RepoRanger.Domain.Common.Interfaces;
-using RepoRanger.Domain.Entities;
-using RepoRanger.Domain.Sources.Repositories;
 
-namespace RepoRanger.Domain.Sources;
+namespace RepoRanger.Domain.Entities;
 
 public sealed class Source : ICreatedAuditableEntity
 {

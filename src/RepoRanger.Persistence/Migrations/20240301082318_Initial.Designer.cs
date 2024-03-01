@@ -11,14 +11,14 @@ using RepoRanger.Persistence;
 namespace RepoRanger.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240229122918_Initial")]
+    [Migration("20240301082318_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.2");
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.Dependency", b =>
                 {
@@ -131,9 +131,6 @@ namespace RepoRanger.Persistence.Migrations
 
                     b.Property<string>("DefaultBranch")
                         .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("DefaultBranchId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Name")

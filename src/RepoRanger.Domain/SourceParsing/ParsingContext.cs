@@ -1,6 +1,6 @@
 ﻿using RepoRanger.Domain.Common.Interfaces;
 
-namespace RepoRanger.Domain.Sources;
+namespace RepoRanger.Domain.SourceParsing;
 
 public sealed class ParsingContext
 {

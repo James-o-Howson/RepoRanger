@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Domain.Entities;
-using RepoRanger.Domain.Sources;
 
 namespace RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 

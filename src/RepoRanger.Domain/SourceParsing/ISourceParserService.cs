@@ -1,4 +1,6 @@
-﻿namespace RepoRanger.Domain.Sources;
+﻿using RepoRanger.Domain.Entities;
+
+namespace RepoRanger.Domain.SourceParsing;
 
 public interface ISourceParserService
 {

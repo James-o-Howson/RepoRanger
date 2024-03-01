@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Options;
 using Quartz;
-using RepoRanger.Domain.Sources;
+using RepoRanger.Domain.SourceParsing;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
 
 namespace RepoRanger.Api.Jobs;

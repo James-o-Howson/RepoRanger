@@ -1,4 +1,4 @@
-﻿namespace RepoRanger.Domain.Sources.Repositories.Git;
+﻿namespace RepoRanger.Domain.Git;
 
 public sealed record GitRepositoryDetail
 {

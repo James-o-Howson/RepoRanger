@@ -47,7 +47,6 @@ namespace RepoRanger.Persistence.Migrations
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     RemoteUrl = table.Column<string>(type: "TEXT", nullable: false),
                     SourceId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    DefaultBranchId = table.Column<Guid>(type: "TEXT", nullable: false),
                     DefaultBranch = table.Column<string>(type: "TEXT", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)

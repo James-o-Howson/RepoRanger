@@ -1,6 +1,4 @@
-﻿using RepoRanger.Domain.Common;
-using RepoRanger.Domain.Common.Interfaces;
-using RepoRanger.Domain.Sources.Repositories;
+﻿using RepoRanger.Domain.Common.Interfaces;
 using RepoRanger.Domain.ValueObjects;
 
 namespace RepoRanger.Domain.Entities;

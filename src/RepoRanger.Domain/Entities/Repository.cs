@@ -1,7 +1,6 @@
 ﻿using RepoRanger.Domain.Common.Interfaces;
-using RepoRanger.Domain.Entities;
 
-namespace RepoRanger.Domain.Sources.Repositories;
+namespace RepoRanger.Domain.Entities;
 
 public class Repository : ICreatedAuditableEntity
 {
@@ -23,7 +22,6 @@ public class Repository : ICreatedAuditableEntity
     public string RemoteUrl { get; set; } = string.Empty;
     public Guid SourceId { get; private set; } = Guid.Empty;
     public Source Source { get; private set; } = null!;
-    public Guid DefaultBranchId { get; private set; } = Guid.Empty;
     public string DefaultBranch { get; set; } = string.Empty;
     public IReadOnlyCollection<Project> Projects => _projects;
     public DateTime Created { get; set; }

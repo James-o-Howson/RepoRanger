@@ -2,8 +2,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using RepoRanger.Application.Common.Interfaces;
-using RepoRanger.Domain.Sources;
-using RepoRanger.Domain.Sources.Repositories.Git;
+using RepoRanger.Domain.Git;
+using RepoRanger.Domain.SourceParsing;
 using RepoRanger.Infrastructure.Services;
 using RepoRanger.Infrastructure.SourceParsing;
 using RepoRanger.Infrastructure.SourceParsing.Angular;

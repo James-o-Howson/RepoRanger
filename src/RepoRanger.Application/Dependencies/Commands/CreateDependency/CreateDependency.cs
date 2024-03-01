@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Domain.Entities;
 

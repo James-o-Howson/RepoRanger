@@ -28,7 +28,6 @@ internal sealed class ListRepositoriesQueryHandler : IRequestHandler<ListReposit
                     Id = r.Id,
                     Name = r.Name,
                     RemoteUrl = r.RemoteUrl,
-                    DefaultBranchId = r.DefaultBranchId,
                     DefaultBranchName = r.DefaultBranch,
                     ParseTime = r.Created
                 })

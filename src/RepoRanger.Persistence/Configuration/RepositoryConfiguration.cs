@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RepoRanger.Domain.Entities;
-using RepoRanger.Domain.Sources.Repositories;
 
 namespace RepoRanger.Persistence.Configuration;
 

@@ -1,18 +1,19 @@
 ﻿using RepoRanger.Domain.Common.Interfaces;
-using RepoRanger.Domain.Sources.Repositories.Git;
+using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Git;
 
-namespace RepoRanger.Domain.Sources.Repositories;
+namespace RepoRanger.Domain.SourceParsing;
 
-public interface IGitRepositoryParser
+public interface IRepositoryParser
 {
     Task<Repository> ParseAsync(ParsingContext parsingContext);
 }
 
-internal sealed class GitRepositoryParser : IGitRepositoryParser
+internal sealed class RepositoryParser : IRepositoryParser
 {
     private readonly IGitDetailService _gitDetailService;
 
-    public GitRepositoryParser(IGitDetailService gitDetailService)
+    public RepositoryParser(IGitDetailService gitDetailService)
     {
         _gitDetailService = gitDetailService;
     }

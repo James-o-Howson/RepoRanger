@@ -538,10 +538,6 @@
             "type": "string",
             "nullable": true
           },
-          "defaultBranchId": {
-            "type": "string",
-            "format": "uuid"
-          },
           "defaultBranchName": {
             "type": "string",
             "nullable": true
