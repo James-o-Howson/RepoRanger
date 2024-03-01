@@ -1,4 +1,6 @@
 ﻿using RepoRanger.Domain.Common;
+using RepoRanger.Domain.Common.Interfaces;
+using RepoRanger.Domain.Sources.Repositories;
 using RepoRanger.Domain.ValueObjects;
 
 namespace RepoRanger.Domain.Entities;
@@ -8,27 +10,24 @@ public class Project : ICreatedAuditableEntity
     private readonly List<DependencyInstance> _dependencyInstances = [];
     
     private Project() { }
-
-    public Project(ProjectType type, string name, string version)
+    
+    public static Project CreateNew(ProjectType type, string name, string version, params Metadata[] metadata) => new()
     {
-        ArgumentException.ThrowIfNullOrEmpty(type);
-        ArgumentException.ThrowIfNullOrEmpty(name);
-        ArgumentException.ThrowIfNullOrEmpty(version);
-        
-        Id = Guid.NewGuid();
-        Type = type;
-        Name = name;
-        Version = version;
-    }
-
-    public Guid Id { get; private set; }
-    public string Name { get; private set; }
-    public ProjectType Type { get; private set; }
-    public string Version { get; private set; }
+        Id = Guid.NewGuid(),
+        Name = name,
+        Type = type,
+        Version = version,
+        Metadata = metadata.ToList()
+    };
+    
+    public Guid Id { get; private set; } = Guid.Empty;
+    public List<Metadata> Metadata { get; private set; } = []; 
+    public ProjectType Type { get; private set; } = null!;
+    public string Name { get; private set; } = string.Empty;
+    public string Version { get; private set; } = string.Empty;
     public IReadOnlyCollection<DependencyInstance> DependencyInstances => _dependencyInstances;
-
-    public Guid RepositoryId { get; private set; }
-    public Repository Repository { get; private set; }
+    public Guid RepositoryId { get; private set; } = Guid.Empty;
+    public Repository Repository { get; private set; } = null!;
     public DateTime Created { get; set; }
     public string? CreatedBy { get; set; }
 

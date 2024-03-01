@@ -11,7 +11,7 @@ using RepoRanger.Persistence;
 namespace RepoRanger.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240225133244_Initial")]
+    [Migration("20240229122918_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -19,39 +19,6 @@ namespace RepoRanger.Persistence.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
-
-            modelBuilder.Entity("RepoRanger.Domain.Entities.Branch", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasMaxLength(150)
-                        .IsUnicode(true)
-                        .HasColumnType("TEXT");
-
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<Guid>("RepositoryId")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RepositoryId")
-                        .IsUnique();
-
-                    b.ToTable("Branches");
-                });
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.Dependency", b =>
                 {
@@ -162,6 +129,10 @@ namespace RepoRanger.Persistence.Migrations
                         .IsUnicode(true)
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("DefaultBranch")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("DefaultBranchId")
                         .HasColumnType("TEXT");
 
@@ -212,17 +183,6 @@ namespace RepoRanger.Persistence.Migrations
                         .IsUnique();
 
                     b.ToTable("Sources");
-                });
-
-            modelBuilder.Entity("RepoRanger.Domain.Entities.Branch", b =>
-                {
-                    b.HasOne("RepoRanger.Domain.Entities.Repository", "Repository")
-                        .WithOne("DefaultBranch")
-                        .HasForeignKey("RepoRanger.Domain.Entities.Branch", "RepositoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Repository");
                 });
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.DependencyInstance", b =>
@@ -295,6 +255,25 @@ namespace RepoRanger.Persistence.Migrations
                                 .HasForeignKey("ProjectId");
                         });
 
+                    b.OwnsOne("System.Collections.Generic.List<RepoRanger.Domain.ValueObjects.Metadata>", "Metadata", b1 =>
+                        {
+                            b1.Property<Guid>("ProjectId")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<int>("Capacity")
+                                .HasColumnType("INTEGER");
+
+                            b1.HasKey("ProjectId");
+
+                            b1.ToTable("Projects");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ProjectId");
+                        });
+
+                    b.Navigation("Metadata")
+                        .IsRequired();
+
                     b.Navigation("Repository");
 
                     b.Navigation("Type")
@@ -324,9 +303,6 @@ namespace RepoRanger.Persistence.Migrations
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.Repository", b =>
                 {
-                    b.Navigation("DefaultBranch")
-                        .IsRequired();
-
                     b.Navigation("DependencyInstances");
 
                     b.Navigation("Projects");

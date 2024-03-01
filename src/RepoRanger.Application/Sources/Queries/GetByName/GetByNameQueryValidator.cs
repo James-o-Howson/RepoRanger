@@ -2,7 +2,7 @@
 
 namespace RepoRanger.Application.Sources.Queries.GetByName;
 
-internal sealed class GetByNameQueryValidator : AbstractValidator<GetByNameQuery>
+internal sealed class GetByNameQueryValidator : AbstractValidator<GetSourceByNameQuery>
 {
     public GetByNameQueryValidator()
     {

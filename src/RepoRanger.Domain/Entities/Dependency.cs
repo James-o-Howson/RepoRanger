@@ -1,4 +1,5 @@
 ﻿using RepoRanger.Domain.Common;
+using RepoRanger.Domain.Common.Interfaces;
 
 namespace RepoRanger.Domain.Entities;
 

@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using RepoRanger.Application.Sources.Common;
 
 namespace RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 
@@ -7,6 +6,10 @@ internal sealed class CreateSourceCommandValidator : AbstractValidator<CreateSou
 {
     public CreateSourceCommandValidator()
     {
-        Include(new SourceDtoValidator());
+        RuleFor(s => s.Name)
+            .NotEmpty();
+        
+        RuleFor(s => s.Location)
+            .NotEmpty();
     }
 }

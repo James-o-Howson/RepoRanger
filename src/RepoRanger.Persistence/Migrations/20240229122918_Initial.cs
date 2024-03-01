@@ -48,6 +48,7 @@ namespace RepoRanger.Persistence.Migrations
                     RemoteUrl = table.Column<string>(type: "TEXT", nullable: false),
                     SourceId = table.Column<Guid>(type: "TEXT", nullable: false),
                     DefaultBranchId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DefaultBranch = table.Column<string>(type: "TEXT", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
                 },
@@ -63,34 +64,13 @@ namespace RepoRanger.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Branches",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
-                    IsDefault = table.Column<bool>(type: "INTEGER", nullable: false),
-                    RepositoryId = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Branches", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Branches_Repositories_RepositoryId",
-                        column: x => x.RepositoryId,
-                        principalTable: "Repositories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Projects",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Metadata_Capacity = table.Column<int>(type: "INTEGER", nullable: false),
                     Type_Value = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
                     Version = table.Column<string>(type: "TEXT", nullable: false),
                     RepositoryId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -149,12 +129,6 @@ namespace RepoRanger.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Branches_RepositoryId",
-                table: "Branches",
-                column: "RepositoryId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DependencyInstances_DependencyName",
                 table: "DependencyInstances",
                 column: "DependencyName");
@@ -194,9 +168,6 @@ namespace RepoRanger.Persistence.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "Branches");
-
             migrationBuilder.DropTable(
                 name: "DependencyInstances");
 

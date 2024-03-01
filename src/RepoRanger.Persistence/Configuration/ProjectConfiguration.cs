@@ -14,6 +14,7 @@ internal sealed class ProjectConfiguration : IEntityTypeConfiguration<Project>
             .WithOne(p => p.Project);
 
         builder.OwnsOne(p => p.Type);
+        builder.OwnsOne(p => p.Metadata);
         
         builder.Property(e => e.CreatedBy)
             .IsRequired()

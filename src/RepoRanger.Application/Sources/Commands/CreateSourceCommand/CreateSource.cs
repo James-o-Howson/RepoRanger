@@ -1,14 +1,16 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Common.Interfaces.Persistence;
-using RepoRanger.Application.Repositories.Common;
-using RepoRanger.Application.Sources.Common;
 using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Sources;
 
 namespace RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 
-public sealed record CreateSourceCommand(string Name, string Location, IEnumerable<RepositoryDto> Repositories) 
-    : SourceDto(Name, Location, Repositories), IRequest<Guid>;
+public sealed record CreateSourceCommand : IRequest<Guid>
+{
+    public string Name { get; init; } = string.Empty;
+    public string Location { get; init; } = string.Empty;
+}
 
 internal sealed class CreateSourceCommandHandler : IRequestHandler<CreateSourceCommand, Guid>
 {
@@ -21,7 +23,7 @@ internal sealed class CreateSourceCommandHandler : IRequestHandler<CreateSourceC
 
     public async Task<Guid> Handle(CreateSourceCommand request, CancellationToken cancellationToken)
     {
-        var source = request.ToEntity();
+        var source = Source.CreateNew(request.Name, request.Location);
         
         await CreateDependencies(
             source.DependencyInstances.Select(di => di.DependencyName).ToHashSet(), 

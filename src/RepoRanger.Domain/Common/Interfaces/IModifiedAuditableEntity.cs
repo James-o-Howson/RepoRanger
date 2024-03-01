@@ -1,4 +1,4 @@
-namespace RepoRanger.Domain.Common;
+namespace RepoRanger.Domain.Common.Interfaces;
 
 public interface IModifiedAuditableEntity : ICreatedAuditableEntity
 {

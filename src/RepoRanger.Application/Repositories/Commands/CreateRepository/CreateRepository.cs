@@ -1,5 +1,7 @@
 ﻿using MediatR;
 using RepoRanger.Application.Common.Interfaces.Persistence;
+using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Sources.Repositories;
 
 namespace RepoRanger.Application.Repositories.Commands.CreateRepository;
 
@@ -8,7 +10,7 @@ public sealed record CreateRepositoryCommand : IRequest<Guid>
     public string Name { get; set; } = string.Empty;
     public string RemoteUrl { get; set; } = string.Empty;
     public string BranchName { get; set; } = string.Empty;
-    public bool BranchIsDefault { get; set; } = true;
+    public Guid SourceId { get; init; }
 }
 
 internal sealed class CreateRepositoryCommandHandler : IRequestHandler<CreateRepositoryCommand, Guid>
@@ -20,8 +22,13 @@ internal sealed class CreateRepositoryCommandHandler : IRequestHandler<CreateRep
         _context = context;
     }
 
-    public Task<Guid> Handle(CreateRepositoryCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(CreateRepositoryCommand request, CancellationToken cancellationToken)
     {
-        throw new NotImplementedException();
+        var repository = Repository.Create(request.Name, request.RemoteUrl, request.BranchName, request.SourceId);
+
+        await _context.Repositories.AddAsync(repository, cancellationToken);
+        await _context.SaveChangesAsync(cancellationToken);
+
+        return repository.Id;
     }
 }

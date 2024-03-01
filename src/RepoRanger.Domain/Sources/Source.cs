@@ -1,6 +1,8 @@
-﻿using RepoRanger.Domain.Common;
+﻿using RepoRanger.Domain.Common.Interfaces;
+using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Sources.Repositories;
 
-namespace RepoRanger.Domain.Entities;
+namespace RepoRanger.Domain.Sources;
 
 public sealed class Source : ICreatedAuditableEntity
 {
@@ -8,18 +10,22 @@ public sealed class Source : ICreatedAuditableEntity
     
     private Source() { }
 
-    public Source(string name, string location)
+    public static Source CreateNew(string name, string location) => new()
     {
-        ArgumentException.ThrowIfNullOrWhiteSpace(name);
-        
-        Id = Guid.NewGuid();
-        Name = name;
-        Location = location;
-    }
+        Name = name ?? throw new ArgumentNullException(nameof(name), "Cannot be null"),
+        Location = location ?? throw new ArgumentNullException(nameof(location), "Cannot be null")
+    };
     
+    public static Source CreateExisting(Guid id, string name, string location) => new()
+    {
+        Id = id,
+        Name = name ?? throw new ArgumentNullException(nameof(name), "Cannot be null"),
+        Location = location ?? throw new ArgumentNullException(nameof(location), "Cannot be null"),
+    };
+
     public Guid Id { get; private set; }
-    public string Name { get; private set; }
-    public string Location { get; private set; }
+    public string Name { get; private set; } = string.Empty;
+    public string Location { get; set; } = string.Empty;
     public IReadOnlyCollection<Repository> Repositories => _repositories;
     public DateTime Created { get; set; }
     public string? CreatedBy { get; set; }

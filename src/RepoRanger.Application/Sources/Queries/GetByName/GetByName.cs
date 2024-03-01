@@ -4,21 +4,21 @@ using RepoRanger.Application.Common.Interfaces.Persistence;
 
 namespace RepoRanger.Application.Sources.Queries.GetByName;
 
-public sealed record GetByNameQuery : IRequest<SourcePreviewDto?>
+public sealed record GetSourceByNameQuery : IRequest<SourcePreviewDto?>
 {
     public string Name { get; init; } = string.Empty;
 };
 
-internal sealed class GetByNameQueryHandler : IRequestHandler<GetByNameQuery, SourcePreviewDto?>
+internal sealed class GetSourceByNameQueryHandler : IRequestHandler<GetSourceByNameQuery, SourcePreviewDto?>
 {
     private readonly IApplicationDbContext _applicationDbContext;
 
-    public GetByNameQueryHandler(IApplicationDbContext applicationDbContext)
+    public GetSourceByNameQueryHandler(IApplicationDbContext applicationDbContext)
     {
         _applicationDbContext = applicationDbContext;
     }
 
-    public async Task<SourcePreviewDto?> Handle(GetByNameQuery request, CancellationToken cancellationToken)
+    public async Task<SourcePreviewDto?> Handle(GetSourceByNameQuery request, CancellationToken cancellationToken)
     {
         var source = await _applicationDbContext.Sources
             .FirstOrDefaultAsync(s => s.Name == request.Name, cancellationToken);
@@ -28,7 +28,8 @@ internal sealed class GetByNameQueryHandler : IRequestHandler<GetByNameQuery, So
         return new SourcePreviewDto
         {
             Id = source.Id,
-            Name = source.Name
+            Name = source.Name,
+            Location = source.Location
         };
     }
 }

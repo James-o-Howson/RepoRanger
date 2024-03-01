@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Sources.Repositories;
 
 namespace RepoRanger.Persistence.Configuration;
 
@@ -14,11 +15,6 @@ internal sealed class RepositoryConfiguration : IEntityTypeConfiguration<Reposit
             .WithOne(p => p.Repository)
             .HasForeignKey(b => b.RepositoryId)
             .IsRequired()
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.HasOne(r => r.DefaultBranch)
-            .WithOne(b => b.Repository)
-            .HasForeignKey<Branch>(b => b.RepositoryId)
             .OnDelete(DeleteBehavior.Cascade);
         
         builder.Property(e => e.CreatedBy)

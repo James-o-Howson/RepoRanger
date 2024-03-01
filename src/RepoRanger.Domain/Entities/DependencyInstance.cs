@@ -1,4 +1,5 @@
 ﻿using RepoRanger.Domain.Common;
+using RepoRanger.Domain.Common.Interfaces;
 using RepoRanger.Domain.ValueObjects;
 
 namespace RepoRanger.Domain.Entities;
@@ -18,11 +19,11 @@ public class DependencyInstance : ICreatedAuditableEntity
         Version = Normalise(source, version);
     }
 
-    public Guid Id { get; private set; }
-    public DependencySource Source { get; private set; }
-    public string DependencyName { get; private set; }
-    public string Version { get; private set; }
-    public Project Project { get; private set; }
+    public Guid Id { get; private set; } = Guid.Empty;
+    public DependencySource Source { get; private set; } = null!;
+    public string DependencyName { get; private set; } = string.Empty;
+    public string Version { get; private set; } = string.Empty;
+    public Project Project { get; private set; } = null!;
     public DateTime Created { get; set; }
     public string? CreatedBy { get; set; }
     

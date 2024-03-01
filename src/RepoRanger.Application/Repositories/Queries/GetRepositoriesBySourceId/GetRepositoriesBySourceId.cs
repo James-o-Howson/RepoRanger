@@ -32,7 +32,7 @@ internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<Ge
                 Name = r.Name,
                 RemoteUrl = r.RemoteUrl,
                 DefaultBranchId = r.DefaultBranchId,
-                DefaultBranchName = r.DefaultBranch.Name,
+                DefaultBranchName = r.DefaultBranch,
                 ParseTime = r.Created
 
             }).ToListAsync(cancellationToken);

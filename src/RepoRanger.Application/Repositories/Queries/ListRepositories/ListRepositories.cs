@@ -29,7 +29,7 @@ internal sealed class ListRepositoriesQueryHandler : IRequestHandler<ListReposit
                     Name = r.Name,
                     RemoteUrl = r.RemoteUrl,
                     DefaultBranchId = r.DefaultBranchId,
-                    DefaultBranchName = r.DefaultBranch.Name,
+                    DefaultBranchName = r.DefaultBranch,
                     ParseTime = r.Created
                 })
                 .ToListAsync(cancellationToken)

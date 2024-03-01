@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Application.Projects.ViewModels;
 using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Sources.Repositories;
 
 namespace RepoRanger.Application.Projects.Queries.GetProjectsByRepositoryIds;
 

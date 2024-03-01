@@ -1,11 +1,7 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Options;
 using Quartz;
-using RepoRanger.Application.Sources.Commands.CreateSourceCommand;
-using RepoRanger.Application.Sources.Commands.DeleteSourceCommand;
-using RepoRanger.Application.Sources.Common;
 using RepoRanger.Application.Sources.Parsing;
-using RepoRanger.Application.Sources.Queries.GetByName;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
 
 namespace RepoRanger.Api.Jobs;
@@ -15,7 +11,7 @@ internal sealed class RepoRangerJob : IJob
 {
     internal static readonly JobKey JobKey = new(nameof(RepoRangerJob));
     
-    private readonly ISourceParser _sourceParser;
+    private readonly IGitParserService _gitParserService;
     private readonly ILogger<RepoRangerJob> _logger;
     private readonly QuartzOptions _quartzOptions;
     private readonly IMediator _mediator;
@@ -23,11 +19,11 @@ internal sealed class RepoRangerJob : IJob
     public RepoRangerJob(ILogger<RepoRangerJob> logger,
         IOptions<QuartzOptions> options,
         IMediator mediator, 
-        ISourceParser sourceParser)
+        IGitParserService gitParserService)
     {
         _logger = logger;
         _mediator = mediator;
-        _sourceParser = sourceParser;
+        _gitParserService = gitParserService;
         _quartzOptions = options.Value;
     }
 
@@ -54,33 +50,11 @@ internal sealed class RepoRangerJob : IJob
 
     private async Task StartRanging()
     {
-        var sources = await _sourceParser.ParseAsync();
-        foreach (var sourceDto in sources.ToDtos())
-        {
-            await DeleteIfSourceExistsAsync(sourceDto);
-            await CreateAsync(sourceDto);
-        }
-    }
+        var sources = await _gitParserService.ParseAsync();
 
-    private async Task CreateAsync(SourceDto sourceDto)
-    {
-        var result = await _mediator.Send(new CreateSourceCommand(sourceDto.Name, sourceDto.Location, sourceDto.Repositories));
-        _logger.LogInformation("Repo Ranger Job Finished - Source created Id: {SourceId}", result);
-    }
-
-    private async Task DeleteIfSourceExistsAsync(SourceDto sourceDto)
-    {
-        var existing = await _mediator.Send(new GetByNameQuery
+        foreach (var source in sources)
         {
-            Name = sourceDto.Name
-        });
-
-        if (existing is not null)
-        {
-            await _mediator.Send(new DeleteSourceCommand
-            {
-                Id = existing.Id
-            });
+            _logger.LogInformation("Repo Ranger Job Finished - Source created Id: {SourceId}", source.Id);
         }
     }
 }

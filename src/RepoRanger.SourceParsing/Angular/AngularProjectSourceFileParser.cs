@@ -2,18 +2,20 @@
 using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using RepoRanger.Application.Sources.Parsing;
+using RepoRanger.Domain.Common;
+using RepoRanger.Domain.Common.Interfaces;
 using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.ValueObjects;
 
 namespace RepoRanger.SourceParsing.Angular;
 
-internal sealed class AngularProjectFileContentParser : IFileContentParser
+internal sealed class AngularProjectSourceFileParser : ISourceFileParser
 {
     private static readonly JsonSerializerOptions JsonSerializerOptions = new() { PropertyNameCaseInsensitive = true };
 
-    private readonly ILogger<AngularProjectFileContentParser> _logger;
+    private readonly ILogger<AngularProjectSourceFileParser> _logger;
 
-    public AngularProjectFileContentParser(ILogger<AngularProjectFileContentParser> logger)
+    public AngularProjectSourceFileParser(ILogger<AngularProjectSourceFileParser> logger)
     {
         _logger = logger;
     }
@@ -30,7 +32,7 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
         return workspaceIsSibling;
     }
 
-    public async Task ParseAsync(string content, FileInfo fileInfo, Repository repository)
+    public async Task<IEnumerable<Project>> ParseAsync(string content, FileInfo fileInfo)
     {
         _logger.LogInformation("Parsing package.json {PackageJsonPath}", fileInfo.FullName);
         
@@ -40,11 +42,12 @@ internal sealed class AngularProjectFileContentParser : IFileContentParser
         
         if (package is null) throw new ArgumentException($"Cannot deserialize {nameof(content)} into ${typeof(PackageJson)}", content);
 
-        var project = new Project(ProjectType.Angular, package.Name, FindAngularVersion(package));
+        var project = Project.CreateNew(ProjectType.Angular, package.Name, FindAngularVersion(package));
         project.AddDependencies(GetDependencies(package));
-        repository.AddProject(project);
         
         _logger.LogInformation("Finished Parsing package.json {PackageJsonPath}. Dependencies found = {DependencyCount}", fileInfo.FullName, project.DependencyInstances.Count);
+
+        return [project];
     }
 
     private IEnumerable<DependencyInstance> GetDependencies(PackageJson package)

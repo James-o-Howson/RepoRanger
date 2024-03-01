@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Application.Branches;
 using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Application.Projects.Common;
 using RepoRanger.Application.Repositories.Common;
@@ -29,7 +28,7 @@ internal sealed class GetRepositoriesByDependencyNameQueryHandler : IRequestHand
             .Include(r => r.Projects)
                 .ThenInclude(p => p.DependencyInstances)
             .Where(r => r.DependencyInstances.Any(di => di.DependencyName == request.DependencyName))
-            .Select(di => new RepositoryDto(di.Name, di.RemoteUrl, di.DefaultBranch.ToDto(), di.Projects.ToDtos()))
+            .Select(di => new RepositoryDto(di.Name, di.RemoteUrl, di.DefaultBranch, di.Projects.ToDtos()))
             .ToListAsync(cancellationToken);
 
         return new RepositoriesDto(dependencyInstances);
