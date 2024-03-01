@@ -53,7 +53,9 @@ internal sealed class GitRepositoryParser : IGitRepositoryParser
             var content = await File.ReadAllTextAsync(filePath);
             var fileInfo = new FileInfo(filePath);
 
-            var projects = await fileContentParser.ParseAsync(content, fileInfo);
+            var projects = (await fileContentParser.ParseAsync(content, fileInfo)).ToList();
+            if (projects.Count == 0) return;
+            
             repository.AddProjects(projects.ToList());
         }
     }

@@ -6,6 +6,7 @@ public class ProjectDefinition
     public string Type { get; init; } = string.Empty;
     public string FilePath { get; init; } = string.Empty;
 
+    public bool Exists => File.Exists(FilePath);
     public string Name => Path.GetFileName(FilePath);
     public string Content => File.ReadAllText(FilePath);
 }

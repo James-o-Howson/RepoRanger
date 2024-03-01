@@ -52,8 +52,14 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
         var projects = new List<Project>();
         foreach (var definition in projectDefinitions)
         {
-            _logger.LogInformation("Parsing CSharp Project {CsprojFilePath}", definition.FilePath);
+            if (!definition.Exists)
+            {
+                _logger.LogInformation("Skipping CSharp Project {CsprojFilePath}. Project in Solution File but not present in Repository", definition.FilePath);
+                continue;
+            }
             
+            _logger.LogInformation("Parsing CSharp Project {CsprojFilePath}", definition.FilePath);
+
             var dependencyInstances = _projectParsers
                 .SelectMany(p => p.ParseAsync(definition.Content));
             
