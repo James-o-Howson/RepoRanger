@@ -4,13 +4,13 @@ using RepoRanger.Application.Common.Interfaces.Persistence;
 
 namespace RepoRanger.Application.Sources.Commands.UpdateSourceCommand;
 
-public sealed record UpdateSourceCommand : IRequest<Guid>
+public sealed record UpdateSourceCommand : IRequest<int>
 {
-    public Guid Id { get; init; } = Guid.Empty;
+    public int Id { get; init; }
     public string Location { get; init; } = string.Empty; 
 }
 
-internal sealed class UpdateSourceCommandHandler : IRequestHandler<UpdateSourceCommand, Guid>
+internal sealed class UpdateSourceCommandHandler : IRequestHandler<UpdateSourceCommand, int>
 {
     private readonly IApplicationDbContext _context;
 
@@ -19,7 +19,7 @@ internal sealed class UpdateSourceCommandHandler : IRequestHandler<UpdateSourceC
         _context = context;
     }
 
-    public async Task<Guid> Handle(UpdateSourceCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(UpdateSourceCommand request, CancellationToken cancellationToken)
     {
         var source = await _context.Sources.FindAsync([request.Id], cancellationToken);
 

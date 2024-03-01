@@ -66,7 +66,7 @@ internal sealed class SourceParserService : ISourceParserService
             Name = name
         });
 
-        Guid id;
+        int id;
         if (existing is null)
         {
             id = await _mediator.Send(new CreateSourceCommand
@@ -87,7 +87,7 @@ internal sealed class SourceParserService : ISourceParserService
         
         _logger.LogInformation("Repo Ranger Job Finished - Source created Id: {SourceId}", id);
 
-        return Source.CreateExisting(id, name, location);
+        return Source.Create(name, location);
     }
 
     private async Task<IEnumerable<Repository>> ParseRepositoriesAsync(SourceOptions sourceOptions)

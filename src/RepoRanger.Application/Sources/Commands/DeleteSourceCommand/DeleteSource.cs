@@ -9,7 +9,7 @@ namespace RepoRanger.Application.Sources.Commands.DeleteSourceCommand;
 
 public sealed record DeleteSourceCommand : IRequest
 {
-    public Guid Id { get; init; }
+    public int Id { get; init; }
 } 
 
 internal sealed class DeleteSourceCommandHandler : IRequestHandler<DeleteSourceCommand>

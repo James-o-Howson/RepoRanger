@@ -7,7 +7,7 @@ namespace RepoRanger.Application.Repositories.Queries.GetRepositoriesBySourceId;
 
 public sealed record GetRepositoriesBySourceIdQuery : IRequest<RepositoriesVm>
 {
-    public Guid? SourceId { get; init; }
+    public int? SourceId { get; init; }
 }
 
 internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<GetRepositoriesBySourceIdQuery, RepositoriesVm>

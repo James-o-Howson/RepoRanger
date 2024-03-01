@@ -9,19 +9,19 @@ public sealed class ParsingContext
     private ParsingContext() { }
     
     public IEnumerable<ISourceFileParser> SourceFileParsers { get; private init; } = Array.Empty<ISourceFileParser>();
-    public Guid? SourceId { get; private set; }
+    public int? SourceId { get; private set; }
     public DirectoryInfo? GitDirectory { get; set; }
     public string GitDirectoryPath => GitDirectory?.FullName ?? string.Empty;
     public string GitRepositoryName => GitDirectory?.Name ?? string.Empty;
     
     public void EnsureParsingContextValid()
     {
-        if (_isParsing && GitDirectory != null && (SourceId != Guid.Empty || SourceId != null)) return;
+        if (_isParsing && GitDirectory != null && SourceId != null) return;
 
         throw new ArgumentException($"{nameof(ParsingContext)} is in an invalid state.");
     }
 
-    public void StartParsing(Guid sourceId)
+    public void StartParsing(int sourceId)
     {
         _isParsing = true;
         SourceId = sourceId;

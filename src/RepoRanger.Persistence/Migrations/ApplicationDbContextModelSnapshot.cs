@@ -35,9 +35,9 @@ namespace RepoRanger.Persistence.Migrations
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.DependencyInstance", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
@@ -52,18 +52,14 @@ namespace RepoRanger.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("ProjectId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("ProjectId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<Guid?>("RepositoryId")
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("RepositoryId")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<Guid?>("SourceId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Version")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int?>("SourceId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -80,9 +76,9 @@ namespace RepoRanger.Persistence.Migrations
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.Project", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
@@ -97,8 +93,8 @@ namespace RepoRanger.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("RepositoryId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("RepositoryId")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Version")
                         .IsRequired()
@@ -113,9 +109,9 @@ namespace RepoRanger.Persistence.Migrations
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.Repository", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
@@ -138,8 +134,8 @@ namespace RepoRanger.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<Guid>("SourceId")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("SourceId")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
@@ -150,9 +146,9 @@ namespace RepoRanger.Persistence.Migrations
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.Source", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("Created")
                         .HasColumnType("TEXT");
@@ -203,8 +199,8 @@ namespace RepoRanger.Persistence.Migrations
 
                     b.OwnsOne("RepoRanger.Domain.ValueObjects.DependencySource", "Source", b1 =>
                         {
-                            b1.Property<Guid>("DependencyInstanceId")
-                                .HasColumnType("TEXT");
+                            b1.Property<int>("DependencyInstanceId")
+                                .HasColumnType("INTEGER");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -234,8 +230,8 @@ namespace RepoRanger.Persistence.Migrations
 
                     b.OwnsOne("RepoRanger.Domain.ValueObjects.ProjectType", "Type", b1 =>
                         {
-                            b1.Property<Guid>("ProjectId")
-                                .HasColumnType("TEXT");
+                            b1.Property<int>("ProjectId")
+                                .HasColumnType("INTEGER");
 
                             b1.Property<string>("Value")
                                 .IsRequired()
@@ -251,8 +247,8 @@ namespace RepoRanger.Persistence.Migrations
 
                     b.OwnsOne("System.Collections.Generic.List<RepoRanger.Domain.ValueObjects.Metadata>", "Metadata", b1 =>
                         {
-                            b1.Property<Guid>("ProjectId")
-                                .HasColumnType("TEXT");
+                            b1.Property<int>("ProjectId")
+                                .HasColumnType("INTEGER");
 
                             b1.Property<int>("Capacity")
                                 .HasColumnType("INTEGER");

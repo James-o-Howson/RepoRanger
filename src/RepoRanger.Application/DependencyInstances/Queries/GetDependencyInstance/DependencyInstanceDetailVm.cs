@@ -2,7 +2,7 @@ namespace RepoRanger.Application.DependencyInstances.Queries.GetDependencyInstan
 
 public class DependencyInstanceDetailVm
 {
-    public Guid Id { get; set; }
+    public int Id { get; set; }
     public string Source { get; init; } = string.Empty;
     public string Name { get; init; } = string.Empty;
     public string Version { get; init; } = string.Empty;

@@ -8,20 +8,13 @@ public sealed class Source : ICreatedAuditableEntity
     
     private Source() { }
 
-    public static Source CreateNew(string name, string location) => new()
+    public static Source Create(string name, string location) => new()
     {
         Name = name ?? throw new ArgumentNullException(nameof(name), "Cannot be null"),
         Location = location ?? throw new ArgumentNullException(nameof(location), "Cannot be null")
     };
-    
-    public static Source CreateExisting(Guid id, string name, string location) => new()
-    {
-        Id = id,
-        Name = name ?? throw new ArgumentNullException(nameof(name), "Cannot be null"),
-        Location = location ?? throw new ArgumentNullException(nameof(location), "Cannot be null"),
-    };
 
-    public Guid Id { get; private set; }
+    public int Id { get; private set; }
     public string Name { get; private set; } = string.Empty;
     public string Location { get; set; } = string.Empty;
     public IReadOnlyCollection<Repository> Repositories => _repositories;

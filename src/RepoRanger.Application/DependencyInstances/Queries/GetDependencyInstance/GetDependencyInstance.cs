@@ -8,7 +8,7 @@ namespace RepoRanger.Application.DependencyInstances.Queries.GetDependencyInstan
 
 public sealed record GetDependencyInstanceQuery : IRequest<DependencyInstanceDetailVm>
 {
-    public Guid Id { get; init; }
+    public int Id { get; init; }
 }
 
 internal sealed class GetDependencyInstanceQueryHandler : IRequestHandler<GetDependencyInstanceQuery, DependencyInstanceDetailVm>
@@ -40,7 +40,7 @@ internal sealed class GetDependencyInstanceQueryHandler : IRequestHandler<GetDep
         return dependencyInstance;
     }
 
-    private static IEnumerable<ProjectDetailVm> GetProjectsForRepository(Guid repositoryId, IEnumerable<Project> projects) => 
+    private static IEnumerable<ProjectDetailVm> GetProjectsForRepository(int repositoryId, IEnumerable<Project> projects) => 
         projects.Where(p => p.RepositoryId == repositoryId).Select(p => new ProjectDetailVm
         {
             Id = p.Id,

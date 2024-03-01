@@ -36,7 +36,7 @@ internal sealed class RepositoryParser : IRepositoryParser
         return repository;
     }
     
-    private Repository Create(DirectoryInfo gitDirectory, Guid sourceId)
+    private Repository Create(DirectoryInfo gitDirectory, int sourceId)
     {
         var detail = _gitDetailService.GetRepositoryDetail(gitDirectory);
         var repository = Repository.Create(detail.Name, detail.RemoteUrl, detail.BranchName, sourceId);

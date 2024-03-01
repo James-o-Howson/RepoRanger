@@ -4,15 +4,15 @@ using RepoRanger.Application.Common.Interfaces.Persistence;
 
 namespace RepoRanger.Application.Repositories.Commands.UpdateRepository;
 
-public sealed record UpdateRepositoryCommand : IRequest<Guid>
+public sealed record UpdateRepositoryCommand : IRequest<int>
 {
-    public Guid Id { get; init; }
+    public int Id { get; init; }
     public string Name { get; init; } = string.Empty;
     public string RemoteUrl { get; init; } = string.Empty;
     public string BranchName { get; init; } = string.Empty;
 }
 
-internal sealed class UpdateRepositoryCommandHandler : IRequestHandler<UpdateRepositoryCommand, Guid>
+internal sealed class UpdateRepositoryCommandHandler : IRequestHandler<UpdateRepositoryCommand, int>
 {
     private readonly IApplicationDbContext _context;
 
@@ -21,7 +21,7 @@ internal sealed class UpdateRepositoryCommandHandler : IRequestHandler<UpdateRep
         _context = context;
     }
 
-    public async Task<Guid> Handle(UpdateRepositoryCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(UpdateRepositoryCommand request, CancellationToken cancellationToken)
     {
         var repository = await _context.Repositories.FindAsync([request.Id], cancellationToken);
 

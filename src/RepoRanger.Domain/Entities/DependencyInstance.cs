@@ -12,16 +12,15 @@ public class DependencyInstance : ICreatedAuditableEntity
         ArgumentException.ThrowIfNullOrEmpty(source);
         ArgumentException.ThrowIfNullOrEmpty(dependencyName);
 
-        Id = Guid.NewGuid();
         Source = source;
         DependencyName = dependencyName;
         Version = Normalise(source, version);
     }
 
-    public Guid Id { get; private set; } = Guid.Empty;
+    public int Id { get; set; }
     public DependencySource Source { get; private set; } = null!;
     public string DependencyName { get; private set; } = string.Empty;
-    public string Version { get; private set; } = string.Empty;
+    public string Version { get; } = string.Empty;
     public Project Project { get; private set; } = null!;
     public DateTime Created { get; set; }
     public string? CreatedBy { get; set; }

@@ -5,13 +5,13 @@ using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Sources.Commands.CreateSourceCommand;
 
-public sealed record CreateSourceCommand : IRequest<Guid>
+public sealed record CreateSourceCommand : IRequest<int>
 {
     public string Name { get; init; } = string.Empty;
     public string Location { get; init; } = string.Empty;
 }
 
-internal sealed class CreateSourceCommandHandler : IRequestHandler<CreateSourceCommand, Guid>
+internal sealed class CreateSourceCommandHandler : IRequestHandler<CreateSourceCommand, int>
 {
     private readonly IApplicationDbContext _context;
 
@@ -20,9 +20,9 @@ internal sealed class CreateSourceCommandHandler : IRequestHandler<CreateSourceC
         _context = context;
     }
 
-    public async Task<Guid> Handle(CreateSourceCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(CreateSourceCommand request, CancellationToken cancellationToken)
     {
-        var source = Source.CreateNew(request.Name, request.Location);
+        var source = Source.Create(request.Name, request.Location);
         
         await CreateDependencies(
             source.DependencyInstances.Select(di => di.DependencyName).ToHashSet(), 

@@ -11,20 +11,19 @@ public class Project : ICreatedAuditableEntity
     
     public static Project CreateNew(ProjectType type, string name, string version, params Metadata[] metadata) => new()
     {
-        Id = Guid.NewGuid(),
         Name = name,
         Type = type,
         Version = version,
         Metadata = metadata.ToList()
     };
     
-    public Guid Id { get; private set; } = Guid.Empty;
+    public int Id { get; set; }
     public List<Metadata> Metadata { get; private set; } = []; 
     public ProjectType Type { get; private set; } = null!;
     public string Name { get; private set; } = string.Empty;
     public string Version { get; private set; } = string.Empty;
     public IReadOnlyCollection<DependencyInstance> DependencyInstances => _dependencyInstances;
-    public Guid RepositoryId { get; private set; } = Guid.Empty;
+    public int RepositoryId { get; private set; }
     public Repository Repository { get; private set; } = null!;
     public DateTime Created { get; set; }
     public string? CreatedBy { get; set; }

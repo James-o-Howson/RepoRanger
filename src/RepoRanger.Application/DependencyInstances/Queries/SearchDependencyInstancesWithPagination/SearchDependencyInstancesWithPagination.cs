@@ -8,9 +8,9 @@ namespace RepoRanger.Application.DependencyInstances.Queries.SearchDependencyIns
 
 public sealed record SearchDependencyInstancesWithPaginationQuery : PaginatedRequest<DependencyInstanceVm>
 {
-    public IReadOnlyCollection<Guid>? SourceIds { get; init; }
-    public IReadOnlyCollection<Guid>? RepositoryIds { get; init; }
-    public IReadOnlyCollection<Guid>? ProjectIds { get; init; }
+    public IReadOnlyCollection<int>? SourceIds { get; init; }
+    public IReadOnlyCollection<int>? RepositoryIds { get; init; }
+    public IReadOnlyCollection<int>? ProjectIds { get; init; }
 }
 
 internal sealed class SearchDependencyInstancesWithPaginationQueryHandler : IRequestHandler<SearchDependencyInstancesWithPaginationQuery, PaginatedList<DependencyInstanceVm>>
@@ -58,20 +58,20 @@ internal sealed class SearchDependencyInstancesWithPaginationQueryHandler : IReq
         return query;
     }
     
-    private IQueryable<DependencyInstance> QueryProjectDependencies(IReadOnlyCollection<Guid> projectIds) =>
+    private IQueryable<DependencyInstance> QueryProjectDependencies(IReadOnlyCollection<int> projectIds) =>
         _context.Projects
             .Include(p => p.DependencyInstances)
             .Where(p => projectIds.Contains(p.Id))
             .SelectMany(p => p.DependencyInstances);
     
-    private IQueryable<DependencyInstance> QueryRepositoryDependencies(IReadOnlyCollection<Guid> repositoryIds) =>
+    private IQueryable<DependencyInstance> QueryRepositoryDependencies(IReadOnlyCollection<int> repositoryIds) =>
         _context.Repositories
             .Include(b => b.Projects)
             .ThenInclude(p => p.DependencyInstances)
             .Where(r => repositoryIds.Contains(r.Id))
             .SelectMany(r => r.DependencyInstances);
 
-    private IQueryable<DependencyInstance> QuerySourceDependencies(IReadOnlyCollection<Guid> sourceIds) =>
+    private IQueryable<DependencyInstance> QuerySourceDependencies(IReadOnlyCollection<int> sourceIds) =>
         _context.Sources
             .Include(r => r.Repositories)
             .ThenInclude(b => b.Projects)

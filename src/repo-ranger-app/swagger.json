@@ -16,8 +16,8 @@
             "in": "query",
             "style": "form",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -145,8 +145,8 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "string",
-                "format": "uuid"
+                "type": "integer",
+                "format": "int32"
               }
             }
           }
@@ -225,8 +225,8 @@
             "in": "query",
             "style": "form",
             "schema": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
@@ -300,8 +300,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "source": {
             "type": "string",
@@ -432,8 +432,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "name": {
             "type": "string",
@@ -450,8 +450,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "name": {
             "type": "string",
@@ -466,8 +466,8 @@
             "format": "int32"
           },
           "repositoryId": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "repositoryName": {
             "type": "string",
@@ -506,8 +506,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "name": {
             "type": "string",
@@ -527,8 +527,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "name": {
             "type": "string",
@@ -580,24 +580,24 @@
           "sourceIds": {
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32"
             },
             "nullable": true
           },
           "repositoryIds": {
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32"
             },
             "nullable": true
           },
           "projectIds": {
             "type": "array",
             "items": {
-              "type": "string",
-              "format": "uuid"
+              "type": "integer",
+              "format": "int32"
             },
             "nullable": true
           }
@@ -616,8 +616,8 @@
         "type": "object",
         "properties": {
           "id": {
-            "type": "string",
-            "format": "uuid"
+            "type": "integer",
+            "format": "int32"
           },
           "name": {
             "type": "string",

@@ -4,15 +4,15 @@ using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Repositories.Commands.CreateRepository;
 
-public sealed record CreateRepositoryCommand : IRequest<Guid>
+public sealed record CreateRepositoryCommand : IRequest<int>
 {
     public string Name { get; set; } = string.Empty;
     public string RemoteUrl { get; set; } = string.Empty;
     public string BranchName { get; set; } = string.Empty;
-    public Guid SourceId { get; init; }
+    public int SourceId { get; init; }
 }
 
-internal sealed class CreateRepositoryCommandHandler : IRequestHandler<CreateRepositoryCommand, Guid>
+internal sealed class CreateRepositoryCommandHandler : IRequestHandler<CreateRepositoryCommand, int>
 {
     private readonly IApplicationDbContext _context;
 
@@ -21,7 +21,7 @@ internal sealed class CreateRepositoryCommandHandler : IRequestHandler<CreateRep
         _context = context;
     }
 
-    public async Task<Guid> Handle(CreateRepositoryCommand request, CancellationToken cancellationToken)
+    public async Task<int> Handle(CreateRepositoryCommand request, CancellationToken cancellationToken)
     {
         var repository = Repository.Create(request.Name, request.RemoteUrl, request.BranchName, request.SourceId);
 
