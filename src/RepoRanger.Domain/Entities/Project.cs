@@ -9,7 +9,7 @@ public class Project : ICreatedAuditableEntity
     
     private Project() { }
     
-    public static Project CreateNew(ProjectType type, string name, string version, params Metadata[] metadata) => new()
+    public static Project Create(ProjectType type, string name, string version, params Metadata[] metadata) => new()
     {
         Name = name,
         Type = type,

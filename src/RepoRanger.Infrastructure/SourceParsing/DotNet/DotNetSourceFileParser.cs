@@ -61,7 +61,7 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
             var dependencyInstances = _projectParsers
                 .SelectMany(p => p.ParseAsync(definition.Content));
             
-            var project = Project.CreateNew(ProjectType.Dotnet, definition.Name, 
+            var project = Project.Create(ProjectType.Dotnet, definition.Name, 
                 await GetDotNetVersionAsync(definition.Content), GetMetadata(definition, fileInfo));
         
             project.AddDependencies(dependencyInstances);

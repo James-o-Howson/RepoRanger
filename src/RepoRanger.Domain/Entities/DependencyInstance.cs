@@ -7,20 +7,17 @@ public class DependencyInstance : ICreatedAuditableEntity
 {
     private DependencyInstance() { }
 
-    public DependencyInstance(DependencySource source, string dependencyName, string version)
+    public static DependencyInstance CreateInstance(DependencySource source, string dependencyName, string version) => new()
     {
-        ArgumentException.ThrowIfNullOrEmpty(source);
-        ArgumentException.ThrowIfNullOrEmpty(dependencyName);
-
-        Source = source;
-        DependencyName = dependencyName;
-        Version = Normalise(source, version);
-    }
+        Source = source,
+        DependencyName = dependencyName,
+        Version = version
+    };
 
     public int Id { get; set; }
     public DependencySource Source { get; private set; } = null!;
     public string DependencyName { get; private set; } = string.Empty;
-    public string Version { get; } = string.Empty;
+    public string Version { get; private set; } = string.Empty;
     public Project Project { get; private set; } = null!;
     public DateTime Created { get; set; }
     public string? CreatedBy { get; set; }

@@ -49,7 +49,7 @@ internal sealed partial class ProjectReferenceAttributeParser : IProjectParser
                     }
                 }
                     
-                return new DependencyInstance(DependencySource.Local, name, version);
+                return DependencyInstance.CreateInstance(DependencySource.Local, name, version);
             });
         
         return dependencyViewModels;
