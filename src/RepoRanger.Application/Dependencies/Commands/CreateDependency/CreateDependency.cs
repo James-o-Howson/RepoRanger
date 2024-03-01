@@ -20,7 +20,7 @@ internal sealed class CreateDependencyCommandHandler : IRequestHandler<CreateDep
 
     public async Task Handle(CreateDependencyCommand request, CancellationToken cancellationToken)
     {
-        await _context.Dependencies.AddAsync(new Dependency(request.Name), cancellationToken);
+        await _context.Dependencies.AddAsync(Dependency.CreateInstance(request.Name), cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
     }
 }

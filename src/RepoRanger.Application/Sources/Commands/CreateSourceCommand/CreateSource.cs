@@ -38,7 +38,7 @@ internal sealed class CreateSourceCommandHandler : IRequestHandler<CreateSourceC
     {
         foreach (var dependency in dependencies)
         {
-            var entity = new Dependency(dependency);
+            var entity = Dependency.CreateInstance(dependency);
             await _context.Dependencies.AddIfNotExistsAsync(entity, cancellationToken: cancellationToken);
         }
     }

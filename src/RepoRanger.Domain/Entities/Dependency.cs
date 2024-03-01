@@ -5,15 +5,15 @@ namespace RepoRanger.Domain.Entities;
 public sealed class Dependency : ICreatedAuditableEntity, IEquatable<Dependency>
 {
     private readonly List<DependencyInstance> _dependencyInstances = [];
-    
-    public Dependency(string name)
-    {
-        ArgumentException.ThrowIfNullOrEmpty(name);
 
-        Name = name;
-    }
+    private Dependency() { }
     
-    public string Name { get; private set; }
+    public static Dependency CreateInstance(string name) => new() 
+    {
+        Name = name
+    };
+
+    public string Name { get; private set; } = string.Empty;
     public IReadOnlyCollection<DependencyInstance> DependencyInstances => _dependencyInstances;
     public DateTime Created { get; set; }
     public string? CreatedBy { get; set; }
