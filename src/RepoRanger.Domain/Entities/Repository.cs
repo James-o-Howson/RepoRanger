@@ -8,18 +8,17 @@ public class Repository : ICreatedAuditableEntity
     
     private Repository() { }
     
-    public static Repository Create(string name, string remoteUrl, string defaultBranch, int sourceId) => new()
+    public static Repository Create(string name, string remoteUrl, string defaultBranch) => new()
     {
         Name = name,
         RemoteUrl = remoteUrl,
-        DefaultBranch = defaultBranch,
-        SourceId = sourceId
+        DefaultBranch = defaultBranch
     };
     
     public int Id { get; set; }
     public string Name { get; set; } = string.Empty;
     public string RemoteUrl { get; set; } = string.Empty;
-    public int SourceId { get; private set; }
+    public int SourceId { get; set; }
     public Source Source { get; private set; } = null!;
     public string DefaultBranch { get; set; } = string.Empty;
     public IReadOnlyCollection<Project> Projects => _projects;

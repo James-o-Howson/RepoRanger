@@ -11,7 +11,7 @@ public class DependencyInstance : ICreatedAuditableEntity
     {
         Source = source,
         DependencyName = dependencyName,
-        Version = version
+        Version = Normalise(source, version)
     };
 
     public int Id { get; set; }

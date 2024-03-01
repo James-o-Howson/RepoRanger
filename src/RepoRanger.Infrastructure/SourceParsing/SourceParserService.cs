@@ -11,7 +11,7 @@ using RepoRanger.Domain.SourceParsing;
 
 namespace RepoRanger.Infrastructure.SourceParsing;
 
-internal sealed class SourceParserService : ISourceParserService
+internal sealed class SourceParserService : ISourceParserService, IDisposable
 {
     private readonly ParsingContext _context;
 
@@ -45,35 +45,22 @@ internal sealed class SourceParserService : ISourceParserService
     {
         _logger.LogInformation("Parsing Source {SourceName}", sourceOptions.Name);
 
-        Source source = await CreateOrUpdateSourceAsync(sourceOptions.Name, sourceOptions.Location);
-
-        _context.StartParsing(source.Id);
+        Source source = await GetSource(sourceOptions.Name, sourceOptions.Location);
 
         IEnumerable<Repository> repositories = await ParseRepositoriesAsync(sourceOptions);
         source.AddRepositories(repositories);
 
-        _context.StopParsing();
-
         _logger.LogInformation("Finished Parsing Source {SourceName}:{Id}", sourceOptions.Name, source.Id);
     }
 
-    private async Task<Source> CreateOrUpdateSourceAsync(string name, string location)
+    private async Task<Source> GetSource(string name, string location)
     {
         SourcePreviewDto? existing = await _mediator.Send(new GetSourceByNameQuery { Name = name });
-
-        int id;
-        if (existing != null)
-        {
-            id = await _mediator.Send(new CreateSourceCommand { Name = name, Location = location });
-        }
-        else
-        {
-            id = await _mediator.Send(new UpdateSourceCommand { Id = existing.Id, Location = existing.Location });
-        }
-
-        _logger.LogInformation("Repo Ranger Job Finished - Source created Id: {SourceId}", id);
-
-        return Source.Create(name, location);
+        var source = Source.Create(name, location);
+        
+        if (existing != null) source.Id = existing.Id;
+        
+        return source;
     }
 
     private async Task<IEnumerable<Repository>> ParseRepositoriesAsync(SourceOptions sourceOptions)
@@ -97,4 +84,6 @@ internal sealed class SourceParserService : ISourceParserService
 
         return repository;
     }
+
+    public void Dispose() => _context.Dispose();
 }

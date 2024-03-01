@@ -20,9 +20,9 @@ internal sealed class RepositoryParser : IRepositoryParser
 
     public async Task<Repository> ParseAsync(ParsingContext parseContext)
     {
-        parseContext.EnsureParsingContextValid();
+        ArgumentNullException.ThrowIfNull(parseContext.GitDirectory);
         
-        var repository = Create(parseContext.GitDirectory!, parseContext.SourceId!.Value);
+        var repository = Create(parseContext.GitDirectory);
         
         var filePaths = Directory.EnumerateFiles(parseContext.GitDirectoryPath, "*.*", SearchOption.AllDirectories)
             .AsParallel()
@@ -36,10 +36,10 @@ internal sealed class RepositoryParser : IRepositoryParser
         return repository;
     }
     
-    private Repository Create(DirectoryInfo gitDirectory, int sourceId)
+    private Repository Create(DirectoryInfo gitDirectory)
     {
         var detail = _gitDetailService.GetRepositoryDetail(gitDirectory);
-        var repository = Repository.Create(detail.Name, detail.RemoteUrl, detail.BranchName, sourceId);
+        var repository = Repository.Create(detail.Name, detail.RemoteUrl, detail.BranchName);
         
         return repository;
     }
