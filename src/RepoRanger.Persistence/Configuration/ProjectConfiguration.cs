@@ -10,8 +10,14 @@ internal sealed class ProjectConfiguration : IEntityTypeConfiguration<Project>
     {
         builder.HasKey(e => e.Id);
         
-        builder.HasMany(b => b.DependencyInstances)
-            .WithOne(p => p.Project);
+        builder.HasAlternateKey(p => new
+        {
+            p.RepositoryId, p.Name, p.Path
+        });
+        
+        builder.HasMany(p => p.DependencyInstances)
+            .WithOne(d => d.Project)
+            .HasForeignKey(d => d.ProjectId);
 
         builder.OwnsOne(p => p.Type);
         builder.OwnsOne(p => p.Metadata);

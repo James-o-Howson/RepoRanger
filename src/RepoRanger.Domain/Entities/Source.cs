@@ -37,11 +37,22 @@ public sealed class Source : ICreatedAuditableEntity
     public IEnumerable<DependencyInstance> DependencyInstances => Repositories
         .SelectMany(r => r.DependencyInstances)
         .ToList();
+
+    public IEnumerable<string> Dependencies => DependencyInstances
+        .Select(d => d.DependencyName).ToHashSet();
     
     public void AddRepositories(IEnumerable<Repository> repositories)
     {
         ArgumentNullException.ThrowIfNull(repositories);
         _repositories.AddRange(repositories);
+    }
+
+    public void Update(string location, IEnumerable<Repository> repositories)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(location);
+        ArgumentNullException.ThrowIfNull(repositories);
+        
+        Location = location;
     }
 
     public void Delete()

@@ -10,6 +10,11 @@ internal sealed class RepositoryConfiguration : IEntityTypeConfiguration<Reposit
     {
         builder.HasKey(e => e.Id);
 
+        builder.HasAlternateKey(r => new
+        {
+            r.SourceId, r.Name, r.RemoteUrl
+        });
+
         builder.HasMany(r => r.Projects)
             .WithOne(p => p.Repository)
             .HasForeignKey(b => b.RepositoryId)

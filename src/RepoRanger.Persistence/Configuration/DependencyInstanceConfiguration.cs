@@ -10,6 +10,11 @@ internal sealed class DependencyInstanceConfiguration : IEntityTypeConfiguration
     {
         builder.HasKey(di => di.Id);
         
+        builder.HasAlternateKey(d => new
+        {
+            d.ProjectId, d.DependencyName
+        });
+        
         builder.OwnsOne(d => d.Source);
         
         builder.Property(di => di.CreatedBy)

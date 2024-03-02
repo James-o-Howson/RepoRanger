@@ -61,11 +61,15 @@ namespace RepoRanger.Persistence.Migrations
                     b.Property<int?>("SourceId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Version")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("DependencyName");
+                    b.HasAlternateKey("ProjectId", "DependencyName");
 
-                    b.HasIndex("ProjectId");
+                    b.HasIndex("DependencyName");
 
                     b.HasIndex("RepositoryId");
 
@@ -93,6 +97,10 @@ namespace RepoRanger.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("Path")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("RepositoryId")
                         .HasColumnType("INTEGER");
 
@@ -102,7 +110,7 @@ namespace RepoRanger.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RepositoryId");
+                    b.HasAlternateKey("RepositoryId", "Name", "Path");
 
                     b.ToTable("Projects");
                 });
@@ -139,7 +147,7 @@ namespace RepoRanger.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("SourceId");
+                    b.HasAlternateKey("SourceId", "Name", "RemoteUrl");
 
                     b.ToTable("Repositories");
                 });

@@ -56,6 +56,7 @@ namespace RepoRanger.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Repositories", x => x.Id);
+                    table.UniqueConstraint("AK_Repositories_SourceId_Name_RemoteUrl", x => new { x.SourceId, x.Name, x.RemoteUrl });
                     table.ForeignKey(
                         name: "FK_Repositories_Sources_SourceId",
                         column: x => x.SourceId,
@@ -73,6 +74,7 @@ namespace RepoRanger.Persistence.Migrations
                     Metadata_Capacity = table.Column<int>(type: "INTEGER", nullable: false),
                     Type_Value = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Path = table.Column<string>(type: "TEXT", nullable: false),
                     Version = table.Column<string>(type: "TEXT", nullable: false),
                     RepositoryId = table.Column<int>(type: "INTEGER", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -81,6 +83,7 @@ namespace RepoRanger.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Projects", x => x.Id);
+                    table.UniqueConstraint("AK_Projects_RepositoryId_Name_Path", x => new { x.RepositoryId, x.Name, x.Path });
                     table.ForeignKey(
                         name: "FK_Projects_Repositories_RepositoryId",
                         column: x => x.RepositoryId,
@@ -97,6 +100,7 @@ namespace RepoRanger.Persistence.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     Source_Value = table.Column<string>(type: "TEXT", nullable: false),
                     DependencyName = table.Column<string>(type: "TEXT", nullable: false),
+                    Version = table.Column<string>(type: "TEXT", nullable: false),
                     ProjectId = table.Column<int>(type: "INTEGER", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
@@ -106,6 +110,7 @@ namespace RepoRanger.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_DependencyInstances", x => x.Id);
+                    table.UniqueConstraint("AK_DependencyInstances_ProjectId_DependencyName", x => new { x.ProjectId, x.DependencyName });
                     table.ForeignKey(
                         name: "FK_DependencyInstances_Dependencies_DependencyName",
                         column: x => x.DependencyName,
@@ -136,11 +141,6 @@ namespace RepoRanger.Persistence.Migrations
                 column: "DependencyName");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DependencyInstances_ProjectId",
-                table: "DependencyInstances",
-                column: "ProjectId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DependencyInstances_RepositoryId",
                 table: "DependencyInstances",
                 column: "RepositoryId");
@@ -148,16 +148,6 @@ namespace RepoRanger.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_DependencyInstances_SourceId",
                 table: "DependencyInstances",
-                column: "SourceId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Projects_RepositoryId",
-                table: "Projects",
-                column: "RepositoryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Repositories_SourceId",
-                table: "Repositories",
                 column: "SourceId");
 
             migrationBuilder.CreateIndex(

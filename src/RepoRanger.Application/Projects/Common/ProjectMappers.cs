@@ -14,6 +14,6 @@ internal static class ProjectMappers
     private static ProjectDto ToDto(this Project project)
     {
         ArgumentNullException.ThrowIfNull(project);
-        return new ProjectDto(project.Type, project.Name, project.Version, project.DependencyInstances.ToDtos());
+        return new ProjectDto(project.Type, project.Name, project.Version, project.Path, project.DependencyInstances.ToDtos());
     }
 }

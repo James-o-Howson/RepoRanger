@@ -9,7 +9,7 @@ public class Project : ICreatedAuditableEntity
     
     private Project() { }
     
-    public static Project Create(ProjectType type, string name, string version, IEnumerable<Metadata>? metadata)
+    public static Project Create(ProjectType type, string name, string version, string path, IEnumerable<Metadata>? metadata)
     {
         var project = new Project
         {
@@ -22,10 +22,10 @@ public class Project : ICreatedAuditableEntity
         return project;
     }
     
-    public static Project Create(ProjectType type, string name, string version, IEnumerable<Metadata>? metadata, 
+    public static Project Create(ProjectType type, string name, string version, string path, IEnumerable<Metadata>? metadata, 
         IEnumerable<DependencyInstance>? dependencyInstances)
     {
-        var project = Create(type, name, version, metadata);
+        var project = Create(type, name, version, path, metadata);
         if(dependencyInstances != null) project.AddDependencyInstances(dependencyInstances);
         
         return project;
@@ -35,6 +35,7 @@ public class Project : ICreatedAuditableEntity
     public List<Metadata> Metadata { get; private set; } = []; 
     public ProjectType Type { get; private set; } = null!;
     public string Name { get; private set; } = string.Empty;
+    public string Path { get; private set; }
     public string Version { get; private set; } = string.Empty;
     public IReadOnlyCollection<DependencyInstance> DependencyInstances => _dependencyInstances;
     public int RepositoryId { get; private set; }

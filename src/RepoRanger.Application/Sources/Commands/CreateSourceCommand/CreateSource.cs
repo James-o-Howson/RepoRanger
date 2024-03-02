@@ -24,12 +24,7 @@ internal sealed class CreateSourceCommandHandler : IRequestHandler<CreateSourceC
 
     public async Task<int> Handle(CreateSourceCommand request, CancellationToken cancellationToken)
     {
-        var repositories = request.Repositories.ToEntities();
-        var source = Source.Create(request.Name, request.Location, repositories);
-        
-        await CreateDependencies(
-            source.DependencyInstances.Select(di => di.DependencyName).ToHashSet(), 
-            cancellationToken);
+        var source = await CreateSourceAsync(request, cancellationToken);
         
         await _context.Sources.AddAsync(source, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
@@ -37,12 +32,24 @@ internal sealed class CreateSourceCommandHandler : IRequestHandler<CreateSourceC
         return source.Id;
     }
 
+    private async Task<Source> CreateSourceAsync(CreateSourceCommand request, CancellationToken cancellationToken)
+    {
+        var repositories = request.Repositories.ToEntities();
+        var source = Source.Create(request.Name, request.Location, repositories);
+        
+        await CreateDependencies(source.Dependencies, cancellationToken);
+        
+        return source;
+    }
+
     private async Task CreateDependencies(IEnumerable<string> dependencies, CancellationToken cancellationToken)
     {
         foreach (var dependency in dependencies)
         {
-            var entity = Dependency.CreateInstance(dependency);
-            await _context.Dependencies.AddIfNotExistsAsync(entity, cancellationToken: cancellationToken);
+            await _context.Dependencies.AddIfNotExistsAsync(
+                Dependency.CreateInstance(dependency), 
+                null, 
+                cancellationToken);
         }
     }
 }

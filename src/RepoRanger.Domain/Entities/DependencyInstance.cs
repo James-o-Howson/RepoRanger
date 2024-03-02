@@ -18,10 +18,11 @@ public class DependencyInstance : ICreatedAuditableEntity
     public DependencySource Source { get; private set; } = null!;
     public string DependencyName { get; private set; } = string.Empty;
     public string Version { get; private set; } = string.Empty;
+    public int ProjectId { get; private set; }
     public Project Project { get; private set; } = null!;
     public DateTime Created { get; set; }
     public string? CreatedBy { get; set; }
-    
+
     private static string Normalise(string source, string version)
     {
         if (source != "Nuget") return version;

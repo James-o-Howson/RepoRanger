@@ -18,6 +18,7 @@ public static class ProjectMapper
             ProjectType.From(dto.Type), 
             dto.Name, 
             dto.Version, 
+            dto.Path,
             null, 
             dto.Dependencies.ToEntities());
     }

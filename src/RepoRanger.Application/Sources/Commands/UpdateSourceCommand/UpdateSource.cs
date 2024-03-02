@@ -2,6 +2,7 @@
 using RepoRanger.Application.Common.Exceptions;
 using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Application.Repositories.Common;
+using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Sources.Commands.UpdateSourceCommand;
 
@@ -26,8 +27,10 @@ internal sealed class UpdateSourceCommandHandler : IRequestHandler<UpdateSourceC
         var source = await _context.Sources.FindAsync([request.Id], cancellationToken);
 
         if (source is null) throw new NotFoundException($"Cannot find Source for Id: {request.Id}");
-
-        source.Location = request.Location;
+        
+        source.Update(request.Location, request.Repositories.ToEntities());
+        
+        await _context.SaveChangesAsync(cancellationToken);
         return source.Id;
     }
 }
