@@ -45,12 +45,28 @@ public sealed class Source : Auditable, IEquatable<Source>
         _repositories.AddRange(repositories);
     }
 
-    public void Update(string location, IEnumerable<Repository> repositories)
+    public void Update(string location, IList<Repository> repositories)
     {
         ArgumentException.ThrowIfNullOrEmpty(location);
         ArgumentNullException.ThrowIfNull(repositories);
         
         Location = location;
+        
+        var removed = Repositories.Except(repositories);
+        foreach (var repository in removed)
+        {
+            _repositories.Remove(repository);
+        }
+        
+        var updated = repositories.Intersect(Repositories);
+        foreach (var repository in updated)
+        {
+            var index = _repositories.IndexOf(repository);
+            _repositories[index].Update(repository);
+        }
+        
+        var added = repositories.Except(Repositories);
+        _repositories.AddRange(added);
     }
 
     public void Delete()

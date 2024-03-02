@@ -28,7 +28,7 @@ internal sealed class UpdateSourceCommandHandler : IRequestHandler<UpdateSourceC
 
         if (source is null) throw new NotFoundException($"Cannot find Source for Id: {request.Id}");
         
-        source.Update(request.Location, request.Repositories.ToEntities());
+        source.Update(request.Location, request.Repositories.ToEntities().ToList());
         
         await _context.SaveChangesAsync(cancellationToken);
         return source.Id;
