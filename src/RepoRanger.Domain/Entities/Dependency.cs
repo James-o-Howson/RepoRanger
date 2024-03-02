@@ -1,8 +1,8 @@
-﻿using RepoRanger.Domain.Common.Interfaces;
+﻿using RepoRanger.Domain.Common;
 
 namespace RepoRanger.Domain.Entities;
 
-public sealed class Dependency : ICreatedAuditableEntity, IEquatable<Dependency>
+public sealed class Dependency : Auditable, IEquatable<Dependency>
 {
     private readonly List<DependencyInstance> _dependencyInstances = [];
 
@@ -15,8 +15,6 @@ public sealed class Dependency : ICreatedAuditableEntity, IEquatable<Dependency>
 
     public string Name { get; private set; } = string.Empty;
     public IReadOnlyCollection<DependencyInstance> DependencyInstances => _dependencyInstances;
-    public DateTime Created { get; set; }
-    public string? CreatedBy { get; set; }
 
     public void Delete()
     {

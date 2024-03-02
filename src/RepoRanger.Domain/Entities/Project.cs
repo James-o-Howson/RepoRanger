@@ -1,9 +1,9 @@
-﻿using RepoRanger.Domain.Common.Interfaces;
+﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.ValueObjects;
 
 namespace RepoRanger.Domain.Entities;
 
-public class Project : ICreatedAuditableEntity
+public class Project : Auditable, IEquatable<Project>
 {
     private readonly List<DependencyInstance> _dependencyInstances = [];
     
@@ -35,13 +35,11 @@ public class Project : ICreatedAuditableEntity
     public List<Metadata> Metadata { get; private set; } = []; 
     public ProjectType Type { get; private set; } = null!;
     public string Name { get; private set; } = string.Empty;
-    public string Path { get; private set; }
+    public string Path { get; private set; } = string.Empty;
     public string Version { get; private set; } = string.Empty;
     public IReadOnlyCollection<DependencyInstance> DependencyInstances => _dependencyInstances;
     public int RepositoryId { get; private set; }
     public Repository Repository { get; private set; } = null!;
-    public DateTime Created { get; set; }
-    public string? CreatedBy { get; set; }
 
     public void AddDependencyInstances(IEnumerable<DependencyInstance> dependencies)
     {
@@ -52,5 +50,25 @@ public class Project : ICreatedAuditableEntity
     internal void Delete()
     {
         _dependencyInstances.Clear();
+    }
+
+    public bool Equals(Project? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Name == other.Name && Path == other.Path && RepositoryId == other.RepositoryId;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+        return Equals((Project)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name, Path, RepositoryId);
     }
 }

@@ -1,8 +1,8 @@
-﻿using RepoRanger.Domain.Common.Interfaces;
+﻿using RepoRanger.Domain.Common;
 
 namespace RepoRanger.Domain.Entities;
 
-public class Repository : ICreatedAuditableEntity
+public class Repository : Auditable, IEquatable<Repository>
 {
     private readonly List<Project> _projects = [];
     
@@ -36,8 +36,6 @@ public class Repository : ICreatedAuditableEntity
     public Source Source { get; private set; } = null!;
     public string DefaultBranch { get; set; } = string.Empty;
     public IReadOnlyCollection<Project> Projects => _projects;
-    public DateTime Created { get; set; }
-    public string? CreatedBy { get; set; }
 
     public IEnumerable<DependencyInstance> DependencyInstances => Projects
         .SelectMany(p => p.DependencyInstances)
@@ -57,5 +55,25 @@ public class Repository : ICreatedAuditableEntity
         }
 
         _projects.Clear();
+    }
+
+    public bool Equals(Repository? other)
+    {
+        if (ReferenceEquals(null, other)) return false;
+        if (ReferenceEquals(this, other)) return true;
+        return Name == other.Name && RemoteUrl == other.RemoteUrl && SourceId == other.SourceId;
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        if (obj.GetType() != GetType()) return false;
+        return Equals((Repository)obj);
+    }
+
+    public override int GetHashCode()
+    {
+        return HashCode.Combine(Name, RemoteUrl, SourceId);
     }
 }
