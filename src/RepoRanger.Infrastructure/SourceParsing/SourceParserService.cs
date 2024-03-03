@@ -61,7 +61,6 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
         }
         
         await _dbContext.SaveChangesAsync(cancellationToken);
-
     }
 
     private async Task<ParsedSourceResult> ParseSourceAsync(SourceOptions sourceOptions, CancellationToken cancellationToken)
