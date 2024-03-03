@@ -50,21 +50,26 @@ public class Repository : Auditable, IEquatable<Repository>
     public void Update(Repository repository)
     {
         DefaultBranch = repository.DefaultBranch;
-        
-        var removed = Projects.Except(repository.Projects);
+        Update(repository.Projects);
+    }
+
+    public void Update(IEnumerable<Project> projects)
+    {
+        var enumerable = projects.ToList();
+        var removed = Projects.Except(enumerable);
         foreach (var project in removed)
         {
             _projects.Remove(project);
         }
         
-        var updated = repository.Projects.Intersect(Projects);
+        var updated = enumerable.Intersect(Projects);
         foreach (var project in updated)
         {
             var index = _projects.IndexOf(project);
             _projects[index].Update(project);
         }
         
-        var added = repository.Projects.Except(Projects);
+        var added = enumerable.Except(Projects);
         _projects.AddRange(added);
     }
     

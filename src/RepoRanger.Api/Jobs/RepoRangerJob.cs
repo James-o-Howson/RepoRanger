@@ -39,7 +39,7 @@ internal sealed class RepoRangerJob : IJob
                 return;
             }
 
-            await StartRanging();
+            await StartRanging(context.CancellationToken);
         }
         catch (Exception e)
         {
@@ -48,9 +48,9 @@ internal sealed class RepoRangerJob : IJob
         }
     }
 
-    private async Task StartRanging()
+    private async Task StartRanging(CancellationToken cancellationToken)
     {
-        await _sourceParserService.ParseAsync();
+        await _sourceParserService.ParseAsync(cancellationToken);
         _logger.LogInformation("Repo Ranger Job Finished");
     }
 }

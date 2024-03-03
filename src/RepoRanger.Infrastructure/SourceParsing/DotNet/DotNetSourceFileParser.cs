@@ -59,7 +59,7 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
             _logger.LogInformation("Parsing CSharp Project {CsprojFilePath}", definition.FilePath);
 
             var dependencyInstances = _projectParsers
-                .SelectMany(p => p.ParseAsync(definition.Content));
+                .SelectMany(p => p.ParseAsync(definition.Content)).ToHashSet();
             
             var project = Project.Create(ProjectType.Dotnet, definition.Name, 
                 await GetDotNetVersionAsync(definition.Content), definition.FilePath, GetMetadata(definition, fileInfo));

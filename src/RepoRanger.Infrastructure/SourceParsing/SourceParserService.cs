@@ -1,10 +1,8 @@
 ﻿using System.Collections.Concurrent;
-using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RepoRanger.Application.Sources.Commands.CreateSourceCommand;
-using RepoRanger.Application.Sources.Commands.UpdateSourceCommand;
-using RepoRanger.Application.Sources.Queries.GetByName;
+using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Domain.Common.Interfaces;
 using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.SourceParsing;
@@ -13,83 +11,74 @@ namespace RepoRanger.Infrastructure.SourceParsing;
 
 internal sealed class SourceParserService : ISourceParserService, IDisposable
 {
-    private readonly ParsingContext _context;
+    private readonly ParsingContext _parseContext;
 
     private readonly ILogger<SourceParserService> _logger;
-
-    private readonly IMediator _mediator;
+    private readonly IApplicationDbContext _dbContext;
     private readonly SourceParserOptions _options;
     private readonly IRepositoryParser _repositoryParser;
 
     public SourceParserService(IEnumerable<ISourceFileParser> fileContentParsers,
         IOptions<SourceParserOptions> options,
-        ILogger<SourceParserService> logger,
-        IMediator mediator, IRepositoryParser repositoryParser)
+        ILogger<SourceParserService> logger, 
+        IRepositoryParser repositoryParser, 
+        IApplicationDbContext dbContext)
     {
-        ConcurrentBag<ISourceFileParser> sourceFileParsers = new(fileContentParsers);
+        ConcurrentQueue<ISourceFileParser> sourceFileParsers = new(fileContentParsers);
         _logger = logger;
-        _mediator = mediator;
         _repositoryParser = repositoryParser;
+        _dbContext = dbContext;
         _options = options.Value;
 
-        _context = ParsingContext.Create(sourceFileParsers);
+        _parseContext = ParsingContext.Create(sourceFileParsers);
     }
 
     private IEnumerable<SourceOptions> EnabledSourceOptions => 
         _options.Sources.Where(s => s.Enabled);
 
-    public async Task ParseAsync()
+    public async Task ParseAsync(CancellationToken cancellationToken)
     {
-        var sources = await Task.WhenAll(EnabledSourceOptions.Select(ParseSourceAsync));
+        var sources = await Task.WhenAll(EnabledSourceOptions.Select(options => 
+            ParseSourceAsync(options, cancellationToken)));
 
         foreach (var source in sources)
         {
-            await CreateOrUpdate(source);
+            await CreateOrUpdate(source, cancellationToken);
         }
     }
 
-    private async Task CreateOrUpdate(Source source)
+    private async Task CreateOrUpdate(Source source, CancellationToken cancellationToken)
     {
-        if (!source.HasId)
+        if (source.IsNew)
         {
-            await _mediator.Send(new CreateSourceCommand
-            {
-                Name = source.Name,
-                Location = source.Location
-            });
+            await _dbContext.Sources.AddAsync(source, cancellationToken);
         }
-        else
-        {
-            await _mediator.Send(new UpdateSourceCommand
-            {
-                Id = source.Id,
-                Location = source.Location
-            });
-        }
+        
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
     }
 
-    private async Task<Source> ParseSourceAsync(SourceOptions sourceOptions)
+    private async Task<Source> ParseSourceAsync(SourceOptions sourceOptions, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Parsing Source {SourceName}", sourceOptions.Name);
 
-        var source = await GetSource(sourceOptions.Name, sourceOptions.Location);
-
+        var source = await GetSource(sourceOptions.Name, sourceOptions.Location, cancellationToken);
+        _parseContext.Source = source;
+            
         var repositories = await ParseRepositoriesAsync(sourceOptions);
         source.AddRepositories(repositories);
 
-        _logger.LogInformation("Finished Parsing Source {SourceName}:{Id}", sourceOptions.Name, source.Id);
+        _logger.LogInformation("Finished Parsing Source {SourceName}", sourceOptions.Name);
 
         return source;
     }
 
-    private async Task<Source> GetSource(string name, string location)
+    private async Task<Source> GetSource(string name, string location, CancellationToken cancellationToken)
     {
-        var existing = await _mediator.Send(new GetSourceByNameQuery { Name = name });
-        var source = Source.Create(name, location);
-        
-        if (existing != null) source.Id = existing.Id;
-        
-        return source;
+        var source = await _dbContext.Sources
+            .FirstOrDefaultAsync(s => s.Name == name, cancellationToken);
+
+        return source ?? Source.Create(name, location);
     }
 
     private async Task<IEnumerable<Repository>> ParseRepositoriesAsync(SourceOptions sourceOptions)
@@ -103,16 +92,16 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
 
     private async Task<Repository> ParseRepositoryAsync(string repositoryPath)
     {
-        _context.GitDirectory = new DirectoryInfo(repositoryPath);
+        _parseContext.GitDirectory = new DirectoryInfo(repositoryPath);
 
-        _logger.LogInformation("Parsing Repository {RepositoryName}", _context.GitRepositoryName);
+        _logger.LogInformation("Parsing Repository {RepositoryName}", _parseContext.GitRepositoryName);
 
-        var repository = await _repositoryParser.ParseAsync(_context);
+        var repository = await _repositoryParser.ParseAsync(_parseContext);
 
-        _logger.LogInformation("Finished Parsing Repository {RepositoryName}", _context.GitRepositoryName);
+        _logger.LogInformation("Finished Parsing Repository {RepositoryName}", _parseContext.GitRepositoryName);
 
         return repository;
     }
 
-    public void Dispose() => _context.Dispose();
+    public void Dispose() => _parseContext.Dispose();
 }

@@ -30,45 +30,26 @@ public sealed class Source : Auditable, IEquatable<Source>
     public string Name { get; private set; } = string.Empty;
     public string Location { get; set; } = string.Empty;
     public IReadOnlyCollection<Repository> Repositories => _repositories;
-    public bool HasId => Id > 0;
+    public bool IsNew => Id == 0;
     
     public IEnumerable<DependencyInstance> DependencyInstances => Repositories
         .SelectMany(r => r.DependencyInstances)
         .ToList();
-
-    public IEnumerable<string> Dependencies => DependencyInstances
-        .Select(d => d.DependencyName).ToHashSet();
     
     public void AddRepositories(IEnumerable<Repository> repositories)
     {
         ArgumentNullException.ThrowIfNull(repositories);
         _repositories.AddRange(repositories);
     }
-
-    public void Update(string location, IList<Repository> repositories)
+    
+    public Repository? GetRepository(Repository repository)
     {
-        ArgumentException.ThrowIfNullOrEmpty(location);
-        ArgumentNullException.ThrowIfNull(repositories);
-        
-        Location = location;
-        
-        var removed = Repositories.Except(repositories);
-        foreach (var repository in removed)
-        {
-            _repositories.Remove(repository);
-        }
-        
-        var updated = repositories.Intersect(Repositories);
-        foreach (var repository in updated)
-        {
-            var index = _repositories.IndexOf(repository);
-            _repositories[index].Update(repository);
-        }
-        
-        var added = repositories.Except(Repositories);
-        _repositories.AddRange(added);
+        return _repositories.FirstOrDefault(r =>
+            r.SourceId == repository.SourceId && 
+            r.Name == repository.Name && 
+            r.RemoteUrl == repository.RemoteUrl);
     }
-
+    
     public void Delete()
     {
         foreach (var repository in Repositories)

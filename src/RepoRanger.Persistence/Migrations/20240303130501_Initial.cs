@@ -102,10 +102,10 @@ namespace RepoRanger.Persistence.Migrations
                     DependencyName = table.Column<string>(type: "TEXT", nullable: false),
                     Version = table.Column<string>(type: "TEXT", nullable: false),
                     ProjectId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
                     RepositoryId = table.Column<int>(type: "INTEGER", nullable: true),
-                    SourceId = table.Column<int>(type: "INTEGER", nullable: true)
+                    SourceId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
                 },
                 constraints: table =>
                 {

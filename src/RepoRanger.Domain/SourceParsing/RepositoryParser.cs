@@ -1,4 +1,5 @@
-﻿using RepoRanger.Domain.Common.Interfaces;
+﻿using System.Collections.Concurrent;
+using RepoRanger.Domain.Common.Interfaces;
 using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.Git;
 
@@ -20,44 +21,54 @@ internal sealed class RepositoryParser : IRepositoryParser
 
     public async Task<Repository> ParseAsync(ParsingContext parseContext)
     {
+        ArgumentNullException.ThrowIfNull(parseContext.Source);
         ArgumentNullException.ThrowIfNull(parseContext.GitDirectory);
-        
-        var repository = Create(parseContext.GitDirectory);
         
         var filePaths = Directory.EnumerateFiles(parseContext.GitDirectoryPath, "*.*", SearchOption.AllDirectories)
             .AsParallel()
             .WithDegreeOfParallelism(Environment.ProcessorCount);
         
         var parseFileTasks = filePaths.Select(filePath => 
-            AddProjectsAsync(repository, filePath, parseContext.SourceFileParsers));
+            AddProjectsAsync(filePath, parseContext.SourceFileParsers));
         
-        await Task.WhenAll(parseFileTasks);
+        var repository = GetOrCreate(parseContext.GitDirectory, parseContext.Source);
+        var projects = (await Task.WhenAll(parseFileTasks)).SelectMany(p => p);
+        repository.Update(projects);
         
         return repository;
     }
     
-    private Repository Create(DirectoryInfo gitDirectory)
+    private Repository GetOrCreate(DirectoryInfo gitDirectory, Source source)
     {
         var detail = _gitDetailService.GetRepositoryDetail(gitDirectory);
         var repository = Repository.Create(detail.Name, detail.RemoteUrl, detail.BranchName);
+
+        if (source.IsNew)
+        {
+            return repository;
+        }
+
+        var existing = source.GetRepository(repository);
+        if (existing is not null) return existing;
         
+        source.AddRepositories([repository]);
         return repository;
+
     }
     
-    private static async Task AddProjectsAsync(Repository repository, string filePath,
-        IEnumerable<ISourceFileParser> sourceFileParsers)
+    private static async Task<List<Project>> AddProjectsAsync(string filePath, ConcurrentQueue<ISourceFileParser> sourceFileParsers)
     {
+        List<Project> projects = [];
         var fileContentParser = sourceFileParsers.SingleOrDefault(p => p.CanParse(filePath));
-        if (fileContentParser != null)
-        {
-            // Don't read content or make file info unless the file path matches a parser, it's expensive.
-            var content = await File.ReadAllTextAsync(filePath);
-            var fileInfo = new FileInfo(filePath);
+        
+        if (fileContentParser == null) return projects;
+        
+        // Don't read content or make file info unless the file path matches a parser, it's expensive.
+        var content = await File.ReadAllTextAsync(filePath);
+        var fileInfo = new FileInfo(filePath);
 
-            var projects = (await fileContentParser.ParseAsync(content, fileInfo)).ToList();
-            if (projects.Count == 0) return;
-            
-            repository.AddProjects(projects.ToList());
-        }
+        projects = (await fileContentParser.ParseAsync(content, fileInfo)).ToList();
+
+        return projects;
     }
 }

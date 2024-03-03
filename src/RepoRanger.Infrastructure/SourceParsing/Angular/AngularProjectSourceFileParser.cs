@@ -56,8 +56,8 @@ internal sealed class AngularProjectSourceFileParser : ISourceFileParser
         
         dependencies.AddRange(package.Dependencies
             .Select(entry => CreateDependencyInstance(entry.Key, entry.Value)));
-
-        return dependencies;
+        
+        return dependencies.ToHashSet();
     }
 
     private static string FindAngularVersion(PackageJson packageJson)
@@ -68,7 +68,7 @@ internal sealed class AngularProjectSourceFileParser : ISourceFileParser
         return version ?? string.Empty;
     }
 
-    private DependencyInstance CreateDependencyInstance(string dependencyName, string? version)
+    private static DependencyInstance CreateDependencyInstance(string dependencyName, string? version)
     {
         if (dependencyName.Length > 0 && dependencyName[0] == '@')
         {

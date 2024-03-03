@@ -2,5 +2,5 @@
 
 public interface ISourceParserService
 {
-    Task ParseAsync();
+    Task ParseAsync(CancellationToken cancellationToken);
 }
