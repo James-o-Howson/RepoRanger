@@ -41,14 +41,14 @@ internal sealed class AngularProjectSourceFileParser : ISourceFileParser
         if (package is null) throw new ArgumentException($"Cannot deserialize {nameof(content)} into ${typeof(PackageJson)}", content);
 
         var project = Project.Create(ProjectType.Angular, package.Name, FindAngularVersion(package), fileInfo.FullName, null);
-        project.AddDependencyInstances(GetDependencies(package));
+        project.AddDependencyInstances(GetDependencyInstances(package));
         
         _logger.LogInformation("Finished Parsing package.json {PackageJsonPath}. Dependencies found = {DependencyCount}", fileInfo.FullName, project.DependencyInstances.Count);
 
         return [project];
     }
 
-    private IEnumerable<DependencyInstance> GetDependencies(PackageJson package)
+    private static IEnumerable<DependencyInstance> GetDependencyInstances(PackageJson package)
     {
         var dependencies = package.DevDependencies
             .Select(entry => CreateDependencyInstance(entry.Key, entry.Value))

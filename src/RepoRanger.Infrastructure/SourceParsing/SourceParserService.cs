@@ -6,6 +6,7 @@ using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Domain.Common.Interfaces;
 using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.SourceParsing;
+using RepoRanger.Infrastructure.SourceParsing.Common;
 
 namespace RepoRanger.Infrastructure.SourceParsing;
 
@@ -38,49 +39,46 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
 
     public async Task ParseAsync(CancellationToken cancellationToken)
     {
-        var sources = await Task.WhenAll(EnabledSourceOptions.Select(options => 
+        var parseResults = await Task.WhenAll(EnabledSourceOptions.Select(options => 
             ParseSourceAsync(options, cancellationToken)));
 
-        foreach (var source in sources)
+        foreach (var result in parseResults)
         {
-            await CreateOrUpdate(source, cancellationToken);
+            await CreateOrUpdate(result, cancellationToken);
         }
     }
 
-    private async Task CreateOrUpdate(Source source, CancellationToken cancellationToken)
+    private async Task CreateOrUpdate(ParsedSourceResult result, CancellationToken cancellationToken)
     {
-        if (source.IsNew)
+        if (result.IsNewSource)
         {
-            await _dbContext.Sources.AddAsync(source, cancellationToken);
+            await _dbContext.Sources.AddAsync(result.Parsed, cancellationToken);
+        }
+        else
+        {
+            ArgumentNullException.ThrowIfNull(result.Existing);
+            result.Existing.Update(result.Existing.Location, result.Existing.Repositories.ToList());
         }
         
         await _dbContext.SaveChangesAsync(cancellationToken);
 
     }
 
-    private async Task<Source> ParseSourceAsync(SourceOptions sourceOptions, CancellationToken cancellationToken)
+    private async Task<ParsedSourceResult> ParseSourceAsync(SourceOptions sourceOptions, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Parsing Source {SourceName}", sourceOptions.Name);
+        
+        var existing = await _dbContext.Sources
+            .FirstOrDefaultAsync(s => s.Name == sourceOptions.Name, cancellationToken);
 
-        var source = await GetSource(sourceOptions.Name, sourceOptions.Location, cancellationToken);
-        _parseContext.Source = source;
-            
         var repositories = await ParseRepositoriesAsync(sourceOptions);
-        source.AddRepositories(repositories);
+        var source = Source.Create(sourceOptions.Name, sourceOptions.Location, repositories);
 
         _logger.LogInformation("Finished Parsing Source {SourceName}", sourceOptions.Name);
 
-        return source;
+        return ParsedSourceResult.CreateInstance(existing, source);
     }
-
-    private async Task<Source> GetSource(string name, string location, CancellationToken cancellationToken)
-    {
-        var source = await _dbContext.Sources
-            .FirstOrDefaultAsync(s => s.Name == name, cancellationToken);
-
-        return source ?? Source.Create(name, location);
-    }
-
+    
     private async Task<IEnumerable<Repository>> ParseRepositoriesAsync(SourceOptions sourceOptions)
     {
         var paths = sourceOptions.LocationInfo.GetGitDirectories();

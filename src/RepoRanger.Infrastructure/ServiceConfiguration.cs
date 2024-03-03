@@ -7,6 +7,7 @@ using RepoRanger.Domain.SourceParsing;
 using RepoRanger.Infrastructure.Services;
 using RepoRanger.Infrastructure.SourceParsing;
 using RepoRanger.Infrastructure.SourceParsing.Angular;
+using RepoRanger.Infrastructure.SourceParsing.Common;
 using RepoRanger.Infrastructure.SourceParsing.DotNet;
 using RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
 

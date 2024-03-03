@@ -21,10 +21,10 @@ public class DependencyInstance : Auditable, IEquatable<DependencyInstance>
     public int ProjectId { get; private set; }
     public Project Project { get; private set; } = null!;
     
-    public void Update(DependencyInstance dependencyInstance)
+    public void Update(DependencySource source, string version)
     {
-        Source = dependencyInstance.Source;
-        Version = dependencyInstance.Version;
+        Source = source;
+        Version = version;
     }
 
     private static string Normalise(string source, string version)

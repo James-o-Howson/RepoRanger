@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RepoRanger.Domain.Common.Interfaces;
 
-namespace RepoRanger.Infrastructure.SourceParsing;
+namespace RepoRanger.Infrastructure.SourceParsing.Common;
 
 internal interface ISourceParserConfigurator
 {

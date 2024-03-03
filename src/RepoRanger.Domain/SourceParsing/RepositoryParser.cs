@@ -21,42 +21,32 @@ internal sealed class RepositoryParser : IRepositoryParser
 
     public async Task<Repository> ParseAsync(ParsingContext parseContext)
     {
-        ArgumentNullException.ThrowIfNull(parseContext.Source);
         ArgumentNullException.ThrowIfNull(parseContext.GitDirectory);
         
         var filePaths = Directory.EnumerateFiles(parseContext.GitDirectoryPath, "*.*", SearchOption.AllDirectories)
             .AsParallel()
             .WithDegreeOfParallelism(Environment.ProcessorCount);
         
+        var repository = CreateRepository(parseContext.GitDirectory);
+
         var parseFileTasks = filePaths.Select(filePath => 
             AddProjectsAsync(filePath, parseContext.SourceFileParsers));
         
-        var repository = GetOrCreate(parseContext.GitDirectory, parseContext.Source);
         var projects = (await Task.WhenAll(parseFileTasks)).SelectMany(p => p);
-        repository.Update(projects);
+        repository.AddProjects(projects);
         
         return repository;
     }
     
-    private Repository GetOrCreate(DirectoryInfo gitDirectory, Source source)
+    private Repository CreateRepository(DirectoryInfo gitDirectory)
     {
         var detail = _gitDetailService.GetRepositoryDetail(gitDirectory);
-        var repository = Repository.Create(detail.Name, detail.RemoteUrl, detail.BranchName);
-
-        if (source.IsNew)
-        {
-            return repository;
-        }
-
-        var existing = source.GetRepository(repository);
-        if (existing is not null) return existing;
         
-        source.AddRepositories([repository]);
-        return repository;
-
+        return Repository.Create(detail.Name, detail.RemoteUrl, detail.BranchName);
     }
     
-    private static async Task<List<Project>> AddProjectsAsync(string filePath, ConcurrentQueue<ISourceFileParser> sourceFileParsers)
+    private static async Task<List<Project>> AddProjectsAsync(string filePath,
+        ConcurrentQueue<ISourceFileParser> sourceFileParsers)
     {
         List<Project> projects = [];
         var fileContentParser = sourceFileParsers.SingleOrDefault(p => p.CanParse(filePath));

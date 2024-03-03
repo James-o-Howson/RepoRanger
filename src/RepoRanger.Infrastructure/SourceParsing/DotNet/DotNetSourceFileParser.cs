@@ -38,7 +38,7 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
         
         var projectDefinitions = GetProjectDefinitions(fileInfo, content);
         var projects = await CreateProjects(projectDefinitions, fileInfo);
-        
+
         _logger.LogInformation("Finished Parsing C# Solution {SolutionPath}. Projects found = {ProjectsCount}",
             fileInfo.FullName, projects.Count);
 

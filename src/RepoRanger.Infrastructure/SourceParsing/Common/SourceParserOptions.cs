@@ -1,4 +1,4 @@
-﻿namespace RepoRanger.Infrastructure.SourceParsing;
+﻿namespace RepoRanger.Infrastructure.SourceParsing.Common;
 
 internal sealed class SourceParserOptions
 {

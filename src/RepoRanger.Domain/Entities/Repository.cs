@@ -37,6 +37,8 @@ public class Repository : Auditable, IEquatable<Repository>
     public string DefaultBranch { get; set; } = string.Empty;
     public IReadOnlyCollection<Project> Projects => _projects;
 
+    public bool IsNew => Id == 0;
+
     public IEnumerable<DependencyInstance> DependencyInstances => Projects
         .SelectMany(p => p.DependencyInstances)
         .ToList();
@@ -46,32 +48,28 @@ public class Repository : Auditable, IEquatable<Repository>
         ArgumentNullException.ThrowIfNull(projects);
         _projects.AddRange(projects);
     }
-    
-    public void Update(Repository repository)
-    {
-        DefaultBranch = repository.DefaultBranch;
-        Update(repository.Projects);
-    }
 
-    public void Update(IEnumerable<Project> projects)
+    public void Update(string defaultBranch, IReadOnlyCollection<Project> projects)
     {
-        var enumerable = projects.ToList();
-        var removed = Projects.Except(enumerable);
+        DefaultBranch = defaultBranch;
+        
+        var removed = Projects.Except(projects);
         foreach (var project in removed)
         {
             _projects.Remove(project);
         }
         
-        var updated = enumerable.Intersect(Projects);
+        var updated = projects.Intersect(Projects);
         foreach (var project in updated)
         {
             var index = _projects.IndexOf(project);
-            _projects[index].Update(project);
+            _projects[index].Update(project.Version, project.Metadata, project.Type, project.DependencyInstances);
         }
         
-        var added = enumerable.Except(Projects);
+        var added = projects.Except(Projects);
         _projects.AddRange(added);
     }
+    
     
     internal void Delete()
     {

@@ -36,6 +36,30 @@ public sealed class Source : Auditable, IEquatable<Source>
         .SelectMany(r => r.DependencyInstances)
         .ToList();
     
+    public void Update(string location, IReadOnlyCollection<Repository> repositories)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(location);
+        ArgumentNullException.ThrowIfNull(repositories);
+        
+        Location = location;
+        
+        var removed = Repositories.Except(repositories);
+        foreach (var repository in removed)
+        {
+            _repositories.Remove(repository);
+        }
+        
+        var updated = repositories.Intersect(Repositories);
+        foreach (var repository in updated)
+        {
+            var index = _repositories.IndexOf(repository);
+            _repositories[index].Update(repository.DefaultBranch, repository.Projects);
+        }
+        
+        var added = repositories.Except(Repositories);
+        _repositories.AddRange(added);
+    }
+    
     public void AddRepositories(IEnumerable<Repository> repositories)
     {
         ArgumentNullException.ThrowIfNull(repositories);

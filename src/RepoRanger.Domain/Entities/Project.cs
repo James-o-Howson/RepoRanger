@@ -47,26 +47,27 @@ public class Project : Auditable, IEquatable<Project>
         _dependencyInstances.AddRange(dependencies);
     }
     
-    public void Update(Project project)
+    public void Update(string version, List<Metadata> metadata, ProjectType type, 
+        IReadOnlyCollection<DependencyInstance> dependencyInstances)
     {
-        Version = project.Version;
-        Metadata = project.Metadata;
-        Type = project.Type;
+        Version = version;
+        Metadata = metadata;
+        Type = type;
         
-        var removed = DependencyInstances.Except(project.DependencyInstances);
+        var removed = DependencyInstances.Except(dependencyInstances);
         foreach (var dependencyInstance in removed)
         {
             _dependencyInstances.Remove(dependencyInstance);
         }
         
-        var updated = project.DependencyInstances.Intersect(DependencyInstances);
+        var updated = dependencyInstances.Intersect(DependencyInstances);
         foreach (var dependencyInstance in updated)
         {
             var index = _dependencyInstances.IndexOf(dependencyInstance);
-            _dependencyInstances[index].Update(dependencyInstance);
+            _dependencyInstances[index].Update(dependencyInstance.Source, dependencyInstance.Version);
         }
         
-        var added = project.DependencyInstances.Except(DependencyInstances);
+        var added = dependencyInstances.Except(DependencyInstances);
         _dependencyInstances.AddRange(added);
     }
     
