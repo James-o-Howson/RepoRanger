@@ -1,1 +1,0 @@
-openapi-generator-cli generate -i 'swagger.json' -g typescript-angular --additional-properties supportsES6=true,fileNaming=kebab-case,typescriptThreePlus=true -o 'src\app\generated'
