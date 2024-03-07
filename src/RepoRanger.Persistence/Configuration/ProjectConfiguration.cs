@@ -17,10 +17,14 @@ internal sealed class ProjectConfiguration : IEntityTypeConfiguration<Project>
         
         builder.HasMany(p => p.DependencyInstances)
             .WithOne(d => d.Project)
-            .HasForeignKey(d => d.ProjectId);
+            .HasForeignKey(d => d.ProjectId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+        builder.HasMany(p => p.Metadata)
+            .WithOne()
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.OwnsOne(p => p.Type);
-        builder.OwnsOne(p => p.Metadata);
         
         builder.Property(e => e.CreatedBy)
             .IsRequired()

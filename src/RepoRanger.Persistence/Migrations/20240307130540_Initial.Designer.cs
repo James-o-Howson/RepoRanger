@@ -11,7 +11,7 @@ using RepoRanger.Persistence;
 namespace RepoRanger.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240303130501_Initial")]
+    [Migration("20240307130540_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -79,6 +79,36 @@ namespace RepoRanger.Persistence.Migrations
                     b.HasIndex("SourceId");
 
                     b.ToTable("DependencyInstances");
+                });
+
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Metadata", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("Created")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("ProjectId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Value")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProjectId");
+
+                    b.ToTable("Metadata");
                 });
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.Project", b =>
@@ -231,6 +261,14 @@ namespace RepoRanger.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RepoRanger.Domain.Entities.Metadata", b =>
+                {
+                    b.HasOne("RepoRanger.Domain.Entities.Project", null)
+                        .WithMany("Metadata")
+                        .HasForeignKey("ProjectId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
             modelBuilder.Entity("RepoRanger.Domain.Entities.Project", b =>
                 {
                     b.HasOne("RepoRanger.Domain.Entities.Repository", "Repository")
@@ -255,25 +293,6 @@ namespace RepoRanger.Persistence.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("ProjectId");
                         });
-
-                    b.OwnsOne("System.Collections.Generic.List<RepoRanger.Domain.ValueObjects.Metadata>", "Metadata", b1 =>
-                        {
-                            b1.Property<int>("ProjectId")
-                                .HasColumnType("INTEGER");
-
-                            b1.Property<int>("Capacity")
-                                .HasColumnType("INTEGER");
-
-                            b1.HasKey("ProjectId");
-
-                            b1.ToTable("Projects");
-
-                            b1.WithOwner()
-                                .HasForeignKey("ProjectId");
-                        });
-
-                    b.Navigation("Metadata")
-                        .IsRequired();
 
                     b.Navigation("Repository");
 
@@ -300,6 +319,8 @@ namespace RepoRanger.Persistence.Migrations
             modelBuilder.Entity("RepoRanger.Domain.Entities.Project", b =>
                 {
                     b.Navigation("DependencyInstances");
+
+                    b.Navigation("Metadata");
                 });
 
             modelBuilder.Entity("RepoRanger.Domain.Entities.Repository", b =>

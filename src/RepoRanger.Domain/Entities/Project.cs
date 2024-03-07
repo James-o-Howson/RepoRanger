@@ -6,24 +6,26 @@ namespace RepoRanger.Domain.Entities;
 public class Project : Auditable, IEquatable<Project>
 {
     private readonly List<DependencyInstance> _dependencyInstances = [];
+    private readonly List<Metadata> _metadata = [];
     
     private Project() { }
     
-    public static Project Create(ProjectType type, string name, string version, string path, IEnumerable<Metadata>? metadata)
+    public static Project Create(ProjectType type, string name, string version, string path, IReadOnlyCollection<Metadata>? metadata)
     {
         var project = new Project
         {
             Name = name,
             Type = type,
             Version = version,
-            Path = path,
-            Metadata = metadata?.ToList() ?? []
+            Path = path
         };
+        
+        project._metadata.AddRange(metadata ?? []);
         
         return project;
     }
     
-    public static Project Create(ProjectType type, string name, string version, string path, IEnumerable<Metadata>? metadata, 
+    public static Project Create(ProjectType type, string name, string version, string path, IReadOnlyCollection<Metadata>? metadata, 
         IEnumerable<DependencyInstance>? dependencyInstances)
     {
         var project = Create(type, name, version, path, metadata);
@@ -33,7 +35,7 @@ public class Project : Auditable, IEquatable<Project>
     }
 
     public int Id { get; set; }
-    public List<Metadata> Metadata { get; private set; } = []; 
+    public IReadOnlyCollection<Metadata> Metadata => _metadata;
     public ProjectType Type { get; private set; } = null!;
     public string Name { get; private set; } = string.Empty;
     public string Path { get; private set; } = string.Empty;
@@ -48,11 +50,13 @@ public class Project : Auditable, IEquatable<Project>
         _dependencyInstances.AddRange(dependencies.ToHashSet());
     }
     
-    public void Update(string version, List<Metadata> metadata, ProjectType type, 
+    public void Update(string version, IEnumerable<Metadata> metadata, ProjectType type, 
         IReadOnlyCollection<DependencyInstance> dependencyInstances)
     {
         Version = version;
-        Metadata = metadata;
+        
+        _metadata.Clear();
+        _metadata.AddRange(metadata);
         Type = type;
         
         var removed = DependencyInstances.Except(dependencyInstances);

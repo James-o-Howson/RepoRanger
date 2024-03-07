@@ -10,7 +10,8 @@ public interface IApplicationDbContext
     DbSet<Project> Projects { get; set; }
     DbSet<DependencyInstance> DependencyInstances { get; set; }
     DbSet<Dependency> Dependencies { get; set; }
-    
+    DbSet<Metadata> Metadata { get; set; }
+
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     DbSet<TEntity> Set<TEntity>() where TEntity : class;
 }

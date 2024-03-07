@@ -71,7 +71,6 @@ namespace RepoRanger.Persistence.Migrations
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    Metadata_Capacity = table.Column<int>(type: "INTEGER", nullable: false),
                     Type_Value = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Path = table.Column<string>(type: "TEXT", nullable: false),
@@ -135,6 +134,29 @@ namespace RepoRanger.Persistence.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Metadata",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: false),
+                    ProjectId = table.Column<int>(type: "INTEGER", nullable: true),
+                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Metadata", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Metadata_Projects_ProjectId",
+                        column: x => x.ProjectId,
+                        principalTable: "Projects",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_DependencyInstances_DependencyName",
                 table: "DependencyInstances",
@@ -151,6 +173,11 @@ namespace RepoRanger.Persistence.Migrations
                 column: "SourceId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Metadata_ProjectId",
+                table: "Metadata",
+                column: "ProjectId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Sources_Name",
                 table: "Sources",
                 column: "Name",
@@ -162,6 +189,9 @@ namespace RepoRanger.Persistence.Migrations
         {
             migrationBuilder.DropTable(
                 name: "DependencyInstances");
+
+            migrationBuilder.DropTable(
+                name: "Metadata");
 
             migrationBuilder.DropTable(
                 name: "Dependencies");

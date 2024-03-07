@@ -142,7 +142,7 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
         return element?.Value;
     }
 
-    private static Metadata[] GetMetadata(ProjectDefinition definition, FileSystemInfo fileInfo)
+    private static IReadOnlyCollection<Metadata> GetMetadata(ProjectDefinition definition, FileSystemInfo fileInfo)
     {
         return [
             Metadata.Create("Solution Name", fileInfo.Name), 
