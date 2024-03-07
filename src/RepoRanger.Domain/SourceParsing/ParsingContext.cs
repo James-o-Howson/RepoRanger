@@ -10,9 +10,6 @@ public sealed class ParsingContext
     private ParsingContext() { }
 
     public ConcurrentQueue<ISourceFileParser> SourceFileParsers { get; private init; } = new();
-    // public DirectoryInfo? GitRepository { get; set; }
-    // public string GitRepositoryPath => GitRepository?.FullName ?? string.Empty;
-    // public string GitRepositoryName => GitRepository?.Name ?? string.Empty;
 
     public void MarkAsParsed(string path, FileInfo? fileInfo)
     {
