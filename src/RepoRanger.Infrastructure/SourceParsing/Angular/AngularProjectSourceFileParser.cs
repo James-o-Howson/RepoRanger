@@ -3,6 +3,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using RepoRanger.Domain.Common.Interfaces;
 using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.SourceParsing;
 using RepoRanger.Domain.ValueObjects;
 
 namespace RepoRanger.Infrastructure.SourceParsing.Angular;
@@ -30,9 +31,16 @@ internal sealed class AngularProjectSourceFileParser : ISourceFileParser
         return workspaceIsSibling;
     }
 
-    public async Task<IEnumerable<Project>> ParseAsync(string content, FileInfo fileInfo)
+    public async Task<IEnumerable<Project>> ParseAsync(string content, FileInfo fileInfo, ParsingContext parsingContext)
     {
+        ArgumentNullException.ThrowIfNull(parsingContext.GitDirectory);
         _logger.LogInformation("Parsing package.json {PackageJsonPath}", fileInfo.FullName);
+
+        if (parsingContext.AlreadyParsed(fileInfo.FullName))
+        {
+            _logger.LogInformation("Skipping Angular Project {CsprojFilePath}. Project has already been parsed", fileInfo.FullName);
+            return [];
+        }
         
         var package = await JsonSerializer.DeserializeAsync<PackageJson>(
             new MemoryStream(Encoding.UTF8.GetBytes(content)),
@@ -40,11 +48,13 @@ internal sealed class AngularProjectSourceFileParser : ISourceFileParser
         
         if (package is null) throw new ArgumentException($"Cannot deserialize {nameof(content)} into ${typeof(PackageJson)}", content);
 
-        var project = Project.Create(ProjectType.Angular, package.Name, FindAngularVersion(package), fileInfo.FullName, null);
+        var relativePath = fileInfo.RelativeTo(parsingContext.GitDirectory);
+        var project = Project.Create(ProjectType.Angular, package.Name, FindAngularVersion(package), relativePath, null);
         project.AddDependencyInstances(GetDependencyInstances(package));
         
         _logger.LogInformation("Finished Parsing package.json {PackageJsonPath}. Dependencies found = {DependencyCount}", fileInfo.FullName, project.DependencyInstances.Count);
-
+        parsingContext.MarkAsParsed(fileInfo.FullName, fileInfo);
+        
         return [project];
     }
 

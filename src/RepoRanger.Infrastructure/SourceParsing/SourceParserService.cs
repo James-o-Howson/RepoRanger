@@ -52,15 +52,23 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
     {
         if (result.IsNewSource)
         {
+            await CreateOrUpdateDependencies(result.Parsed.Dependencies, cancellationToken);
             await _dbContext.Sources.AddAsync(result.Parsed, cancellationToken);
         }
         else
         {
             ArgumentNullException.ThrowIfNull(result.Existing);
+            await CreateOrUpdateDependencies(result.Existing.Dependencies, cancellationToken);
             result.Existing.Update(result.Existing.Location, result.Existing.Repositories.ToList());
         }
         
         await _dbContext.SaveChangesAsync(cancellationToken);
+    }
+
+    private async Task CreateOrUpdateDependencies(IEnumerable<string> dependencies, CancellationToken cancellationToken)
+    {
+        var existing = await _dbContext.Dependencies.ToListAsync(cancellationToken);
+        await _dbContext.Dependencies.AddRangeAsync(dependencies.Select(Dependency.Create).Except(existing), cancellationToken);
     }
 
     private async Task<ParsedSourceResult> ParseSourceAsync(SourceOptions sourceOptions, CancellationToken cancellationToken)

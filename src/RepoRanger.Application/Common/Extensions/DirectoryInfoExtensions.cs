@@ -1,7 +1,7 @@
 ﻿// ReSharper disable once CheckNamespace
 namespace System.IO;
 
-internal static class DirectoryInfoExtensions
+public static class DirectoryInfoExtensions
 {
     public static IEnumerable<string> GetGitDirectories(this DirectoryInfo info)
     {

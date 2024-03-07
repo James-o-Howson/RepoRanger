@@ -36,6 +36,9 @@ public sealed class Source : Auditable, IEquatable<Source>
         .SelectMany(r => r.DependencyInstances)
         .ToList();
     
+    public IEnumerable<string> Dependencies => 
+        DependencyInstances.Select(di => di.DependencyName);
+    
     public void Update(string location, IReadOnlyCollection<Repository> repositories)
     {
         ArgumentException.ThrowIfNullOrEmpty(location);

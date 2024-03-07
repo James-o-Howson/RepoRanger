@@ -3,6 +3,7 @@ using System.Xml.Linq;
 using Microsoft.Extensions.Logging;
 using RepoRanger.Domain.Common.Interfaces;
 using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.SourceParsing;
 using RepoRanger.Domain.ValueObjects;
 using RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
 
@@ -32,12 +33,12 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
         !string.IsNullOrEmpty(filePath) && 
         filePath.EndsWith(SolutionExtension);
 
-    public async Task<IEnumerable<Project>> ParseAsync(string content, FileInfo fileInfo)
+    public async Task<IEnumerable<Project>> ParseAsync(string content, FileInfo fileInfo, ParsingContext parsingContext)
     {
         _logger.LogInformation("Parsing C# Solution {SolutionPath}", fileInfo.FullName);
         
         var projectDefinitions = GetProjectDefinitions(fileInfo, content);
-        var projects = await CreateProjects(projectDefinitions, fileInfo);
+        var projects = await CreateProjects(parsingContext, fileInfo, projectDefinitions);
 
         _logger.LogInformation("Finished Parsing C# Solution {SolutionPath}. Projects found = {ProjectsCount}",
             fileInfo.FullName, projects.Count);
@@ -45,13 +46,21 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
         return projects;
     }
 
-    private async Task<List<Project>> CreateProjects(IEnumerable<ProjectDefinition> projectDefinitions, FileSystemInfo fileInfo)
+    private async Task<List<Project>> CreateProjects(ParsingContext parsingContext, FileSystemInfo solutionFileInfo,
+        IEnumerable<ProjectDefinition> projectDefinitions)
     {
         var projects = new List<Project>();
         foreach (var definition in projectDefinitions)
         {
+            if (parsingContext.AlreadyParsed(definition.FilePath))
+            {
+                _logger.LogInformation("Skipping CSharp Project {CsprojFilePath}. Project has already been parsed", definition.FilePath);
+                continue;
+            }
+            
             if (!definition.Exists)
             {
+                parsingContext.MarkAsParsed(definition.FilePath, null);
                 _logger.LogInformation("Skipping CSharp Project {CsprojFilePath}. Project in Solution File but not present in Repository", definition.FilePath);
                 continue;
             }
@@ -62,15 +71,17 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
                 .SelectMany(p => p.ParseAsync(definition.Content)).ToHashSet();
             
             var project = Project.Create(ProjectType.Dotnet, definition.Name, 
-                await GetDotNetVersionAsync(definition.Content), definition.FilePath, GetMetadata(definition, fileInfo));
+                await GetDotNetVersionAsync(definition.Content), definition.FilePath, GetMetadata(definition, solutionFileInfo));
         
             project.AddDependencyInstances(dependencyInstances);
             projects.Add(project);
             
             _logger.LogInformation("Finished Parsing C# Project {CsprojFilePath}. Dependencies found = {DependencyCount}",
                 definition.FilePath, project.DependencyInstances.Count);
+            
+            parsingContext.MarkAsParsed(definition.FilePath, definition.FileInfo);
         }
-
+        
         return projects;
     }
 
@@ -79,14 +90,14 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
         var regex = ProjectInfoRegex();
         var matches = regex.Matches(content);
 
-        List<ProjectDefinition> projects = [];
+        List<ProjectDefinition> projectDefinitions = [];
         foreach (Match projectLine in matches)
         {
             var projectId = projectLine.Groups[4].Value;
             var projectTypeId = projectLine.Groups[1].Value;
             var projectFilePath = projectLine.Groups[3].Value;
             
-            projects.Add(new ProjectDefinition
+            projectDefinitions.Add(new ProjectDefinition
             {
                 ProjectId = projectId,
                 Type = projectTypeId,
@@ -94,7 +105,7 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
             });
         }
 
-        return projects;
+        return projectDefinitions;
     }
     
     private static async Task<string> GetDotNetVersionAsync(string csprojContent)

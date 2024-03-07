@@ -1,4 +1,5 @@
 ﻿using RepoRanger.Domain.Common;
+using RepoRanger.Domain.Exceptions;
 
 namespace RepoRanger.Domain.Entities;
 
@@ -21,7 +22,7 @@ public class Repository : Auditable, IEquatable<Repository>
     }
     
     public static Repository Create(string name, string remoteUrl, string defaultBranch, 
-        IEnumerable<Project> projects)
+        IReadOnlyCollection<Project> projects)
     {
         var repository = Create(name, remoteUrl, defaultBranch);
         repository.AddProjects(projects);
@@ -43,10 +44,10 @@ public class Repository : Auditable, IEquatable<Repository>
         .SelectMany(p => p.DependencyInstances)
         .ToList();
     
-    public void AddProjects(IEnumerable<Project> projects)
+    public void AddProjects(IReadOnlyCollection<Project> projects)
     {
         ArgumentNullException.ThrowIfNull(projects);
-        _projects.AddRange(projects);
+        _projects.AddRange(projects.ToHashSet());
     }
 
     public void Update(string defaultBranch, IReadOnlyCollection<Project> projects)
@@ -100,4 +101,7 @@ public class Repository : Auditable, IEquatable<Repository>
     {
         return HashCode.Combine(Name, RemoteUrl, SourceId);
     }
+    
+    private static bool HasDuplicates(IReadOnlyCollection<Project> projects) => 
+        projects.Count != projects.Distinct().Count();
 }

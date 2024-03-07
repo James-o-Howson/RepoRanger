@@ -9,4 +9,5 @@ public class ProjectDefinition
     public bool Exists => File.Exists(FilePath);
     public string Name => Path.GetFileName(FilePath);
     public string Content => File.ReadAllText(FilePath);
+    public FileInfo FileInfo => new(FilePath);
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-using RepoRanger.Domain.Common.Interfaces;
-using RepoRanger.Domain.Entities;
+﻿using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.Git;
 
 namespace RepoRanger.Domain.SourceParsing;
@@ -30,10 +28,10 @@ internal sealed class RepositoryParser : IRepositoryParser
         var repository = CreateRepository(parseContext.GitDirectory);
 
         var parseFileTasks = filePaths.Select(filePath => 
-            AddProjectsAsync(filePath, parseContext.SourceFileParsers));
+            AddProjectsAsync(filePath, parseContext));
         
         var projects = (await Task.WhenAll(parseFileTasks)).SelectMany(p => p);
-        repository.AddProjects(projects);
+        repository.AddProjects(projects.ToList());
         
         return repository;
     }
@@ -45,19 +43,22 @@ internal sealed class RepositoryParser : IRepositoryParser
         return Repository.Create(detail.Name, detail.RemoteUrl, detail.BranchName);
     }
     
-    private static async Task<List<Project>> AddProjectsAsync(string filePath,
-        ConcurrentQueue<ISourceFileParser> sourceFileParsers)
+    private static async Task<List<Project>> AddProjectsAsync(string filePath, ParsingContext parsingContext)
     {
         List<Project> projects = [];
-        var fileContentParser = sourceFileParsers.SingleOrDefault(p => p.CanParse(filePath));
+        var fileContentParser = parsingContext.SourceFileParsers
+            .SingleOrDefault(p => p.CanParse(filePath));
         
         if (fileContentParser == null) return projects;
         
         // Don't read content or make file info unless the file path matches a parser, it's expensive.
         var content = await File.ReadAllTextAsync(filePath);
-        var fileInfo = new FileInfo(filePath);
+        var fileInfo = new FileInfo(filePath);  
 
-        projects = (await fileContentParser.ParseAsync(content, fileInfo)).ToList();
+        if (parsingContext.AlreadyParsed(filePath)) return projects;
+        
+        projects = (await fileContentParser.ParseAsync(content, fileInfo, parsingContext)).ToList();
+        parsingContext.MarkAsParsed(filePath, fileInfo);
 
         return projects;
     }

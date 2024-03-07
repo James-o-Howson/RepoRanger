@@ -17,6 +17,6 @@ public static class RepositoryMapper
             dto.Name, 
             dto.RemoteUrl, 
             dto.Branch, 
-            dto.Projects.ToEntities());
+            dto.Projects.ToEntities().ToList());
     }
 }

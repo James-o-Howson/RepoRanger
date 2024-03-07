@@ -8,7 +8,7 @@ public sealed class Dependency : Auditable, IEquatable<Dependency>
 
     private Dependency() { }
     
-    public static Dependency CreateInstance(string name) => new() 
+    public static Dependency Create(string name) => new() 
     {
         Name = name
     };

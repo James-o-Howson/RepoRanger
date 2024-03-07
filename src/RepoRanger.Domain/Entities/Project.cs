@@ -16,6 +16,7 @@ public class Project : Auditable, IEquatable<Project>
             Name = name,
             Type = type,
             Version = version,
+            Path = path,
             Metadata = metadata?.ToList() ?? []
         };
         
@@ -44,7 +45,7 @@ public class Project : Auditable, IEquatable<Project>
     public void AddDependencyInstances(IEnumerable<DependencyInstance> dependencies)
     {
         ArgumentNullException.ThrowIfNull(dependencies);
-        _dependencyInstances.AddRange(dependencies);
+        _dependencyInstances.AddRange(dependencies.ToHashSet());
     }
     
     public void Update(string version, List<Metadata> metadata, ProjectType type, 
