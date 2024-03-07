@@ -10,7 +10,7 @@ using RepoRanger.Infrastructure.SourceParsing.Common;
 
 namespace RepoRanger.Infrastructure.SourceParsing;
 
-internal sealed class SourceParserService : ISourceParserService, IDisposable
+internal sealed class SourceParserService : ISourceParserService
 {
     private readonly ParsingContext _parseContext;
 
@@ -39,8 +39,8 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
 
     public async Task ParseAsync(CancellationToken cancellationToken)
     {
-        var parseResults = await Task.WhenAll(EnabledSourceOptions.Select(options => 
-            ParseSourceAsync(options, cancellationToken)));
+        var parseResults = await Task.WhenAll(
+            EnabledSourceOptions.Select(options => ParseSourceAsync(options, cancellationToken)));
 
         foreach (var result in parseResults)
         {
@@ -75,38 +75,36 @@ internal sealed class SourceParserService : ISourceParserService, IDisposable
     {
         _logger.LogInformation("Parsing Source {SourceName}", sourceOptions.Name);
         
+        var repositories = await ParseRepositoriesAsync(sourceOptions);
+        var source = Source.Create(sourceOptions.Name, sourceOptions.Location, repositories);
+        
         var existing = await _dbContext.Sources
             .FirstOrDefaultAsync(s => s.Name == sourceOptions.Name, cancellationToken);
 
-        var repositories = await ParseRepositoriesAsync(sourceOptions);
-        var source = Source.Create(sourceOptions.Name, sourceOptions.Location, repositories);
-
         _logger.LogInformation("Finished Parsing Source {SourceName}", sourceOptions.Name);
-
+        
         return ParsedSourceResult.CreateInstance(existing, source);
     }
     
     private async Task<IEnumerable<Repository>> ParseRepositoriesAsync(SourceOptions sourceOptions)
     {
-        var paths = sourceOptions.LocationInfo.GetGitDirectories();
+        var gitRepositories = sourceOptions.LocationInfo.GetGitRepositories();
 
-        return await Task.WhenAll(paths
+        return await Task.WhenAll(gitRepositories
             .Where(p => !sourceOptions.IsExcluded(p))
             .Select(ParseRepositoryAsync));
     }
 
     private async Task<Repository> ParseRepositoryAsync(string repositoryPath)
     {
-        _parseContext.GitDirectory = new DirectoryInfo(repositoryPath);
+        var gitRepository = new DirectoryInfo(repositoryPath);
 
-        _logger.LogInformation("Parsing Repository {RepositoryName}", _parseContext.GitRepositoryName);
+        _logger.LogInformation("Parsing Repository {RepositoryName}", gitRepository.FullName);
 
-        var repository = await _repositoryParser.ParseAsync(_parseContext);
+        var repository = await _repositoryParser.ParseAsync(gitRepository, _parseContext);
 
-        _logger.LogInformation("Finished Parsing Repository {RepositoryName}", _parseContext.GitRepositoryName);
+        _logger.LogInformation("Finished Parsing Repository {RepositoryName}", gitRepository.Name);
 
         return repository;
     }
-
-    public void Dispose() => _parseContext.Dispose();
 }

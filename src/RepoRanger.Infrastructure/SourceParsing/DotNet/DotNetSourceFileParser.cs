@@ -33,10 +33,12 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
         !string.IsNullOrEmpty(filePath) && 
         filePath.EndsWith(SolutionExtension);
 
-    public async Task<IEnumerable<Project>> ParseAsync(string content, FileInfo fileInfo, ParsingContext parsingContext)
+    public async Task<IEnumerable<Project>> ParseAsync(DirectoryInfo gitRepository, FileInfo fileInfo,
+        ParsingContext parsingContext)
     {
         _logger.LogInformation("Parsing C# Solution {SolutionPath}", fileInfo.FullName);
         
+        var content = await File.ReadAllTextAsync(fileInfo.FullName);
         var projectDefinitions = GetProjectDefinitions(fileInfo, content);
         var projects = await CreateProjects(parsingContext, fileInfo, projectDefinitions);
 
@@ -52,7 +54,7 @@ internal sealed partial class DotNetSourceFileParser : ISourceFileParser
         var projects = new List<Project>();
         foreach (var definition in projectDefinitions)
         {
-            if (parsingContext.AlreadyParsed(definition.FilePath))
+            if (parsingContext.IsAlreadyParsed(definition.FilePath))
             {
                 _logger.LogInformation("Skipping CSharp Project {CsprojFilePath}. Project has already been parsed", definition.FilePath);
                 continue;

@@ -31,24 +31,25 @@ internal sealed class AngularProjectSourceFileParser : ISourceFileParser
         return workspaceIsSibling;
     }
 
-    public async Task<IEnumerable<Project>> ParseAsync(string content, FileInfo fileInfo, ParsingContext parsingContext)
+    public async Task<IEnumerable<Project>> ParseAsync(DirectoryInfo gitRepository, FileInfo fileInfo, ParsingContext parsingContext)
     {
-        ArgumentNullException.ThrowIfNull(parsingContext.GitDirectory);
+        ArgumentNullException.ThrowIfNull(gitRepository);
         _logger.LogInformation("Parsing package.json {PackageJsonPath}", fileInfo.FullName);
 
-        if (parsingContext.AlreadyParsed(fileInfo.FullName))
+        if (parsingContext.IsAlreadyParsed(fileInfo.FullName))
         {
             _logger.LogInformation("Skipping Angular Project {CsprojFilePath}. Project has already been parsed", fileInfo.FullName);
             return [];
         }
         
+        var content = await File.ReadAllTextAsync(fileInfo.FullName);
         var package = await JsonSerializer.DeserializeAsync<PackageJson>(
             new MemoryStream(Encoding.UTF8.GetBytes(content)),
             JsonSerializerOptions);
         
         if (package is null) throw new ArgumentException($"Cannot deserialize {nameof(content)} into ${typeof(PackageJson)}", content);
 
-        var relativePath = fileInfo.RelativeTo(parsingContext.GitDirectory);
+        var relativePath = fileInfo.RelativeTo(gitRepository);
         var project = Project.Create(ProjectType.Angular, package.Name, FindAngularVersion(package), relativePath, null);
         project.AddDependencyInstances(GetDependencyInstances(package));
         

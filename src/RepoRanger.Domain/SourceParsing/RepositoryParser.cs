@@ -5,7 +5,7 @@ namespace RepoRanger.Domain.SourceParsing;
 
 public interface IRepositoryParser
 {
-    Task<Repository> ParseAsync(ParsingContext parsingContext);
+    Task<Repository> ParseAsync(DirectoryInfo gitRepository, ParsingContext parsingContext);
 }
 
 internal sealed class RepositoryParser : IRepositoryParser
@@ -17,18 +17,18 @@ internal sealed class RepositoryParser : IRepositoryParser
         _gitDetailService = gitDetailService;
     }
 
-    public async Task<Repository> ParseAsync(ParsingContext parseContext)
+    public async Task<Repository> ParseAsync(DirectoryInfo gitRepository, ParsingContext parseContext)
     {
-        ArgumentNullException.ThrowIfNull(parseContext.GitDirectory);
+        ArgumentNullException.ThrowIfNull(gitRepository);
         
-        var filePaths = Directory.EnumerateFiles(parseContext.GitDirectoryPath, "*.*", SearchOption.AllDirectories)
+        var filePaths = Directory.EnumerateFiles(gitRepository.FullName, "*.*", SearchOption.AllDirectories)
             .AsParallel()
             .WithDegreeOfParallelism(Environment.ProcessorCount);
         
-        var repository = CreateRepository(parseContext.GitDirectory);
+        var repository = CreateRepository(gitRepository);
 
         var parseFileTasks = filePaths.Select(filePath => 
-            AddProjectsAsync(filePath, parseContext));
+            AddProjectsAsync(gitRepository, filePath, parseContext));
         
         var projects = (await Task.WhenAll(parseFileTasks)).SelectMany(p => p);
         repository.AddProjects(projects.ToList());
@@ -43,7 +43,8 @@ internal sealed class RepositoryParser : IRepositoryParser
         return Repository.Create(detail.Name, detail.RemoteUrl, detail.BranchName);
     }
     
-    private static async Task<List<Project>> AddProjectsAsync(string filePath, ParsingContext parsingContext)
+    private static async Task<List<Project>> AddProjectsAsync(DirectoryInfo gitRepository, string filePath,
+        ParsingContext parsingContext)
     {
         List<Project> projects = [];
         var fileContentParser = parsingContext.SourceFileParsers
@@ -52,12 +53,11 @@ internal sealed class RepositoryParser : IRepositoryParser
         if (fileContentParser == null) return projects;
         
         // Don't read content or make file info unless the file path matches a parser, it's expensive.
-        var content = await File.ReadAllTextAsync(filePath);
         var fileInfo = new FileInfo(filePath);  
 
-        if (parsingContext.AlreadyParsed(filePath)) return projects;
+        if (parsingContext.IsAlreadyParsed(filePath)) return projects;
         
-        projects = (await fileContentParser.ParseAsync(content, fileInfo, parsingContext)).ToList();
+        projects = (await fileContentParser.ParseAsync(gitRepository, fileInfo, parsingContext)).ToList();
         parsingContext.MarkAsParsed(filePath, fileInfo);
 
         return projects;

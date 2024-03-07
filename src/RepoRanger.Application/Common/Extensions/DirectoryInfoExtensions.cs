@@ -3,13 +3,13 @@ namespace System.IO;
 
 public static class DirectoryInfoExtensions
 {
-    public static IEnumerable<string> GetGitDirectories(this DirectoryInfo info)
+    public static IEnumerable<string> GetGitRepositories(this DirectoryInfo info)
     {
         var directory = info.FullName;
-        return GetGitDirectories(directory);
+        return GetGitRepositories(directory);
     }
 
-    private static IEnumerable<string> GetGitDirectories(string directory)
+    private static IEnumerable<string> GetGitRepositories(string directory)
     {
         var repositoryPaths = new List<string>();
         foreach (var subdirectory in Directory.GetDirectories(directory))
@@ -20,7 +20,7 @@ public static class DirectoryInfoExtensions
             }
             else
             {
-                GetGitDirectories(subdirectory);
+                GetGitRepositories(subdirectory);
             }
         }
 
