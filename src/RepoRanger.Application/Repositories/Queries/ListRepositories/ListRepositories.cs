@@ -21,7 +21,6 @@ internal sealed class ListRepositoriesQueryHandler : IRequestHandler<ListReposit
         return new RepositoriesVm
         {
             Repositories = await _context.Repositories
-                .Include(r => r.DefaultBranch)
                 .AsNoTracking()
                 .Select(r => new RepositoryVm
                 {

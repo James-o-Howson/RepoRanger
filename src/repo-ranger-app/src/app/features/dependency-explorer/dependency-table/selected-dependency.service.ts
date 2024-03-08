@@ -1,24 +1,24 @@
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
-import { DependencyVm } from "../../../generated";
+import { DependencyInstanceVm } from "../../../api-client";
 
 @Injectable({
     providedIn: 'root'
 })
 export class SelectedDependencyService {
 
-    private selectedDependencySubject: BehaviorSubject<DependencyVm | null> = 
-        new BehaviorSubject<DependencyVm | null>(null);
+    private selectedDependencySubject: BehaviorSubject<DependencyInstanceVm | null> = 
+        new BehaviorSubject<DependencyInstanceVm | null>(null);
 
-    public selectedDependency: Observable<DependencyVm | null> = this.selectedDependencySubject.asObservable();
+    public selectedDependency: Observable<DependencyInstanceVm | null> = this.selectedDependencySubject.asObservable();
     
     constructor() { }
 
-    setSelectedDependency(selectedDependency: DependencyVm | null): void {
+    setSelectedDependency(selectedDependency: DependencyInstanceVm | null): void {
         this.selectedDependencySubject.next(selectedDependency);
     }
     
-    getSelectedDependency(): Observable<DependencyVm | null> {
+    getSelectedDependency(): Observable<DependencyInstanceVm | null> {
     return this.selectedDependency;
     }
 }   
