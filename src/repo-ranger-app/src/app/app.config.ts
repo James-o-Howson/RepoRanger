@@ -4,13 +4,13 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { provideHttpClient } from '@angular/common/http';
-import { BASE_PATH } from './generated';
+import { API_BASE_URL } from './api-client';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
     provideAnimationsAsync(),
     provideHttpClient(),
-    { provide: BASE_PATH, useValue: "https://localhost:7263" }
+    { provide: API_BASE_URL, useValue: "https://localhost:7263" }
   ]
 };

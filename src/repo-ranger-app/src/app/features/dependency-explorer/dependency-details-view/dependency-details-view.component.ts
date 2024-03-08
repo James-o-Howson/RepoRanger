@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { FieldsetModule } from 'primeng/fieldset';
 import { DividerModule } from 'primeng/divider';
-import { DependenciesService, DependencyDetailVm, DependencyVm, ProjectDetailVm, RepositoryDetailVm } from '../../../generated';
+import { Client, DependencyInstanceDetailVm, DependencyInstanceVm, ProjectDetailVm, RepositoryDetailVm } from '../../../api-client'
 import { SelectedDependencyService } from '../dependency-table/selected-dependency.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -20,13 +20,13 @@ import { FormsModule } from '@angular/forms';
 })
 export class DependencyDetailsViewComponent implements OnInit {
 
-  public dependency$: Observable<DependencyVm | null> | null = null;
-  public dependencyDetail: DependencyDetailVm | null = null;
+  public dependency$: Observable<DependencyInstanceDetailVm | null> | null = null;
+  public dependencyDetail: DependencyInstanceDetailVm | null = null;
   public repositoryTreeNodes: TreeNode[] | null = [];
   public selectedTreeNode: TreeNode<any> | TreeNode<any>[] | null = null;
   public specificVersionOnly: boolean = true;
 
-  constructor(private readonly selectedDependencyService: SelectedDependencyService, private readonly dependenciesService: DependenciesService) { }
+  constructor(private readonly selectedDependencyService: SelectedDependencyService, private readonly apiClient: Client) { }
 
   ngOnInit(): void {
     this.dependency$ = this.selectedDependencyService.getSelectedDependency();
@@ -36,14 +36,14 @@ export class DependencyDetailsViewComponent implements OnInit {
       error: (error) => this.handleError(error)
     });
   }
-  handleLoadSelectedDependencySucceess(dependencyVm: DependencyVm | null): void {
-    this.dependenciesService.apiDependenciesGet(dependencyVm?.id).subscribe({
-      next: (depdnencyDetailVm) => this.handleGetDependencyDetailSuccess(depdnencyDetailVm),
-      error: (error) => this.handleError(error)
-    });
+  handleLoadSelectedDependencySucceess(dependencyVm: DependencyInstanceVm | null): void {
+    // this.dependenciesService.apiDependenciesGet(dependencyVm?.id).subscribe({
+    //   next: (depdnencyDetailVm) => this.handleGetDependencyDetailSuccess(depdnencyDetailVm),
+    //   error: (error) => this.handleError(error)
+    // });
   }
 
-  handleGetDependencyDetailSuccess(depdnencyDetailVm: DependencyDetailVm): void {
+  handleGetDependencyDetailSuccess(depdnencyDetailVm: DependencyInstanceDetailVm): void {
     this.dependencyDetail = depdnencyDetailVm;
 
     this.convertRepositoriesToTreeNodes(depdnencyDetailVm);
@@ -78,7 +78,7 @@ export class DependencyDetailsViewComponent implements OnInit {
     return '';
   }
 
-  private convertRepositoriesToTreeNodes(depdnencyDetailVm: DependencyDetailVm) {
+  private convertRepositoriesToTreeNodes(depdnencyDetailVm: DependencyInstanceDetailVm) {
     if (depdnencyDetailVm.repositories && depdnencyDetailVm.repositories.length > 0) {
       this.repositoryTreeNodes = depdnencyDetailVm.repositories.map(repo => this.convertRepositoryToTreeNode(repo));
     }
@@ -86,7 +86,7 @@ export class DependencyDetailsViewComponent implements OnInit {
 
   private convertRepositoryToTreeNode(repository: RepositoryDetailVm): TreeNode {
     const treeNode: TreeNode = {
-        key: repository.id,
+        key: repository.id?.toString(),
         label: repository.name || '',
         data: repository,
         expanded: true,
@@ -95,7 +95,7 @@ export class DependencyDetailsViewComponent implements OnInit {
 
     if (repository.projects && repository.projects.length > 0) {
         treeNode.children = repository.projects.map(project => ({
-            key: project.id,
+            key: project.id?.toString(),
             label: this.getProjectTreeNodeLabel(project),
             data: project,
             expanded: true,

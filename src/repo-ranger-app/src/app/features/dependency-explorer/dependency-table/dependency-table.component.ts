@@ -2,16 +2,7 @@ import { SelectedDependencyService } from './selected-dependency.service';
 import { CardModule } from 'primeng/card';
 import { Component, OnInit } from '@angular/core';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
-import {
-  DependenciesService,
-  DependencyVm,
-  DependencyVmPaginatedList,
-  SearchDependenciesWithPaginationQuery,
-  SortOrder,
-  PaginatedFilter,
-  MatchMode,
-  FilterOperator,
-} from '../../../generated';
+import { Client, DependencyInstanceVm, DependencyInstanceVmPaginatedList, FilterOperator, MatchMode, PaginatedFilter, SearchDependencyInstancesWithPaginationQuery, SortOrder } from '../../../api-client'
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
@@ -36,12 +27,12 @@ export class DependencyTableComponent implements OnInit {
   pageSize: number = 25;
   totalRecords: number = 0;
   loading: boolean = false;
-  paginatedDependencies!: DependencyVmPaginatedList;
-  items!: DependencyVm[];
-  selectedDependency: DependencyVm | null = null;
+  paginatedDependencies!: DependencyInstanceVmPaginatedList;
+  items!: DependencyInstanceVm[];
+  selectedDependency: DependencyInstanceVm | null = null;
 
   constructor(
-    private readonly dependenciesService: DependenciesService,
+    private readonly apiClient: Client,
     private readonly selectedDependencyService: SelectedDependencyService
   ) {}
 
@@ -50,7 +41,7 @@ export class DependencyTableComponent implements OnInit {
   }
 
   searchDependenciesSuccess(
-    paginatedDependencies: DependencyVmPaginatedList
+    paginatedDependencies: DependencyInstanceVmPaginatedList
   ): void {
     if (!paginatedDependencies.items) return;
     this.items = paginatedDependencies.items;
@@ -69,26 +60,25 @@ export class DependencyTableComponent implements OnInit {
     this.loading = true;
     const filters = this.getFilters($event.filters);
 
-    this.dependenciesService
-      .apiDependenciesSearchPost({
-        pageNumber: this.calculatePageNumber($event.first),
-        pageSize: this.pageSize,
-        sortField: this.getFieldName($event.sortField),
-        sortOrder: this.getSortOrder($event.sortOrder),
-        filters: filters,
-      } as SearchDependenciesWithPaginationQuery)
-      .subscribe({
-        next: (paginatedDependencies) =>
-          this.searchDependenciesSuccess(paginatedDependencies),
-        error: (error) => this.handleError(error),
-      });
+    this.apiClient.search({
+      pageNumber: this.calculatePageNumber($event.first),
+          pageSize: this.pageSize,
+          sortField: this.getFieldName($event.sortField),
+          sortOrder: this.getSortOrder($event.sortOrder),
+          filters: filters,
+    } as SearchDependencyInstancesWithPaginationQuery)
+    .subscribe({
+          next: (paginatedDependencies) =>
+            this.searchDependenciesSuccess(paginatedDependencies),
+          error: (error) => this.handleError(error),
+        });
   }
 
   clear(table: Table) {
     table.clear();
   }
 
-  selectedDependencyChanged(selectedDependency: DependencyVm | null) {
+  selectedDependencyChanged(selectedDependency: DependencyInstanceVm | null) {
     this.selectedDependencyService.setSelectedDependency(selectedDependency);
   }
 
@@ -113,11 +103,11 @@ export class DependencyTableComponent implements OnInit {
   private getSortOrder(sortOrder: number | undefined | null): SortOrder {
     switch (sortOrder) {
       case 1:
-        return SortOrder.NUMBER_0;
+        return SortOrder._0;
       case -1:
-        return SortOrder.NUMBER_1;
+        return SortOrder._1;
       default:
-        return SortOrder.NUMBER_0;
+        return SortOrder._0;
     }
   }
 
@@ -140,20 +130,18 @@ export class DependencyTableComponent implements OnInit {
       if (Array.isArray(value)) {
         paginatedFilters = value
           .filter((filter) => filter.value !== null)
-          .map((filter) => ({
+          .map((filter) => (new PaginatedFilter({
             matchMode: this.getMatchMode(filter.matchMode),
             operator: this.getOperator(filter.operator),
             value: filter.value,
-          }));
+          })));
       } else {
         if (value === null) continue;
-        paginatedFilters = [
-          {
-            matchMode: this.getMatchMode(value.matchMode),
-            operator: this.getOperator(value.operator),
-            value: value.value,
-          },
-        ];
+        paginatedFilters = [new PaginatedFilter({
+          matchMode: this.getMatchMode(value.matchMode),
+          operator: this.getOperator(value.operator),
+          value: value.value,
+        })];
       }
 
       if (paginatedFilters.length === 0) continue;
@@ -164,33 +152,31 @@ export class DependencyTableComponent implements OnInit {
     return result;
   }
 
-  private getMatchMode(matchMode: string | undefined): MatchMode | undefined {
+  private getMatchMode(matchMode: string | null | undefined): MatchMode | undefined {
     switch (matchMode) {
       case 'startsWith':
-        return MatchMode.NUMBER_0;
+        return MatchMode._0;
       case 'contains':
-        return MatchMode.NUMBER_1;
+        return MatchMode._1;
       case 'notContains':
-        return MatchMode.NUMBER_2;
+        return MatchMode._2;
       case 'endsWith':
-        return MatchMode.NUMBER_3;
+        return MatchMode._3;
       case 'equals':
-        return MatchMode.NUMBER_4;
+        return MatchMode._4;
       case 'notEquals':
-        return MatchMode.NUMBER_5;
+        return MatchMode._5;
       default:
         return undefined;
     }
   }
 
-  private getOperator(
-    operator: string | undefined
-  ): FilterOperator | undefined {
+  private getOperator(operator: string | null | undefined): FilterOperator | undefined {
     switch (operator) {
       case 'and':
-        return FilterOperator.NUMBER_0;
+        return FilterOperator._0;
       case 'or':
-        return FilterOperator.NUMBER_1;
+        return FilterOperator._1;
       default:
         return undefined;
     }

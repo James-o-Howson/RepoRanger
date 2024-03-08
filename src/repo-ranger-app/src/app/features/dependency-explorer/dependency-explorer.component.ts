@@ -1,6 +1,5 @@
 import { PanelModule } from 'primeng/panel';
 import { Component, OnInit } from '@angular/core';
-import { ProjectVm, ProjectsService, ProjectsVm, RepositoriesService, RepositoriesVm, RepositoryVm, SourceVm } from '../../generated';
 import {
   FormsModule,
 } from '@angular/forms';
@@ -12,6 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AccordionModule } from 'primeng/accordion';
 import { DependencyDetailsViewComponent } from './dependency-details-view/dependency-details-view.component';
 import { CommonModule } from '@angular/common';
+import { Client, ListProjectsQuery, ListRepositoriesQuery, ProjectVm, ProjectsVm, RepositoriesVm, RepositoryVm } from '../../api-client';
 
 @Component({
   selector: 'app-dependency-explorer',
@@ -42,15 +42,16 @@ export class DependencyExplorerComponent implements OnInit {
 
   filterIcon: string = 'pi-filter';
 
-  constructor(private readonly repositoryService: RepositoriesService, private readonly projectsService: ProjectsService) {}
+  constructor(private readonly apiClient: Client) {}
 
   ngOnInit(): void {
-    this.repositoryService.apiRepositoriesGet().subscribe(({
+
+    this.apiClient.repositories(new ListRepositoriesQuery()).subscribe(({
       next: (repositoriesVm) => this.handleRepositoriesSuccess(repositoriesVm),
-      error: (error) => this.handleError(error)
+        error: (error) => this.handleError(error)
     }));
 
-    this.projectsService.apiProjectsGet().subscribe(({
+    this.apiClient.projects(new ListProjectsQuery()).subscribe(({
       next: (projectsVm) => this.handleProjectsSuccess(projectsVm),
       error: (error) => this.handleError(error)
     }));
@@ -82,7 +83,7 @@ export class DependencyExplorerComponent implements OnInit {
       return;
     }
     else {
-      const repositoryIds: string[] = this.selectedRepositories
+      const repositoryIds: number[] = this.selectedRepositories
       .filter(r => r.id !== undefined)
       .map(r => r.id!);
 

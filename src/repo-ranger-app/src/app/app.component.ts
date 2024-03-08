@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { ApiModule } from './generated';
 import { HttpClientModule } from '@angular/common/http';
 import { HeaderComponent } from './shared/components/header/header.component';
 
@@ -10,7 +9,7 @@ import { HeaderComponent } from './shared/components/header/header.component';
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  imports: [RouterOutlet, HeaderComponent, CommonModule, ApiModule, HttpClientModule]
+  imports: [RouterOutlet, HeaderComponent, CommonModule, HttpClientModule]
 })
 export class AppComponent {
   title = 'Repo Ranger';
