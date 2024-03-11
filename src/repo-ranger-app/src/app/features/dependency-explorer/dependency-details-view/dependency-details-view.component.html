@@ -1,9 +1,9 @@
-<div *ngIf="dependency$ | async as dependency">
-    <p-panel header="{{ dependency.name }} ({{ dependency.version }})">
+<div *ngIf="dependencyInstance$ | async as dependencyInstance">
+    <p-panel header="{{ dependencyInstance.name }} ({{ dependencyInstance.version }})">
 
         <div class="flex align-items-start gap-1" >
             <p-checkbox [(ngModel)]="specificVersionOnly" [binary]="true" 
-                label="Version {{ dependency.version }} only"
+                label="Version {{ dependencyInstance.version }} only"
                 (ngModelChange)="specificVersionOnlyChanged($event)" />
         </div>
 

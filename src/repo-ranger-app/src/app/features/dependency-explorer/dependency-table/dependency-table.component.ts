@@ -1,8 +1,9 @@
+
 import { SelectedDependencyService } from './selected-dependency.service';
 import { CardModule } from 'primeng/card';
 import { Component, OnInit } from '@angular/core';
 import { Table, TableLazyLoadEvent, TableModule } from 'primeng/table';
-import { Client, DependencyInstanceVm, DependencyInstanceVmPaginatedList, FilterOperator, MatchMode, PaginatedFilter, SearchDependencyInstancesWithPaginationQuery, SortOrder } from '../../../api-client'
+import { DependencyInstanceVm, DependencyInstancesClient, FilterOperator, MatchMode, PaginatedFilter, PaginatedListOfDependencyInstanceVm, SearchDependencyInstancesWithPaginationQuery, SortOrder } from '../../../api-client'
 import { ButtonModule } from 'primeng/button';
 import { PaginatorModule } from 'primeng/paginator';
 import { InputTextModule } from 'primeng/inputtext';
@@ -27,12 +28,12 @@ export class DependencyTableComponent implements OnInit {
   pageSize: number = 25;
   totalRecords: number = 0;
   loading: boolean = false;
-  paginatedDependencies!: DependencyInstanceVmPaginatedList;
+  paginatedDependencies!: PaginatedListOfDependencyInstanceVm;
   items!: DependencyInstanceVm[];
   selectedDependency: DependencyInstanceVm | null = null;
 
   constructor(
-    private readonly apiClient: Client,
+    private readonly apiClient: DependencyInstancesClient,
     private readonly selectedDependencyService: SelectedDependencyService
   ) {}
 
@@ -40,9 +41,7 @@ export class DependencyTableComponent implements OnInit {
     this.loading = true;
   }
 
-  searchDependenciesSuccess(
-    paginatedDependencies: DependencyInstanceVmPaginatedList
-  ): void {
+  searchDependenciesSuccess(paginatedDependencies: PaginatedListOfDependencyInstanceVm): void {
     if (!paginatedDependencies.items) return;
     this.items = paginatedDependencies.items;
     this.totalRecords = paginatedDependencies.totalCount ?? 0;
@@ -60,7 +59,7 @@ export class DependencyTableComponent implements OnInit {
     this.loading = true;
     const filters = this.getFilters($event.filters);
 
-    this.apiClient.search({
+    this.apiClient.dependencyInstances_Search({
       pageNumber: this.calculatePageNumber($event.first),
           pageSize: this.pageSize,
           sortField: this.getFieldName($event.sortField),
@@ -103,11 +102,11 @@ export class DependencyTableComponent implements OnInit {
   private getSortOrder(sortOrder: number | undefined | null): SortOrder {
     switch (sortOrder) {
       case 1:
-        return SortOrder._0;
+        return SortOrder.Ascending;
       case -1:
-        return SortOrder._1;
+        return SortOrder.Descending;
       default:
-        return SortOrder._0;
+        return SortOrder.Ascending;
     }
   }
 
@@ -155,17 +154,17 @@ export class DependencyTableComponent implements OnInit {
   private getMatchMode(matchMode: string | null | undefined): MatchMode | undefined {
     switch (matchMode) {
       case 'startsWith':
-        return MatchMode._0;
+        return MatchMode.StartsWith;
       case 'contains':
-        return MatchMode._1;
+        return MatchMode.Contains;
       case 'notContains':
-        return MatchMode._2;
+        return MatchMode.NotContains;
       case 'endsWith':
-        return MatchMode._3;
+        return MatchMode.EndsWith;
       case 'equals':
-        return MatchMode._4;
+        return MatchMode.Equals;
       case 'notEquals':
-        return MatchMode._5;
+        return MatchMode.NotEquals;
       default:
         return undefined;
     }
@@ -174,11 +173,11 @@ export class DependencyTableComponent implements OnInit {
   private getOperator(operator: string | null | undefined): FilterOperator | undefined {
     switch (operator) {
       case 'and':
-        return FilterOperator._0;
+        return FilterOperator.And;
       case 'or':
-        return FilterOperator._1;
+        return FilterOperator.Or;
       default:
-        return undefined;
+        return FilterOperator.And;
     }
   }
 }

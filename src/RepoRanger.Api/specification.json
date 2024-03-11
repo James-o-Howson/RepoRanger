@@ -1,0 +1,627 @@
+{
+  "x-generator": "NSwag v14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "openapi": "3.0.0",
+  "info": {
+    "title": "My Title",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/api/DependencyInstances": {
+      "get": {
+        "tags": [
+          "DependencyInstances"
+        ],
+        "operationId": "DependencyInstances_Get",
+        "parameters": [
+          {
+            "name": "Id",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DependencyInstanceDetailVm"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/DependencyInstances/Search": {
+      "post": {
+        "tags": [
+          "DependencyInstances"
+        ],
+        "operationId": "DependencyInstances_Search",
+        "requestBody": {
+          "x-name": "query",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchDependencyInstancesWithPaginationQuery"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedListOfDependencyInstanceVm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Projects": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "operationId": "Projects_List",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListProjectsQuery"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsVm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Projects/GetByRepositoryIds": {
+      "get": {
+        "tags": [
+          "Projects"
+        ],
+        "operationId": "Projects_GetByRepositoryIds",
+        "parameters": [
+          {
+            "name": "RepositoryIds",
+            "in": "query",
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjectsVm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Repositories": {
+      "get": {
+        "tags": [
+          "Repositories"
+        ],
+        "operationId": "Repositories_List",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListRepositoriesQuery"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepositoriesVm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Repositories/GetBySourceId": {
+      "get": {
+        "tags": [
+          "Repositories"
+        ],
+        "operationId": "Repositories_GetBySourceId",
+        "parameters": [
+          {
+            "name": "SourceId",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "nullable": true
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepositoriesVm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Sources": {
+      "get": {
+        "tags": [
+          "Sources"
+        ],
+        "operationId": "Sources_List",
+        "parameters": [
+          {
+            "name": "query",
+            "in": "query",
+            "schema": {
+              "$ref": "#/components/schemas/ListSourcesQuery"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourcesVm"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DependencyInstanceDetailVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "source": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "repositories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RepositoryDetailVm"
+            }
+          }
+        }
+      },
+      "RepositoryDetailVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectDetailVm"
+            }
+          }
+        }
+      },
+      "ProjectDetailVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "PaginatedListOfDependencyInstanceVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "items": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DependencyInstanceVm"
+            }
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "hasPreviousPage": {
+            "type": "boolean"
+          },
+          "hasNextPage": {
+            "type": "boolean"
+          }
+        }
+      },
+      "DependencyInstanceVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "source": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "projectName": {
+            "type": "string"
+          }
+        }
+      },
+      "SearchDependencyInstancesWithPaginationQuery": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/PaginatedRequestOfDependencyInstanceVm"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "sourceIds": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "repositoryIds": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              },
+              "projectIds": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "integer",
+                  "format": "int32"
+                }
+              }
+            }
+          }
+        ]
+      },
+      "PaginatedRequestOfDependencyInstanceVm": {
+        "type": "object",
+        "x-abstract": true,
+        "additionalProperties": false,
+        "properties": {
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sortField": {
+            "type": "string"
+          },
+          "sortOrder": {
+            "$ref": "#/components/schemas/SortOrder"
+          },
+          "filters": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "$ref": "#/components/schemas/PaginatedFilter"
+              }
+            }
+          }
+        }
+      },
+      "SortOrder": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "Ascending",
+          "Descending"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "PaginatedFilter": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "matchMode": {
+            "$ref": "#/components/schemas/MatchMode"
+          },
+          "operator": {
+            "$ref": "#/components/schemas/FilterOperator"
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "MatchMode": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "StartsWith",
+          "Contains",
+          "NotContains",
+          "EndsWith",
+          "Equals",
+          "NotEquals"
+        ],
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5
+        ]
+      },
+      "FilterOperator": {
+        "type": "integer",
+        "description": "",
+        "x-enumNames": [
+          "And",
+          "Or"
+        ],
+        "enum": [
+          0,
+          1
+        ]
+      },
+      "ProjectsVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectVm"
+            }
+          }
+        }
+      },
+      "ProjectVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "dependencyCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "repositoryId": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "repositoryName": {
+            "type": "string"
+          }
+        }
+      },
+      "ListProjectsQuery": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "RepositoriesVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "repositories": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RepositoryVm"
+            }
+          }
+        }
+      },
+      "RepositoryVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "remoteUrl": {
+            "type": "string",
+            "nullable": true
+          },
+          "defaultBranchName": {
+            "type": "string",
+            "nullable": true
+          },
+          "parseTime": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ListRepositoriesQuery": {
+        "type": "object",
+        "additionalProperties": false
+      },
+      "SourcesVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SourceVm"
+            }
+          }
+        }
+      },
+      "SourceVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
+      "ListSourcesQuery": {
+        "type": "object",
+        "additionalProperties": false
+      }
+    }
+  }
+}

@@ -27,14 +27,17 @@
                             </div>
                         </span>
                     </ng-template>
-                    <div class="flex justify-content-center m-3">
-                        <div class="flex flex-column gap-2">
+                    <div class="flex justify-content-left m-3">
+                        <div class="flex flex-column gap-2 p-float-label">
+                            <p-multiSelect id="repositories" [options]="repositories" [(ngModel)]="selectedRepositories" (onChange)="selectedRepositoriesChanged($event)" 
+                                [filter]="true" optionLabel="name" placeholder="Select Repositories"></p-multiSelect>
                             <label for="repositories">Repositories</label>
-                            <p-multiSelect id="repositories"  [options]="repositories" [(ngModel)]="selectedRepositories" (onChange)="selectedRepositoriesChanged($event)" [filter]="true" optionLabel="name" placeholder="Select Repositories"></p-multiSelect>
                         </div>
-                        <div class="flex flex-column gap-2 ml-2">
+                        <div class="flex flex-column gap-2 ml-2 p-float-label">
+                            <p-multiSelect id="projects" [options]="projects" [(ngModel)]="selectedProjects" (onChange)="selectedProjectsChanged($event)" 
+                                [filter]="true" optionLabel="name" placeholder="Select Projects"></p-multiSelect>
                             <label for="projects">Projects</label>
-                            <p-multiSelect id="projects" [options]="projects" [(ngModel)]="selectedProjects" (onChange)="selectedProjectsChanged($event)" [filter]="true" optionLabel="name" placeholder="Select Projects"></p-multiSelect>
+
                         </div>
                     </div>  
                 </p-accordionTab>

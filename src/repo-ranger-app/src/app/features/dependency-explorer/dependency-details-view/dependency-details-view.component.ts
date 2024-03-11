@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { FieldsetModule } from 'primeng/fieldset';
 import { DividerModule } from 'primeng/divider';
-import { Client, DependencyInstanceDetailVm, DependencyInstanceVm, ProjectDetailVm, RepositoryDetailVm } from '../../../api-client'
+import { DependencyInstanceDetailVm, DependencyInstanceVm, DependencyInstancesClient, ProjectDetailVm, RepositoryDetailVm } from '../../../api-client'
 import { SelectedDependencyService } from '../dependency-table/selected-dependency.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -20,27 +20,28 @@ import { FormsModule } from '@angular/forms';
 })
 export class DependencyDetailsViewComponent implements OnInit {
 
-  public dependency$: Observable<DependencyInstanceDetailVm | null> | null = null;
+  public dependencyInstance$: Observable<DependencyInstanceDetailVm | null> | null = null;
   public dependencyDetail: DependencyInstanceDetailVm | null = null;
   public repositoryTreeNodes: TreeNode[] | null = [];
   public selectedTreeNode: TreeNode<any> | TreeNode<any>[] | null = null;
   public specificVersionOnly: boolean = true;
 
-  constructor(private readonly selectedDependencyService: SelectedDependencyService, private readonly apiClient: Client) { }
+  constructor(private readonly selectedDependencyService: SelectedDependencyService, private readonly apiClient: DependencyInstancesClient) { }
 
   ngOnInit(): void {
-    this.dependency$ = this.selectedDependencyService.getSelectedDependency();
+    this.dependencyInstance$ = this.selectedDependencyService.getSelectedDependencyInstance();
 
-    this.dependency$.subscribe({
+    this.dependencyInstance$.subscribe({
       next: (dependencyVm) => this.handleLoadSelectedDependencySucceess(dependencyVm),
       error: (error) => this.handleError(error)
     });
   }
+
   handleLoadSelectedDependencySucceess(dependencyVm: DependencyInstanceVm | null): void {
-    // this.dependenciesService.apiDependenciesGet(dependencyVm?.id).subscribe({
-    //   next: (depdnencyDetailVm) => this.handleGetDependencyDetailSuccess(depdnencyDetailVm),
-    //   error: (error) => this.handleError(error)
-    // });
+    this.apiClient.dependencyInstances_Get(dependencyVm?.id).subscribe({
+      next: (depdnencyDetailVm) => this.handleGetDependencyDetailSuccess(depdnencyDetailVm),
+      error: (error) => this.handleError(error)
+    });
   }
 
   handleGetDependencyDetailSuccess(depdnencyDetailVm: DependencyInstanceDetailVm): void {

@@ -16,7 +16,7 @@ import { HttpClient, HttpHeaders, HttpResponse, HttpResponseBase } from '@angula
 export const API_BASE_URL = new InjectionToken<string>('API_BASE_URL');
 
 @Injectable()
-export class Client {
+export class DependencyInstancesClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -26,11 +26,7 @@ export class Client {
         this.baseUrl = baseUrl ?? "";
     }
 
-    /**
-     * @param id (optional) 
-     * @return Success
-     */
-    dependencyInstances(id: number | undefined): Observable<DependencyInstanceDetailVm> {
+    dependencyInstances_Get(id: number | undefined): Observable<DependencyInstanceDetailVm> {
         let url_ = this.baseUrl + "/api/DependencyInstances?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -42,16 +38,16 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "text/plain"
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDependencyInstances(response_);
+            return this.processDependencyInstances_Get(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processDependencyInstances(response_ as any);
+                    return this.processDependencyInstances_Get(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<DependencyInstanceDetailVm>;
                 }
@@ -60,7 +56,7 @@ export class Client {
         }));
     }
 
-    protected processDependencyInstances(response: HttpResponseBase): Observable<DependencyInstanceDetailVm> {
+    protected processDependencyInstances_Get(response: HttpResponseBase): Observable<DependencyInstanceDetailVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -74,6 +70,13 @@ export class Client {
             result200 = DependencyInstanceDetailVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
+        } else if (status === 404) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result404: any = null;
+            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result404 = ProblemDetails.fromJS(resultData404);
+            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
@@ -82,15 +85,11 @@ export class Client {
         return _observableOf(null as any);
     }
 
-    /**
-     * @param body (optional) 
-     * @return Success
-     */
-    search(body: SearchDependencyInstancesWithPaginationQuery | undefined): Observable<DependencyInstanceVmPaginatedList> {
+    dependencyInstances_Search(query: SearchDependencyInstancesWithPaginationQuery): Observable<PaginatedListOfDependencyInstanceVm> {
         let url_ = this.baseUrl + "/api/DependencyInstances/Search";
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(body);
+        const content_ = JSON.stringify(query);
 
         let options_ : any = {
             body: content_,
@@ -98,25 +97,25 @@ export class Client {
             responseType: "blob",
             headers: new HttpHeaders({
                 "Content-Type": "application/json",
-                "Accept": "text/plain"
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSearch(response_);
+            return this.processDependencyInstances_Search(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processSearch(response_ as any);
+                    return this.processDependencyInstances_Search(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<DependencyInstanceVmPaginatedList>;
+                    return _observableThrow(e) as any as Observable<PaginatedListOfDependencyInstanceVm>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<DependencyInstanceVmPaginatedList>;
+                return _observableThrow(response_) as any as Observable<PaginatedListOfDependencyInstanceVm>;
         }));
     }
 
-    protected processSearch(response: HttpResponseBase): Observable<DependencyInstanceVmPaginatedList> {
+    protected processDependencyInstances_Search(response: HttpResponseBase): Observable<PaginatedListOfDependencyInstanceVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -127,7 +126,7 @@ export class Client {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DependencyInstanceVmPaginatedList.fromJS(resultData200);
+            result200 = PaginatedListOfDependencyInstanceVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -137,12 +136,20 @@ export class Client {
         }
         return _observableOf(null as any);
     }
+}
 
-    /**
-     * @param query (optional) 
-     * @return Success
-     */
-    projects(query: ListProjectsQuery | undefined): Observable<ProjectsVm> {
+@Injectable()
+export class ProjectsClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    projects_List(query: ListProjectsQuery | undefined): Observable<ProjectsVm> {
         let url_ = this.baseUrl + "/api/Projects?";
         if (query === null)
             throw new Error("The parameter 'query' cannot be null.");
@@ -154,16 +161,16 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "text/plain"
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processProjects(response_);
+            return this.processProjects_List(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processProjects(response_ as any);
+                    return this.processProjects_List(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<ProjectsVm>;
                 }
@@ -172,7 +179,7 @@ export class Client {
         }));
     }
 
-    protected processProjects(response: HttpResponseBase): Observable<ProjectsVm> {
+    protected processProjects_List(response: HttpResponseBase): Observable<ProjectsVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -194,11 +201,7 @@ export class Client {
         return _observableOf(null as any);
     }
 
-    /**
-     * @param repositoryIds (optional) 
-     * @return Success
-     */
-    getByRepositoryIds(repositoryIds: number[] | undefined): Observable<ProjectsVm> {
+    projects_GetByRepositoryIds(repositoryIds: number[] | undefined): Observable<ProjectsVm> {
         let url_ = this.baseUrl + "/api/Projects/GetByRepositoryIds?";
         if (repositoryIds === null)
             throw new Error("The parameter 'repositoryIds' cannot be null.");
@@ -210,16 +213,16 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "text/plain"
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetByRepositoryIds(response_);
+            return this.processProjects_GetByRepositoryIds(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetByRepositoryIds(response_ as any);
+                    return this.processProjects_GetByRepositoryIds(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<ProjectsVm>;
                 }
@@ -228,7 +231,7 @@ export class Client {
         }));
     }
 
-    protected processGetByRepositoryIds(response: HttpResponseBase): Observable<ProjectsVm> {
+    protected processProjects_GetByRepositoryIds(response: HttpResponseBase): Observable<ProjectsVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -249,12 +252,20 @@ export class Client {
         }
         return _observableOf(null as any);
     }
+}
 
-    /**
-     * @param query (optional) 
-     * @return Success
-     */
-    repositories(query: ListRepositoriesQuery | undefined): Observable<RepositoriesVm> {
+@Injectable()
+export class RepositoriesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    repositories_List(query: ListRepositoriesQuery | undefined): Observable<RepositoriesVm> {
         let url_ = this.baseUrl + "/api/Repositories?";
         if (query === null)
             throw new Error("The parameter 'query' cannot be null.");
@@ -266,16 +277,16 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "text/plain"
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRepositories(response_);
+            return this.processRepositories_List(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processRepositories(response_ as any);
+                    return this.processRepositories_List(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<RepositoriesVm>;
                 }
@@ -284,7 +295,7 @@ export class Client {
         }));
     }
 
-    protected processRepositories(response: HttpResponseBase): Observable<RepositoriesVm> {
+    protected processRepositories_List(response: HttpResponseBase): Observable<RepositoriesVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -306,15 +317,9 @@ export class Client {
         return _observableOf(null as any);
     }
 
-    /**
-     * @param sourceId (optional) 
-     * @return Success
-     */
-    getBySourceId(sourceId: number | undefined): Observable<RepositoriesVm> {
+    repositories_GetBySourceId(sourceId: number | null | undefined): Observable<RepositoriesVm> {
         let url_ = this.baseUrl + "/api/Repositories/GetBySourceId?";
-        if (sourceId === null)
-            throw new Error("The parameter 'sourceId' cannot be null.");
-        else if (sourceId !== undefined)
+        if (sourceId !== undefined && sourceId !== null)
             url_ += "SourceId=" + encodeURIComponent("" + sourceId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -322,16 +327,16 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "text/plain"
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetBySourceId(response_);
+            return this.processRepositories_GetBySourceId(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetBySourceId(response_ as any);
+                    return this.processRepositories_GetBySourceId(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<RepositoriesVm>;
                 }
@@ -340,7 +345,7 @@ export class Client {
         }));
     }
 
-    protected processGetBySourceId(response: HttpResponseBase): Observable<RepositoriesVm> {
+    protected processRepositories_GetBySourceId(response: HttpResponseBase): Observable<RepositoriesVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -361,12 +366,20 @@ export class Client {
         }
         return _observableOf(null as any);
     }
+}
 
-    /**
-     * @param query (optional) 
-     * @return Success
-     */
-    sources(query: ListSourcesQuery | undefined): Observable<SourcesVm> {
+@Injectable()
+export class SourcesClient {
+    private http: HttpClient;
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
+        this.http = http;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    sources_List(query: ListSourcesQuery | undefined): Observable<SourcesVm> {
         let url_ = this.baseUrl + "/api/Sources?";
         if (query === null)
             throw new Error("The parameter 'query' cannot be null.");
@@ -378,16 +391,16 @@ export class Client {
             observe: "response",
             responseType: "blob",
             headers: new HttpHeaders({
-                "Accept": "text/plain"
+                "Accept": "application/json"
             })
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSources(response_);
+            return this.processSources_List(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processSources(response_ as any);
+                    return this.processSources_List(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<SourcesVm>;
                 }
@@ -396,7 +409,7 @@ export class Client {
         }));
     }
 
-    protected processSources(response: HttpResponseBase): Observable<SourcesVm> {
+    protected processSources_List(response: HttpResponseBase): Observable<SourcesVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -421,10 +434,10 @@ export class Client {
 
 export class DependencyInstanceDetailVm implements IDependencyInstanceDetailVm {
     id?: number;
-    source?: string | undefined;
-    name?: string | undefined;
-    version?: string | undefined;
-    repositories?: RepositoryDetailVm[] | undefined;
+    source?: string;
+    name?: string;
+    version?: string;
+    repositories?: RepositoryDetailVm[];
 
     constructor(data?: IDependencyInstanceDetailVm) {
         if (data) {
@@ -473,460 +486,16 @@ export class DependencyInstanceDetailVm implements IDependencyInstanceDetailVm {
 
 export interface IDependencyInstanceDetailVm {
     id?: number;
-    source?: string | undefined;
-    name?: string | undefined;
-    version?: string | undefined;
-    repositories?: RepositoryDetailVm[] | undefined;
-}
-
-export class DependencyInstanceVm implements IDependencyInstanceVm {
-    source?: string | undefined;
-    name?: string | undefined;
-    version?: string | undefined;
-
-    constructor(data?: IDependencyInstanceVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.source = _data["source"];
-            this.name = _data["name"];
-            this.version = _data["version"];
-        }
-    }
-
-    static fromJS(data: any): DependencyInstanceVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new DependencyInstanceVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["source"] = this.source;
-        data["name"] = this.name;
-        data["version"] = this.version;
-        return data;
-    }
-}
-
-export interface IDependencyInstanceVm {
-    source?: string | undefined;
-    name?: string | undefined;
-    version?: string | undefined;
-}
-
-export class DependencyInstanceVmPaginatedList implements IDependencyInstanceVmPaginatedList {
-    readonly items?: DependencyInstanceVm[] | undefined;
-    readonly pageNumber?: number;
-    readonly totalPages?: number;
-    readonly totalCount?: number;
-    readonly hasPreviousPage?: boolean;
-    readonly hasNextPage?: boolean;
-
-    constructor(data?: IDependencyInstanceVmPaginatedList) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["items"])) {
-                (<any>this).items = [] as any;
-                for (let item of _data["items"])
-                    (<any>this).items!.push(DependencyInstanceVm.fromJS(item));
-            }
-            (<any>this).pageNumber = _data["pageNumber"];
-            (<any>this).totalPages = _data["totalPages"];
-            (<any>this).totalCount = _data["totalCount"];
-            (<any>this).hasPreviousPage = _data["hasPreviousPage"];
-            (<any>this).hasNextPage = _data["hasNextPage"];
-        }
-    }
-
-    static fromJS(data: any): DependencyInstanceVmPaginatedList {
-        data = typeof data === 'object' ? data : {};
-        let result = new DependencyInstanceVmPaginatedList();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.items)) {
-            data["items"] = [];
-            for (let item of this.items)
-                data["items"].push(item.toJSON());
-        }
-        data["pageNumber"] = this.pageNumber;
-        data["totalPages"] = this.totalPages;
-        data["totalCount"] = this.totalCount;
-        data["hasPreviousPage"] = this.hasPreviousPage;
-        data["hasNextPage"] = this.hasNextPage;
-        return data;
-    }
-}
-
-export interface IDependencyInstanceVmPaginatedList {
-    items?: DependencyInstanceVm[] | undefined;
-    pageNumber?: number;
-    totalPages?: number;
-    totalCount?: number;
-    hasPreviousPage?: boolean;
-    hasNextPage?: boolean;
-}
-
-export enum FilterOperator {
-    _0 = 0,
-    _1 = 1,
-}
-
-export class ListProjectsQuery implements IListProjectsQuery {
-
-    constructor(data?: IListProjectsQuery) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): ListProjectsQuery {
-        data = typeof data === 'object' ? data : {};
-        let result = new ListProjectsQuery();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data;
-    }
-}
-
-export interface IListProjectsQuery {
-}
-
-export class ListRepositoriesQuery implements IListRepositoriesQuery {
-
-    constructor(data?: IListRepositoriesQuery) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): ListRepositoriesQuery {
-        data = typeof data === 'object' ? data : {};
-        let result = new ListRepositoriesQuery();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data;
-    }
-}
-
-export interface IListRepositoriesQuery {
-}
-
-export class ListSourcesQuery implements IListSourcesQuery {
-
-    constructor(data?: IListSourcesQuery) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-    }
-
-    static fromJS(data: any): ListSourcesQuery {
-        data = typeof data === 'object' ? data : {};
-        let result = new ListSourcesQuery();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        return data;
-    }
-}
-
-export interface IListSourcesQuery {
-}
-
-export enum MatchMode {
-    _0 = 0,
-    _1 = 1,
-    _2 = 2,
-    _3 = 3,
-    _4 = 4,
-    _5 = 5,
-}
-
-export class PaginatedFilter implements IPaginatedFilter {
-    matchMode?: MatchMode;
-    operator?: FilterOperator;
-    value?: string | undefined;
-
-    constructor(data?: IPaginatedFilter) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.matchMode = _data["matchMode"];
-            this.operator = _data["operator"];
-            this.value = _data["value"];
-        }
-    }
-
-    static fromJS(data: any): PaginatedFilter {
-        data = typeof data === 'object' ? data : {};
-        let result = new PaginatedFilter();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["matchMode"] = this.matchMode;
-        data["operator"] = this.operator;
-        data["value"] = this.value;
-        return data;
-    }
-}
-
-export interface IPaginatedFilter {
-    matchMode?: MatchMode;
-    operator?: FilterOperator;
-    value?: string | undefined;
-}
-
-export class ProjectDetailVm implements IProjectDetailVm {
-    id?: number;
-    name?: string | undefined;
-    version?: string | undefined;
-
-    constructor(data?: IProjectDetailVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.version = _data["version"];
-        }
-    }
-
-    static fromJS(data: any): ProjectDetailVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProjectDetailVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["version"] = this.version;
-        return data;
-    }
-}
-
-export interface IProjectDetailVm {
-    id?: number;
-    name?: string | undefined;
-    version?: string | undefined;
-}
-
-export class ProjectVm implements IProjectVm {
-    id?: number;
-    name?: string | undefined;
-    version?: string | undefined;
-    dependencyCount?: number;
-    repositoryId?: number;
-    repositoryName?: string | undefined;
-
-    constructor(data?: IProjectVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.version = _data["version"];
-            this.dependencyCount = _data["dependencyCount"];
-            this.repositoryId = _data["repositoryId"];
-            this.repositoryName = _data["repositoryName"];
-        }
-    }
-
-    static fromJS(data: any): ProjectVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProjectVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["version"] = this.version;
-        data["dependencyCount"] = this.dependencyCount;
-        data["repositoryId"] = this.repositoryId;
-        data["repositoryName"] = this.repositoryName;
-        return data;
-    }
-}
-
-export interface IProjectVm {
-    id?: number;
-    name?: string | undefined;
-    version?: string | undefined;
-    dependencyCount?: number;
-    repositoryId?: number;
-    repositoryName?: string | undefined;
-}
-
-export class ProjectsVm implements IProjectsVm {
-    projects?: ProjectVm[] | undefined;
-
-    constructor(data?: IProjectsVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["projects"])) {
-                this.projects = [] as any;
-                for (let item of _data["projects"])
-                    this.projects!.push(ProjectVm.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ProjectsVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProjectsVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.projects)) {
-            data["projects"] = [];
-            for (let item of this.projects)
-                data["projects"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IProjectsVm {
-    projects?: ProjectVm[] | undefined;
-}
-
-export class RepositoriesVm implements IRepositoriesVm {
-    repositories?: RepositoryVm[] | undefined;
-
-    constructor(data?: IRepositoriesVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["repositories"])) {
-                this.repositories = [] as any;
-                for (let item of _data["repositories"])
-                    this.repositories!.push(RepositoryVm.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): RepositoriesVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new RepositoriesVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.repositories)) {
-            data["repositories"] = [];
-            for (let item of this.repositories)
-                data["repositories"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IRepositoriesVm {
-    repositories?: RepositoryVm[] | undefined;
+    source?: string;
+    name?: string;
+    version?: string;
+    repositories?: RepositoryDetailVm[];
 }
 
 export class RepositoryDetailVm implements IRepositoryDetailVm {
     id?: number;
-    name?: string | undefined;
-    projects?: ProjectDetailVm[] | undefined;
+    name?: string;
+    projects?: ProjectDetailVm[];
 
     constructor(data?: IRepositoryDetailVm) {
         if (data) {
@@ -971,8 +540,596 @@ export class RepositoryDetailVm implements IRepositoryDetailVm {
 
 export interface IRepositoryDetailVm {
     id?: number;
-    name?: string | undefined;
-    projects?: ProjectDetailVm[] | undefined;
+    name?: string;
+    projects?: ProjectDetailVm[];
+}
+
+export class ProjectDetailVm implements IProjectDetailVm {
+    id?: number;
+    name?: string;
+    version?: string;
+
+    constructor(data?: IProjectDetailVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.version = _data["version"];
+        }
+    }
+
+    static fromJS(data: any): ProjectDetailVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProjectDetailVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["version"] = this.version;
+        return data;
+    }
+}
+
+export interface IProjectDetailVm {
+    id?: number;
+    name?: string;
+    version?: string;
+}
+
+export class ProblemDetails implements IProblemDetails {
+    type?: string | undefined;
+    title?: string | undefined;
+    status?: number | undefined;
+    detail?: string | undefined;
+    instance?: string | undefined;
+
+    [key: string]: any;
+
+    constructor(data?: IProblemDetails) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            for (var property in _data) {
+                if (_data.hasOwnProperty(property))
+                    this[property] = _data[property];
+            }
+            this.type = _data["type"];
+            this.title = _data["title"];
+            this.status = _data["status"];
+            this.detail = _data["detail"];
+            this.instance = _data["instance"];
+        }
+    }
+
+    static fromJS(data: any): ProblemDetails {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProblemDetails();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        for (var property in this) {
+            if (this.hasOwnProperty(property))
+                data[property] = this[property];
+        }
+        data["type"] = this.type;
+        data["title"] = this.title;
+        data["status"] = this.status;
+        data["detail"] = this.detail;
+        data["instance"] = this.instance;
+        return data;
+    }
+}
+
+export interface IProblemDetails {
+    type?: string | undefined;
+    title?: string | undefined;
+    status?: number | undefined;
+    detail?: string | undefined;
+    instance?: string | undefined;
+
+    [key: string]: any;
+}
+
+export class PaginatedListOfDependencyInstanceVm implements IPaginatedListOfDependencyInstanceVm {
+    items?: DependencyInstanceVm[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+
+    constructor(data?: IPaginatedListOfDependencyInstanceVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["items"])) {
+                this.items = [] as any;
+                for (let item of _data["items"])
+                    this.items!.push(DependencyInstanceVm.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.totalPages = _data["totalPages"];
+            this.totalCount = _data["totalCount"];
+            this.hasPreviousPage = _data["hasPreviousPage"];
+            this.hasNextPage = _data["hasNextPage"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedListOfDependencyInstanceVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedListOfDependencyInstanceVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.items)) {
+            data["items"] = [];
+            for (let item of this.items)
+                data["items"].push(item.toJSON());
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["totalPages"] = this.totalPages;
+        data["totalCount"] = this.totalCount;
+        data["hasPreviousPage"] = this.hasPreviousPage;
+        data["hasNextPage"] = this.hasNextPage;
+        return data;
+    }
+}
+
+export interface IPaginatedListOfDependencyInstanceVm {
+    items?: DependencyInstanceVm[];
+    pageNumber?: number;
+    totalPages?: number;
+    totalCount?: number;
+    hasPreviousPage?: boolean;
+    hasNextPage?: boolean;
+}
+
+export class DependencyInstanceVm implements IDependencyInstanceVm {
+    id?: number;
+    source?: string;
+    name?: string;
+    version?: string;
+    projectName?: string;
+
+    constructor(data?: IDependencyInstanceVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.source = _data["source"];
+            this.name = _data["name"];
+            this.version = _data["version"];
+            this.projectName = _data["projectName"];
+        }
+    }
+
+    static fromJS(data: any): DependencyInstanceVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new DependencyInstanceVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["source"] = this.source;
+        data["name"] = this.name;
+        data["version"] = this.version;
+        data["projectName"] = this.projectName;
+        return data;
+    }
+}
+
+export interface IDependencyInstanceVm {
+    id?: number;
+    source?: string;
+    name?: string;
+    version?: string;
+    projectName?: string;
+}
+
+export abstract class PaginatedRequestOfDependencyInstanceVm implements IPaginatedRequestOfDependencyInstanceVm {
+    pageNumber?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: SortOrder;
+    filters?: { [key: string]: PaginatedFilter[]; } | undefined;
+
+    constructor(data?: IPaginatedRequestOfDependencyInstanceVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.pageNumber = _data["pageNumber"];
+            this.pageSize = _data["pageSize"];
+            this.sortField = _data["sortField"];
+            this.sortOrder = _data["sortOrder"];
+            if (_data["filters"]) {
+                this.filters = {} as any;
+                for (let key in _data["filters"]) {
+                    if (_data["filters"].hasOwnProperty(key))
+                        (<any>this.filters)![key] = _data["filters"][key] ? _data["filters"][key].map((i: any) => PaginatedFilter.fromJS(i)) : [];
+                }
+            }
+        }
+    }
+
+    static fromJS(data: any): PaginatedRequestOfDependencyInstanceVm {
+        data = typeof data === 'object' ? data : {};
+        throw new Error("The abstract class 'PaginatedRequestOfDependencyInstanceVm' cannot be instantiated.");
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["pageNumber"] = this.pageNumber;
+        data["pageSize"] = this.pageSize;
+        data["sortField"] = this.sortField;
+        data["sortOrder"] = this.sortOrder;
+        if (this.filters) {
+            data["filters"] = {};
+            for (let key in this.filters) {
+                if (this.filters.hasOwnProperty(key))
+                    (<any>data["filters"])[key] = (<any>this.filters)[key];
+            }
+        }
+        return data;
+    }
+}
+
+export interface IPaginatedRequestOfDependencyInstanceVm {
+    pageNumber?: number;
+    pageSize?: number;
+    sortField?: string;
+    sortOrder?: SortOrder;
+    filters?: { [key: string]: PaginatedFilter[]; } | undefined;
+}
+
+export class SearchDependencyInstancesWithPaginationQuery extends PaginatedRequestOfDependencyInstanceVm implements ISearchDependencyInstancesWithPaginationQuery {
+    sourceIds?: number[] | undefined;
+    repositoryIds?: number[] | undefined;
+    projectIds?: number[] | undefined;
+
+    constructor(data?: ISearchDependencyInstancesWithPaginationQuery) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            if (Array.isArray(_data["sourceIds"])) {
+                this.sourceIds = [] as any;
+                for (let item of _data["sourceIds"])
+                    this.sourceIds!.push(item);
+            }
+            if (Array.isArray(_data["repositoryIds"])) {
+                this.repositoryIds = [] as any;
+                for (let item of _data["repositoryIds"])
+                    this.repositoryIds!.push(item);
+            }
+            if (Array.isArray(_data["projectIds"])) {
+                this.projectIds = [] as any;
+                for (let item of _data["projectIds"])
+                    this.projectIds!.push(item);
+            }
+        }
+    }
+
+    static override fromJS(data: any): SearchDependencyInstancesWithPaginationQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new SearchDependencyInstancesWithPaginationQuery();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.sourceIds)) {
+            data["sourceIds"] = [];
+            for (let item of this.sourceIds)
+                data["sourceIds"].push(item);
+        }
+        if (Array.isArray(this.repositoryIds)) {
+            data["repositoryIds"] = [];
+            for (let item of this.repositoryIds)
+                data["repositoryIds"].push(item);
+        }
+        if (Array.isArray(this.projectIds)) {
+            data["projectIds"] = [];
+            for (let item of this.projectIds)
+                data["projectIds"].push(item);
+        }
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface ISearchDependencyInstancesWithPaginationQuery extends IPaginatedRequestOfDependencyInstanceVm {
+    sourceIds?: number[] | undefined;
+    repositoryIds?: number[] | undefined;
+    projectIds?: number[] | undefined;
+}
+
+export enum SortOrder {
+    Ascending = 0,
+    Descending = 1,
+}
+
+export class PaginatedFilter implements IPaginatedFilter {
+    matchMode?: MatchMode;
+    operator?: FilterOperator;
+    value?: string;
+
+    constructor(data?: IPaginatedFilter) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.matchMode = _data["matchMode"];
+            this.operator = _data["operator"];
+            this.value = _data["value"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedFilter {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedFilter();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["matchMode"] = this.matchMode;
+        data["operator"] = this.operator;
+        data["value"] = this.value;
+        return data;
+    }
+}
+
+export interface IPaginatedFilter {
+    matchMode?: MatchMode;
+    operator?: FilterOperator;
+    value?: string;
+}
+
+export enum MatchMode {
+    StartsWith = 0,
+    Contains = 1,
+    NotContains = 2,
+    EndsWith = 3,
+    Equals = 4,
+    NotEquals = 5,
+}
+
+export enum FilterOperator {
+    And = 0,
+    Or = 1,
+}
+
+export class ProjectsVm implements IProjectsVm {
+    projects?: ProjectVm[];
+
+    constructor(data?: IProjectsVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["projects"])) {
+                this.projects = [] as any;
+                for (let item of _data["projects"])
+                    this.projects!.push(ProjectVm.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ProjectsVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProjectsVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.projects)) {
+            data["projects"] = [];
+            for (let item of this.projects)
+                data["projects"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IProjectsVm {
+    projects?: ProjectVm[];
+}
+
+export class ProjectVm implements IProjectVm {
+    id?: number;
+    name?: string;
+    version?: string;
+    dependencyCount?: number;
+    repositoryId?: number;
+    repositoryName?: string;
+
+    constructor(data?: IProjectVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.version = _data["version"];
+            this.dependencyCount = _data["dependencyCount"];
+            this.repositoryId = _data["repositoryId"];
+            this.repositoryName = _data["repositoryName"];
+        }
+    }
+
+    static fromJS(data: any): ProjectVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProjectVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["version"] = this.version;
+        data["dependencyCount"] = this.dependencyCount;
+        data["repositoryId"] = this.repositoryId;
+        data["repositoryName"] = this.repositoryName;
+        return data;
+    }
+}
+
+export interface IProjectVm {
+    id?: number;
+    name?: string;
+    version?: string;
+    dependencyCount?: number;
+    repositoryId?: number;
+    repositoryName?: string;
+}
+
+export class ListProjectsQuery implements IListProjectsQuery {
+
+    constructor(data?: IListProjectsQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): ListProjectsQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new ListProjectsQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+}
+
+export interface IListProjectsQuery {
+}
+
+export class RepositoriesVm implements IRepositoriesVm {
+    repositories?: RepositoryVm[];
+
+    constructor(data?: IRepositoriesVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["repositories"])) {
+                this.repositories = [] as any;
+                for (let item of _data["repositories"])
+                    this.repositories!.push(RepositoryVm.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): RepositoriesVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new RepositoriesVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.repositories)) {
+            data["repositories"] = [];
+            for (let item of this.repositories)
+                data["repositories"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IRepositoriesVm {
+    repositories?: RepositoryVm[];
 }
 
 export class RepositoryVm implements IRepositoryVm {
@@ -1027,17 +1184,9 @@ export interface IRepositoryVm {
     parseTime?: Date;
 }
 
-export class SearchDependencyInstancesWithPaginationQuery implements ISearchDependencyInstancesWithPaginationQuery {
-    pageNumber?: number;
-    pageSize?: number;
-    sortField?: string | undefined;
-    sortOrder?: SortOrder;
-    filters?: { [key: string]: PaginatedFilter[]; } | undefined;
-    sourceIds?: number[] | undefined;
-    repositoryIds?: number[] | undefined;
-    projectIds?: number[] | undefined;
+export class ListRepositoriesQuery implements IListRepositoriesQuery {
 
-    constructor(data?: ISearchDependencyInstancesWithPaginationQuery) {
+    constructor(data?: IListRepositoriesQuery) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1047,133 +1196,26 @@ export class SearchDependencyInstancesWithPaginationQuery implements ISearchDepe
     }
 
     init(_data?: any) {
-        if (_data) {
-            this.pageNumber = _data["pageNumber"];
-            this.pageSize = _data["pageSize"];
-            this.sortField = _data["sortField"];
-            this.sortOrder = _data["sortOrder"];
-            if (_data["filters"]) {
-                this.filters = {} as any;
-                for (let key in _data["filters"]) {
-                    if (_data["filters"].hasOwnProperty(key))
-                        (<any>this.filters)![key] = _data["filters"][key] ? _data["filters"][key].map((i: any) => PaginatedFilter.fromJS(i)) : [];
-                }
-            }
-            if (Array.isArray(_data["sourceIds"])) {
-                this.sourceIds = [] as any;
-                for (let item of _data["sourceIds"])
-                    this.sourceIds!.push(item);
-            }
-            if (Array.isArray(_data["repositoryIds"])) {
-                this.repositoryIds = [] as any;
-                for (let item of _data["repositoryIds"])
-                    this.repositoryIds!.push(item);
-            }
-            if (Array.isArray(_data["projectIds"])) {
-                this.projectIds = [] as any;
-                for (let item of _data["projectIds"])
-                    this.projectIds!.push(item);
-            }
-        }
     }
 
-    static fromJS(data: any): SearchDependencyInstancesWithPaginationQuery {
+    static fromJS(data: any): ListRepositoriesQuery {
         data = typeof data === 'object' ? data : {};
-        let result = new SearchDependencyInstancesWithPaginationQuery();
+        let result = new ListRepositoriesQuery();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["pageNumber"] = this.pageNumber;
-        data["pageSize"] = this.pageSize;
-        data["sortField"] = this.sortField;
-        data["sortOrder"] = this.sortOrder;
-        if (this.filters) {
-            data["filters"] = {};
-            for (let key in this.filters) {
-                if (this.filters.hasOwnProperty(key))
-                    (<any>data["filters"])[key] = (<any>this.filters)[key];
-            }
-        }
-        if (Array.isArray(this.sourceIds)) {
-            data["sourceIds"] = [];
-            for (let item of this.sourceIds)
-                data["sourceIds"].push(item);
-        }
-        if (Array.isArray(this.repositoryIds)) {
-            data["repositoryIds"] = [];
-            for (let item of this.repositoryIds)
-                data["repositoryIds"].push(item);
-        }
-        if (Array.isArray(this.projectIds)) {
-            data["projectIds"] = [];
-            for (let item of this.projectIds)
-                data["projectIds"].push(item);
-        }
         return data;
     }
 }
 
-export interface ISearchDependencyInstancesWithPaginationQuery {
-    pageNumber?: number;
-    pageSize?: number;
-    sortField?: string | undefined;
-    sortOrder?: SortOrder;
-    filters?: { [key: string]: PaginatedFilter[]; } | undefined;
-    sourceIds?: number[] | undefined;
-    repositoryIds?: number[] | undefined;
-    projectIds?: number[] | undefined;
-}
-
-export enum SortOrder {
-    _0 = 0,
-    _1 = 1,
-}
-
-export class SourceVm implements ISourceVm {
-    id?: number;
-    name?: string | undefined;
-
-    constructor(data?: ISourceVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-        }
-    }
-
-    static fromJS(data: any): SourceVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new SourceVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        return data;
-    }
-}
-
-export interface ISourceVm {
-    id?: number;
-    name?: string | undefined;
+export interface IListRepositoriesQuery {
 }
 
 export class SourcesVm implements ISourcesVm {
-    sources?: SourceVm[] | undefined;
+    sources?: SourceVm[];
 
     constructor(data?: ISourcesVm) {
         if (data) {
@@ -1213,7 +1255,77 @@ export class SourcesVm implements ISourcesVm {
 }
 
 export interface ISourcesVm {
-    sources?: SourceVm[] | undefined;
+    sources?: SourceVm[];
+}
+
+export class SourceVm implements ISourceVm {
+    id?: number;
+    name?: string;
+
+    constructor(data?: ISourceVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+        }
+    }
+
+    static fromJS(data: any): SourceVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new SourceVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        return data;
+    }
+}
+
+export interface ISourceVm {
+    id?: number;
+    name?: string;
+}
+
+export class ListSourcesQuery implements IListSourcesQuery {
+
+    constructor(data?: IListSourcesQuery) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+    }
+
+    static fromJS(data: any): ListSourcesQuery {
+        data = typeof data === 'object' ? data : {};
+        let result = new ListSourcesQuery();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        return data;
+    }
+}
+
+export interface IListSourcesQuery {
 }
 
 export class ApiException extends Error {

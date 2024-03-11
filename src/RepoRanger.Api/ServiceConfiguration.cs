@@ -19,7 +19,7 @@ internal static class ServiceConfiguration
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks().AddDbContextCheck<ApplicationDbContext>();
-        services.AddSwaggerGen();
+        services.AddOpenApiDocument();
         services.AddHttpContextAccessor();
 
         services.AddScoped<ICurrentUserService, CurrentUserService>();

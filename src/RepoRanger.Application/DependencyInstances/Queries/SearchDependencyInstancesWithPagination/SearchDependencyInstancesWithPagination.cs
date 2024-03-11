@@ -28,9 +28,11 @@ internal sealed class SearchDependencyInstancesWithPaginationQueryHandler : IReq
             .ApplyFilters(request.Filters)
             .Select(d => new DependencyInstanceVm
             {
+                Id = d.Id,
                 Source = d.Source,
                 Name = d.DependencyName,
-                Version = d.Version
+                Version = d.Version,
+                ProjectName = d.Project.Name
             })
             .ToPaginatedListAsync(request, cancellationToken);
     }

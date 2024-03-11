@@ -8,10 +8,12 @@ namespace RepoRanger.Api.Controllers;
 public sealed class RepositoriesController : ApiControllerBase
 {
     [HttpGet]
-    public async Task<ActionResult<RepositoriesVm>> List([FromQuery] ListRepositoriesQuery query) 
-        => await Mediator.Send(query);
+    [ProducesResponseType(typeof(RepositoriesVm), 200)]
+    public async Task<ActionResult<RepositoriesVm>> List([FromQuery] ListRepositoriesQuery query) => 
+        await Mediator.Send(query);
     
     [HttpGet("[action]")]
-    public async Task<ActionResult<RepositoriesVm>> GetBySourceId([FromQuery] GetRepositoriesBySourceIdQuery query) 
-        => await Mediator.Send(query);
+    [ProducesResponseType(typeof(RepositoriesVm), 200)]
+    public async Task<ActionResult<RepositoriesVm>> GetBySourceId([FromQuery] GetRepositoriesBySourceIdQuery query) => 
+        await Mediator.Send(query);
 }

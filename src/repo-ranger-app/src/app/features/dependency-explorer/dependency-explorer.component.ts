@@ -11,7 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AccordionModule } from 'primeng/accordion';
 import { DependencyDetailsViewComponent } from './dependency-details-view/dependency-details-view.component';
 import { CommonModule } from '@angular/common';
-import { Client, ListProjectsQuery, ListRepositoriesQuery, ProjectVm, ProjectsVm, RepositoriesVm, RepositoryVm } from '../../api-client';
+import { ListProjectsQuery, ListRepositoriesQuery, ProjectVm, ProjectsClient, ProjectsVm, RepositoriesClient, RepositoriesVm, RepositoryVm } from '../../api-client';
 
 @Component({
   selector: 'app-dependency-explorer',
@@ -42,16 +42,16 @@ export class DependencyExplorerComponent implements OnInit {
 
   filterIcon: string = 'pi-filter';
 
-  constructor(private readonly apiClient: Client) {}
+  constructor(private readonly projectsClient: ProjectsClient, private readonly repositoriesClient: RepositoriesClient) {}
 
   ngOnInit(): void {
 
-    this.apiClient.repositories(new ListRepositoriesQuery()).subscribe(({
+    this.repositoriesClient.repositories_List(new ListRepositoriesQuery()).subscribe(({
       next: (repositoriesVm) => this.handleRepositoriesSuccess(repositoriesVm),
         error: (error) => this.handleError(error)
     }));
 
-    this.apiClient.projects(new ListProjectsQuery()).subscribe(({
+    this.projectsClient.projects_List(new ListProjectsQuery()).subscribe(({
       next: (projectsVm) => this.handleProjectsSuccess(projectsVm),
       error: (error) => this.handleError(error)
     }));

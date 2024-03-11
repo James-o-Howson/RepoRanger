@@ -6,8 +6,7 @@ namespace RepoRanger.Api.Controllers;
 public sealed class SourcesController : ApiControllerBase
 {
     [HttpGet] 
-    public async Task<ActionResult<SourcesVm>> List([FromQuery] ListSourcesQuery query)
-    {
-        return await Mediator.Send(query);
-    }
+    [ProducesResponseType(typeof(SourcesVm), 200)]
+    public async Task<ActionResult<SourcesVm>> List([FromQuery] ListSourcesQuery query) => 
+        await Mediator.Send(query);
 }

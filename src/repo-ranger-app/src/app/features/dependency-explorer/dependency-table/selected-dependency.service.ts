@@ -18,7 +18,7 @@ export class SelectedDependencyService {
         this.selectedDependencySubject.next(selectedDependency);
     }
     
-    getSelectedDependency(): Observable<DependencyInstanceVm | null> {
+    getSelectedDependencyInstance(): Observable<DependencyInstanceVm | null> {
     return this.selectedDependency;
     }
 }   
