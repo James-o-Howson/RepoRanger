@@ -11,7 +11,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { AccordionModule } from 'primeng/accordion';
 import { DependencyDetailsViewComponent } from './dependency-details-view/dependency-details-view.component';
 import { CommonModule } from '@angular/common';
-import { ListProjectsQuery, ListRepositoriesQuery, ProjectVm, ProjectsClient, ProjectsVm, RepositoriesClient, RepositoriesVm, RepositoryVm } from '../../api-client';
+import { ListProjectsQuery, ListRepositoriesQuery, ProjectVm, ProjectsClient, ProjectsVm, RepositoriesClient, RepositorySummariesVm, RepositorySummaryVm } from '../../api-client';
 
 @Component({
   selector: 'app-dependency-explorer',
@@ -33,8 +33,8 @@ import { ListProjectsQuery, ListRepositoriesQuery, ProjectVm, ProjectsClient, Pr
 })
 export class DependencyExplorerComponent implements OnInit {
 
-  selectedRepositories: RepositoryVm[] = [];
-  repositories: RepositoryVm[] = [];
+  selectedRepositories: RepositorySummaryVm[] = [];
+  repositories: RepositorySummaryVm[] = [];
 
   selectedProjects: ProjectVm[] = [];
   projects: ProjectVm[] = [];
@@ -57,9 +57,9 @@ export class DependencyExplorerComponent implements OnInit {
     }));
   }
 
-  handleRepositoriesSuccess(repositoriesVm: RepositoriesVm): void {
-    if(!repositoriesVm.repositories) return;
-    this.repositories = repositoriesVm.repositories;
+  handleRepositoriesSuccess(repositoriesVm: RepositorySummariesVm): void {
+    if(!repositoriesVm.repositorySummaries) return;
+    this.repositories = repositoriesVm.repositorySummaries;
   }
 
   handleProjectsSuccess(projectsVm: ProjectsVm): void {

@@ -1,6 +1,6 @@
 namespace RepoRanger.Application.Repositories.ViewModels;
 
-public sealed class RepositoryVm
+public sealed class RepositorySummaryVm
 {
     public int Id { get; init; }
     public string? Name { get; init; }

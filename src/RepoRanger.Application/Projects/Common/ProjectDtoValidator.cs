@@ -3,7 +3,7 @@ using RepoRanger.Application.DependencyInstances.Common;
 
 namespace RepoRanger.Application.Projects.Common;
 
-internal sealed class ProjectDtoValidator : AbstractValidator<ProjectDto>
+internal sealed class ProjectDtoValidator : AbstractValidator<ProjectVm>
 {
     public ProjectDtoValidator()
     {
@@ -13,10 +13,10 @@ internal sealed class ProjectDtoValidator : AbstractValidator<ProjectDto>
         RuleFor(p => p.Version)
             .NotEmpty();
         
-        RuleFor(p => p.Dependencies)
+        RuleFor(p => p.DependencyInstances)
             .Must(r => r.Any());
 
-        RuleForEach(p => p.Dependencies)
+        RuleForEach(p => p.DependencyInstances)
             .SetValidator(new DependencyInstanceDtoValidator());
     }
 }

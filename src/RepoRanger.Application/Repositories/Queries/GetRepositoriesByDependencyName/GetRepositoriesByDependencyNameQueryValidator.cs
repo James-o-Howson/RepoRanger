@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace RepoRanger.Application.Repositories.Queries.GetRespositoriesByDependencyName;
+namespace RepoRanger.Application.Repositories.Queries.GetRepositoriesByDependencyName;
 
 internal sealed class GetRepositoriesByDependencyNameQueryValidator : AbstractValidator<GetRepositoriesByDependencyNameQuery>
 {

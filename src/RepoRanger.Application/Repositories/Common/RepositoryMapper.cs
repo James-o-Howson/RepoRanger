@@ -5,18 +5,18 @@ namespace RepoRanger.Application.Repositories.Common;
 
 public static class RepositoryMapper
 {
-    public static IEnumerable<Repository> ToEntities(this IEnumerable<RepositoryDto> dtos)
+    public static IEnumerable<Repository> ToEntities(this IEnumerable<RepositoryAggregateVm> viewModels)
     {
-        ArgumentNullException.ThrowIfNull(dtos);
-        return dtos.Select(ToEntity);
+        ArgumentNullException.ThrowIfNull(viewModels);
+        return viewModels.Select(ToEntity);
     }
     
-    private static Repository ToEntity(this RepositoryDto dto)
+    private static Repository ToEntity(this RepositoryAggregateVm viewModel)
     {
         return Repository.Create(
-            dto.Name, 
-            dto.RemoteUrl, 
-            dto.Branch, 
-            dto.Projects.ToEntities().ToList());
+            viewModel.Name, 
+            viewModel.RemoteUrl, 
+            viewModel.Branch, 
+            viewModel.Projects.ToEntities().ToList());
     }
 }

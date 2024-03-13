@@ -5,14 +5,14 @@ namespace RepoRanger.Application.DependencyInstances.Common;
 
 public static class DependencyInstanceMapper
 {
-    public static IEnumerable<DependencyInstance> ToEntities(this IEnumerable<DependencyInstanceDto> dtos)
+    public static IEnumerable<DependencyInstance> ToEntities(this IEnumerable<DependencyInstanceVm> dtos)
     {
         ArgumentNullException.ThrowIfNull(dtos);
         return dtos.Select(ToEntity);
     }
     
-    private static DependencyInstance ToEntity(this DependencyInstanceDto dto)
+    private static DependencyInstance ToEntity(this DependencyInstanceVm vm)
     {
-        return DependencyInstance.Create(DependencySource.From(dto.Source), dto.Name, dto.Version);
+        return DependencyInstance.Create(DependencySource.From(vm.Source), vm.Name, vm.Version);
     }
 }

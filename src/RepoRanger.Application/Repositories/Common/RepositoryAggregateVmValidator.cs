@@ -3,9 +3,9 @@ using RepoRanger.Application.Projects.Common;
 
 namespace RepoRanger.Application.Repositories.Common;
 
-internal sealed class RepositoryDtoValidator : AbstractValidator<RepositoryDto>
+internal sealed class RepositoryAggregateVmValidator : AbstractValidator<RepositoryAggregateVm>
 {
-    public RepositoryDtoValidator()
+    public RepositoryAggregateVmValidator()
     {
         RuleFor(r => r.Name)
             .NotEmpty();

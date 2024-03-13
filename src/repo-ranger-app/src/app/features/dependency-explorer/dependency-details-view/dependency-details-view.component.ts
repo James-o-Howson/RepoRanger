@@ -1,8 +1,9 @@
+import { ProjectVm, RepositoryAggregateVm, RepositoryAggregatesVm } from './../../../api-client';
 import { Component, OnInit } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { FieldsetModule } from 'primeng/fieldset';
 import { DividerModule } from 'primeng/divider';
-import { DependencyInstanceDetailVm, DependencyInstanceVm, DependencyInstancesClient, ProjectDetailVm, RepositoryDetailVm } from '../../../api-client'
+import { DependencyInstanceVm, RepositoriesClient, } from '../../../api-client'
 import { SelectedDependencyService } from '../dependency-table/selected-dependency.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -20,13 +21,13 @@ import { FormsModule } from '@angular/forms';
 })
 export class DependencyDetailsViewComponent implements OnInit {
 
-  public dependencyInstance$: Observable<DependencyInstanceDetailVm | null> | null = null;
-  public dependencyDetail: DependencyInstanceDetailVm | null = null;
+  public dependencyInstance$: Observable<DependencyInstanceVm | null> | null = null;
+  public repositoryAggregates: RepositoryAggregatesVm | null = null;
   public repositoryTreeNodes: TreeNode[] | null = [];
   public selectedTreeNode: TreeNode<any> | TreeNode<any>[] | null = null;
   public specificVersionOnly: boolean = true;
 
-  constructor(private readonly selectedDependencyService: SelectedDependencyService, private readonly apiClient: DependencyInstancesClient) { }
+  constructor(private readonly selectedDependencyService: SelectedDependencyService, private readonly apiClient: RepositoriesClient) { }
 
   ngOnInit(): void {
     this.dependencyInstance$ = this.selectedDependencyService.getSelectedDependencyInstance();
@@ -37,17 +38,17 @@ export class DependencyDetailsViewComponent implements OnInit {
     });
   }
 
-  handleLoadSelectedDependencySucceess(dependencyVm: DependencyInstanceVm | null): void {
-    this.apiClient.dependencyInstances_Get(dependencyVm?.id).subscribe({
+  handleLoadSelectedDependencySucceess(dependencyInstance: DependencyInstanceVm | null): void {
+    this.apiClient.repositories_GetByDependencyName(dependencyInstance?.name).subscribe({
       next: (depdnencyDetailVm) => this.handleGetDependencyDetailSuccess(depdnencyDetailVm),
       error: (error) => this.handleError(error)
     });
   }
 
-  handleGetDependencyDetailSuccess(depdnencyDetailVm: DependencyInstanceDetailVm): void {
-    this.dependencyDetail = depdnencyDetailVm;
+  handleGetDependencyDetailSuccess(repositoryAggregates: RepositoryAggregatesVm): void {
+    this.repositoryAggregates = repositoryAggregates;
 
-    this.convertRepositoriesToTreeNodes(depdnencyDetailVm);
+    this.convertRepositoriesToTreeNodes(repositoryAggregates);
   }
 
   handleError(error: any): void {
@@ -55,8 +56,8 @@ export class DependencyDetailsViewComponent implements OnInit {
   }
 
   specificVersionOnlyChanged($event: any) {
-    if(!this.dependencyDetail) return;
-    this.convertRepositoriesToTreeNodes(this.dependencyDetail);
+    if(!this.repositoryAggregates) return;
+    this.convertRepositoriesToTreeNodes(this.repositoryAggregates);
   }
 
   selectedTreeNodeIsRepository(): boolean {
@@ -79,23 +80,23 @@ export class DependencyDetailsViewComponent implements OnInit {
     return '';
   }
 
-  private convertRepositoriesToTreeNodes(depdnencyDetailVm: DependencyInstanceDetailVm) {
-    if (depdnencyDetailVm.repositories && depdnencyDetailVm.repositories.length > 0) {
-      this.repositoryTreeNodes = depdnencyDetailVm.repositories.map(repo => this.convertRepositoryToTreeNode(repo));
+  private convertRepositoriesToTreeNodes(repositoryAggregates: RepositoryAggregatesVm) {
+    if (repositoryAggregates.repositoryAggregates && repositoryAggregates.repositoryAggregates.length > 0) {
+      this.repositoryTreeNodes = repositoryAggregates.repositoryAggregates.map(repo => this.convertRepositoryToTreeNode(repo));
     }
   }
 
-  private convertRepositoryToTreeNode(repository: RepositoryDetailVm): TreeNode {
+  private convertRepositoryToTreeNode(repositoryAggregate: RepositoryAggregateVm): TreeNode {
     const treeNode: TreeNode = {
-        key: repository.id?.toString(),
-        label: repository.name || '',
-        data: repository,
+        key: repositoryAggregate.id?.toString(),
+        label: repositoryAggregate.name || '',
+        data: repositoryAggregate,
         expanded: true,
         children: []
     };
 
-    if (repository.projects && repository.projects.length > 0) {
-        treeNode.children = repository.projects.map(project => ({
+    if (repositoryAggregate.projects && repositoryAggregate.projects.length > 0) {
+        treeNode.children = repositoryAggregate.projects.map(project => ({
             key: project.id?.toString(),
             label: this.getProjectTreeNodeLabel(project),
             data: project,
@@ -108,7 +109,7 @@ export class DependencyDetailsViewComponent implements OnInit {
     return treeNode;
   }
 
-  private getProjectTreeNodeLabel(project: ProjectDetailVm): string {
+  private getProjectTreeNodeLabel(project: ProjectVm): string {
     if(this.specificVersionOnly) {
       return project.name || '';
     }

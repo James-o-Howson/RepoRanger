@@ -6,20 +6,20 @@ namespace RepoRanger.Application.Projects.Common;
 
 public static class ProjectMapper
 {
-    public static IEnumerable<Project> ToEntities(this IEnumerable<ProjectDto> dtos)
+    public static IEnumerable<Project> ToEntities(this IEnumerable<ProjectVm> dtos)
     {
         ArgumentNullException.ThrowIfNull(dtos);
         return dtos.Select(ToEntity);
     }
     
-    private static Project ToEntity(this ProjectDto dto)
+    private static Project ToEntity(this ProjectVm vm)
     {
         return Project.Create(
-            ProjectType.From(dto.Type), 
-            dto.Name, 
-            dto.Version, 
-            dto.Path,
+            ProjectType.From(vm.Type), 
+            vm.Name, 
+            vm.Version, 
+            vm.Path,
             null, 
-            dto.Dependencies.ToEntities());
+            vm.DependencyInstances.ToEntities());
     }
 }

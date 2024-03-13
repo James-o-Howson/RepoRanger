@@ -6,47 +6,6 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/DependencyInstances": {
-      "get": {
-        "tags": [
-          "DependencyInstances"
-        ],
-        "operationId": "DependencyInstances_Get",
-        "parameters": [
-          {
-            "name": "Id",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DependencyInstanceDetailVm"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProblemDetails"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
     "/api/DependencyInstances/Search": {
       "post": {
         "tags": [
@@ -167,7 +126,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RepositoriesVm"
+                  "$ref": "#/components/schemas/RepositorySummariesVm"
                 }
               }
             }
@@ -199,7 +158,37 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RepositoriesVm"
+                  "$ref": "#/components/schemas/RepositorySummariesVm"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Repositories/GetByDependencyName": {
+      "get": {
+        "tags": [
+          "Repositories"
+        ],
+        "operationId": "Repositories_GetByDependencyName",
+        "parameters": [
+          {
+            "name": "DependencyName",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepositoryAggregatesVm"
                 }
               }
             }
@@ -240,95 +229,6 @@
   },
   "components": {
     "schemas": {
-      "DependencyInstanceDetailVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "source": {
-            "type": "string"
-          },
-          "name": {
-            "type": "string"
-          },
-          "version": {
-            "type": "string"
-          },
-          "repositories": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RepositoryDetailVm"
-            }
-          }
-        }
-      },
-      "RepositoryDetailVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "projects": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ProjectDetailVm"
-            }
-          }
-        }
-      },
-      "ProjectDetailVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "name": {
-            "type": "string"
-          },
-          "version": {
-            "type": "string"
-          }
-        }
-      },
-      "ProblemDetails": {
-        "type": "object",
-        "additionalProperties": {
-          "nullable": true
-        },
-        "properties": {
-          "type": {
-            "type": "string",
-            "nullable": true
-          },
-          "title": {
-            "type": "string",
-            "nullable": true
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "nullable": true
-          },
-          "detail": {
-            "type": "string",
-            "nullable": true
-          },
-          "instance": {
-            "type": "string",
-            "nullable": true
-          }
-        }
-      },
       "PaginatedListOfDependencyInstanceVm": {
         "type": "object",
         "additionalProperties": false,
@@ -377,6 +277,9 @@
             "type": "string"
           },
           "projectName": {
+            "type": "string"
+          },
+          "repositoryName": {
             "type": "string"
           }
         }
@@ -551,19 +454,19 @@
         "type": "object",
         "additionalProperties": false
       },
-      "RepositoriesVm": {
+      "RepositorySummariesVm": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "repositories": {
+          "repositorySummaries": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/RepositoryVm"
+              "$ref": "#/components/schemas/RepositorySummaryVm"
             }
           }
         }
       },
-      "RepositoryVm": {
+      "RepositorySummaryVm": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -592,6 +495,90 @@
       "ListRepositoriesQuery": {
         "type": "object",
         "additionalProperties": false
+      },
+      "RepositoryAggregatesVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "repositoryAggregates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RepositoryAggregateVm"
+            }
+          }
+        }
+      },
+      "RepositoryAggregateVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string"
+          },
+          "remoteUrl": {
+            "type": "string"
+          },
+          "branch": {
+            "type": "string"
+          },
+          "projects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProjectVm2"
+            }
+          }
+        }
+      },
+      "ProjectVm2": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "type": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "dependencyInstances": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DependencyInstanceVm2"
+            }
+          }
+        }
+      },
+      "DependencyInstanceVm2": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "source": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "version": {
+            "type": "string"
+          }
+        }
       },
       "SourcesVm": {
         "type": "object",

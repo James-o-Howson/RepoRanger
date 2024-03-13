@@ -5,9 +5,9 @@ using RepoRanger.Application.Repositories.ViewModels;
 
 namespace RepoRanger.Application.Repositories.Queries.ListRepositories;
 
-public sealed record ListRepositoriesQuery : IRequest<RepositoriesVm>;
+public sealed record ListRepositoriesQuery : IRequest<RepositorySummariesVm>;
 
-internal sealed class ListRepositoriesQueryHandler : IRequestHandler<ListRepositoriesQuery, RepositoriesVm>
+internal sealed class ListRepositoriesQueryHandler : IRequestHandler<ListRepositoriesQuery, RepositorySummariesVm>
 {
     private readonly IApplicationDbContext _context;
 
@@ -16,13 +16,13 @@ internal sealed class ListRepositoriesQueryHandler : IRequestHandler<ListReposit
         _context = context;
     }
 
-    public async Task<RepositoriesVm> Handle(ListRepositoriesQuery request, CancellationToken cancellationToken)
+    public async Task<RepositorySummariesVm> Handle(ListRepositoriesQuery request, CancellationToken cancellationToken)
     {
-        return new RepositoriesVm
+        return new RepositorySummariesVm
         {
-            Repositories = await _context.Repositories
+            RepositorySummaries = await _context.Repositories
                 .AsNoTracking()
-                .Select(r => new RepositoryVm
+                .Select(r => new RepositorySummaryVm
                 {
                     Id = r.Id,
                     Name = r.Name,

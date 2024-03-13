@@ -5,15 +5,15 @@ namespace RepoRanger.Application.Projects.Common;
 
 internal static class ProjectMappers
 {
-    public static IEnumerable<ProjectDto> ToDtos(this IEnumerable<Project> projects)
+    public static IEnumerable<ProjectVm> ToDtos(this IEnumerable<Project> projects)
     {
         ArgumentNullException.ThrowIfNull(projects);
         return projects.Select(ToDto);
     }
 
-    private static ProjectDto ToDto(this Project project)
+    private static ProjectVm ToDto(this Project project)
     {
         ArgumentNullException.ThrowIfNull(project);
-        return new ProjectDto(project.Type, project.Name, project.Version, project.Path, project.DependencyInstances.ToDtos());
+        return new ProjectVm(project.Id, project.Type, project.Name, project.Version, project.Path, project.DependencyInstances.ToDtos());
     }
 }

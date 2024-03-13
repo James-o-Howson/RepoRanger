@@ -2,7 +2,7 @@
 
 namespace RepoRanger.Application.DependencyInstances.Common;
 
-internal sealed class DependencyInstanceDtoValidator : AbstractValidator<DependencyInstanceDto>
+internal sealed class DependencyInstanceDtoValidator : AbstractValidator<DependencyInstanceVm>
 {
     public DependencyInstanceDtoValidator()
     {

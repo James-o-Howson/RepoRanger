@@ -5,12 +5,12 @@ using RepoRanger.Application.Repositories.ViewModels;
 
 namespace RepoRanger.Application.Repositories.Queries.GetRepositoriesBySourceId;
 
-public sealed record GetRepositoriesBySourceIdQuery : IRequest<RepositoriesVm>
+public sealed record GetRepositoriesBySourceIdQuery : IRequest<RepositorySummariesVm>
 {
     public int? SourceId { get; init; }
 }
 
-internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<GetRepositoriesBySourceIdQuery, RepositoriesVm>
+internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<GetRepositoriesBySourceIdQuery, RepositorySummariesVm>
 {
     private readonly IApplicationDbContext _context;
 
@@ -19,14 +19,14 @@ internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<Ge
         _context = context;
     }
 
-    public async Task<RepositoriesVm> Handle(GetRepositoriesBySourceIdQuery request, CancellationToken cancellationToken)
+    public async Task<RepositorySummariesVm> Handle(GetRepositoriesBySourceIdQuery request, CancellationToken cancellationToken)
     {
         var repositories = await _context.Repositories
             .AsNoTracking()
             .AsSplitQuery()
             .Include(r => r.DefaultBranch)
             .Where(r => r.SourceId == request.SourceId)
-            .Select(r => new RepositoryVm
+            .Select(r => new RepositorySummaryVm
             {
                 Id = r.Id,
                 Name = r.Name,
@@ -36,9 +36,9 @@ internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<Ge
 
             }).ToListAsync(cancellationToken);
         
-        return new RepositoriesVm
+        return new RepositorySummariesVm
         {
-            Repositories = repositories
+            RepositorySummaries = repositories
         };
     }
 }

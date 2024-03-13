@@ -26,65 +26,6 @@ export class DependencyInstancesClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    dependencyInstances_Get(id: number | undefined): Observable<DependencyInstanceDetailVm> {
-        let url_ = this.baseUrl + "/api/DependencyInstances?";
-        if (id === null)
-            throw new Error("The parameter 'id' cannot be null.");
-        else if (id !== undefined)
-            url_ += "Id=" + encodeURIComponent("" + id) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processDependencyInstances_Get(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processDependencyInstances_Get(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<DependencyInstanceDetailVm>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<DependencyInstanceDetailVm>;
-        }));
-    }
-
-    protected processDependencyInstances_Get(response: HttpResponseBase): Observable<DependencyInstanceDetailVm> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = DependencyInstanceDetailVm.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status === 404) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result404: any = null;
-            let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result404 = ProblemDetails.fromJS(resultData404);
-            return throwException("A server side error occurred.", status, _responseText, _headers, result404);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
     dependencyInstances_Search(query: SearchDependencyInstancesWithPaginationQuery): Observable<PaginatedListOfDependencyInstanceVm> {
         let url_ = this.baseUrl + "/api/DependencyInstances/Search";
         url_ = url_.replace(/[?&]$/, "");
@@ -265,7 +206,7 @@ export class RepositoriesClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    repositories_List(query: ListRepositoriesQuery | undefined): Observable<RepositoriesVm> {
+    repositories_List(query: ListRepositoriesQuery | undefined): Observable<RepositorySummariesVm> {
         let url_ = this.baseUrl + "/api/Repositories?";
         if (query === null)
             throw new Error("The parameter 'query' cannot be null.");
@@ -288,14 +229,14 @@ export class RepositoriesClient {
                 try {
                     return this.processRepositories_List(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<RepositoriesVm>;
+                    return _observableThrow(e) as any as Observable<RepositorySummariesVm>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<RepositoriesVm>;
+                return _observableThrow(response_) as any as Observable<RepositorySummariesVm>;
         }));
     }
 
-    protected processRepositories_List(response: HttpResponseBase): Observable<RepositoriesVm> {
+    protected processRepositories_List(response: HttpResponseBase): Observable<RepositorySummariesVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -306,7 +247,7 @@ export class RepositoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = RepositoriesVm.fromJS(resultData200);
+            result200 = RepositorySummariesVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -317,7 +258,7 @@ export class RepositoriesClient {
         return _observableOf(null as any);
     }
 
-    repositories_GetBySourceId(sourceId: number | null | undefined): Observable<RepositoriesVm> {
+    repositories_GetBySourceId(sourceId: number | null | undefined): Observable<RepositorySummariesVm> {
         let url_ = this.baseUrl + "/api/Repositories/GetBySourceId?";
         if (sourceId !== undefined && sourceId !== null)
             url_ += "SourceId=" + encodeURIComponent("" + sourceId) + "&";
@@ -338,14 +279,14 @@ export class RepositoriesClient {
                 try {
                     return this.processRepositories_GetBySourceId(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<RepositoriesVm>;
+                    return _observableThrow(e) as any as Observable<RepositorySummariesVm>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<RepositoriesVm>;
+                return _observableThrow(response_) as any as Observable<RepositorySummariesVm>;
         }));
     }
 
-    protected processRepositories_GetBySourceId(response: HttpResponseBase): Observable<RepositoriesVm> {
+    protected processRepositories_GetBySourceId(response: HttpResponseBase): Observable<RepositorySummariesVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -356,7 +297,59 @@ export class RepositoriesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = RepositoriesVm.fromJS(resultData200);
+            result200 = RepositorySummariesVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    repositories_GetByDependencyName(dependencyName: string | undefined): Observable<RepositoryAggregatesVm> {
+        let url_ = this.baseUrl + "/api/Repositories/GetByDependencyName?";
+        if (dependencyName === null)
+            throw new Error("The parameter 'dependencyName' cannot be null.");
+        else if (dependencyName !== undefined)
+            url_ += "DependencyName=" + encodeURIComponent("" + dependencyName) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processRepositories_GetByDependencyName(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processRepositories_GetByDependencyName(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<RepositoryAggregatesVm>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<RepositoryAggregatesVm>;
+        }));
+    }
+
+    protected processRepositories_GetByDependencyName(response: HttpResponseBase): Observable<RepositoryAggregatesVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = RepositoryAggregatesVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -432,226 +425,6 @@ export class SourcesClient {
     }
 }
 
-export class DependencyInstanceDetailVm implements IDependencyInstanceDetailVm {
-    id?: number;
-    source?: string;
-    name?: string;
-    version?: string;
-    repositories?: RepositoryDetailVm[];
-
-    constructor(data?: IDependencyInstanceDetailVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.source = _data["source"];
-            this.name = _data["name"];
-            this.version = _data["version"];
-            if (Array.isArray(_data["repositories"])) {
-                this.repositories = [] as any;
-                for (let item of _data["repositories"])
-                    this.repositories!.push(RepositoryDetailVm.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): DependencyInstanceDetailVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new DependencyInstanceDetailVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["source"] = this.source;
-        data["name"] = this.name;
-        data["version"] = this.version;
-        if (Array.isArray(this.repositories)) {
-            data["repositories"] = [];
-            for (let item of this.repositories)
-                data["repositories"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IDependencyInstanceDetailVm {
-    id?: number;
-    source?: string;
-    name?: string;
-    version?: string;
-    repositories?: RepositoryDetailVm[];
-}
-
-export class RepositoryDetailVm implements IRepositoryDetailVm {
-    id?: number;
-    name?: string;
-    projects?: ProjectDetailVm[];
-
-    constructor(data?: IRepositoryDetailVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            if (Array.isArray(_data["projects"])) {
-                this.projects = [] as any;
-                for (let item of _data["projects"])
-                    this.projects!.push(ProjectDetailVm.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): RepositoryDetailVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new RepositoryDetailVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        if (Array.isArray(this.projects)) {
-            data["projects"] = [];
-            for (let item of this.projects)
-                data["projects"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IRepositoryDetailVm {
-    id?: number;
-    name?: string;
-    projects?: ProjectDetailVm[];
-}
-
-export class ProjectDetailVm implements IProjectDetailVm {
-    id?: number;
-    name?: string;
-    version?: string;
-
-    constructor(data?: IProjectDetailVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.version = _data["version"];
-        }
-    }
-
-    static fromJS(data: any): ProjectDetailVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProjectDetailVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["version"] = this.version;
-        return data;
-    }
-}
-
-export interface IProjectDetailVm {
-    id?: number;
-    name?: string;
-    version?: string;
-}
-
-export class ProblemDetails implements IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-
-    [key: string]: any;
-
-    constructor(data?: IProblemDetails) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            for (var property in _data) {
-                if (_data.hasOwnProperty(property))
-                    this[property] = _data[property];
-            }
-            this.type = _data["type"];
-            this.title = _data["title"];
-            this.status = _data["status"];
-            this.detail = _data["detail"];
-            this.instance = _data["instance"];
-        }
-    }
-
-    static fromJS(data: any): ProblemDetails {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProblemDetails();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        for (var property in this) {
-            if (this.hasOwnProperty(property))
-                data[property] = this[property];
-        }
-        data["type"] = this.type;
-        data["title"] = this.title;
-        data["status"] = this.status;
-        data["detail"] = this.detail;
-        data["instance"] = this.instance;
-        return data;
-    }
-}
-
-export interface IProblemDetails {
-    type?: string | undefined;
-    title?: string | undefined;
-    status?: number | undefined;
-    detail?: string | undefined;
-    instance?: string | undefined;
-
-    [key: string]: any;
-}
-
 export class PaginatedListOfDependencyInstanceVm implements IPaginatedListOfDependencyInstanceVm {
     items?: DependencyInstanceVm[];
     pageNumber?: number;
@@ -722,6 +495,7 @@ export class DependencyInstanceVm implements IDependencyInstanceVm {
     name?: string;
     version?: string;
     projectName?: string;
+    repositoryName?: string;
 
     constructor(data?: IDependencyInstanceVm) {
         if (data) {
@@ -739,6 +513,7 @@ export class DependencyInstanceVm implements IDependencyInstanceVm {
             this.name = _data["name"];
             this.version = _data["version"];
             this.projectName = _data["projectName"];
+            this.repositoryName = _data["repositoryName"];
         }
     }
 
@@ -756,6 +531,7 @@ export class DependencyInstanceVm implements IDependencyInstanceVm {
         data["name"] = this.name;
         data["version"] = this.version;
         data["projectName"] = this.projectName;
+        data["repositoryName"] = this.repositoryName;
         return data;
     }
 }
@@ -766,6 +542,7 @@ export interface IDependencyInstanceVm {
     name?: string;
     version?: string;
     projectName?: string;
+    repositoryName?: string;
 }
 
 export abstract class PaginatedRequestOfDependencyInstanceVm implements IPaginatedRequestOfDependencyInstanceVm {
@@ -1088,10 +865,10 @@ export class ListProjectsQuery implements IListProjectsQuery {
 export interface IListProjectsQuery {
 }
 
-export class RepositoriesVm implements IRepositoriesVm {
-    repositories?: RepositoryVm[];
+export class RepositorySummariesVm implements IRepositorySummariesVm {
+    repositorySummaries?: RepositorySummaryVm[];
 
-    constructor(data?: IRepositoriesVm) {
+    constructor(data?: IRepositorySummariesVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1102,44 +879,44 @@ export class RepositoriesVm implements IRepositoriesVm {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["repositories"])) {
-                this.repositories = [] as any;
-                for (let item of _data["repositories"])
-                    this.repositories!.push(RepositoryVm.fromJS(item));
+            if (Array.isArray(_data["repositorySummaries"])) {
+                this.repositorySummaries = [] as any;
+                for (let item of _data["repositorySummaries"])
+                    this.repositorySummaries!.push(RepositorySummaryVm.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): RepositoriesVm {
+    static fromJS(data: any): RepositorySummariesVm {
         data = typeof data === 'object' ? data : {};
-        let result = new RepositoriesVm();
+        let result = new RepositorySummariesVm();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.repositories)) {
-            data["repositories"] = [];
-            for (let item of this.repositories)
-                data["repositories"].push(item.toJSON());
+        if (Array.isArray(this.repositorySummaries)) {
+            data["repositorySummaries"] = [];
+            for (let item of this.repositorySummaries)
+                data["repositorySummaries"].push(item.toJSON());
         }
         return data;
     }
 }
 
-export interface IRepositoriesVm {
-    repositories?: RepositoryVm[];
+export interface IRepositorySummariesVm {
+    repositorySummaries?: RepositorySummaryVm[];
 }
 
-export class RepositoryVm implements IRepositoryVm {
+export class RepositorySummaryVm implements IRepositorySummaryVm {
     id?: number;
     name?: string | undefined;
     remoteUrl?: string | undefined;
     defaultBranchName?: string | undefined;
     parseTime?: Date;
 
-    constructor(data?: IRepositoryVm) {
+    constructor(data?: IRepositorySummaryVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1158,9 +935,9 @@ export class RepositoryVm implements IRepositoryVm {
         }
     }
 
-    static fromJS(data: any): RepositoryVm {
+    static fromJS(data: any): RepositorySummaryVm {
         data = typeof data === 'object' ? data : {};
-        let result = new RepositoryVm();
+        let result = new RepositorySummaryVm();
         result.init(data);
         return result;
     }
@@ -1176,7 +953,7 @@ export class RepositoryVm implements IRepositoryVm {
     }
 }
 
-export interface IRepositoryVm {
+export interface IRepositorySummaryVm {
     id?: number;
     name?: string | undefined;
     remoteUrl?: string | undefined;
@@ -1212,6 +989,222 @@ export class ListRepositoriesQuery implements IListRepositoriesQuery {
 }
 
 export interface IListRepositoriesQuery {
+}
+
+export class RepositoryAggregatesVm implements IRepositoryAggregatesVm {
+    repositoryAggregates?: RepositoryAggregateVm[];
+
+    constructor(data?: IRepositoryAggregatesVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["repositoryAggregates"])) {
+                this.repositoryAggregates = [] as any;
+                for (let item of _data["repositoryAggregates"])
+                    this.repositoryAggregates!.push(RepositoryAggregateVm.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): RepositoryAggregatesVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new RepositoryAggregatesVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.repositoryAggregates)) {
+            data["repositoryAggregates"] = [];
+            for (let item of this.repositoryAggregates)
+                data["repositoryAggregates"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IRepositoryAggregatesVm {
+    repositoryAggregates?: RepositoryAggregateVm[];
+}
+
+export class RepositoryAggregateVm implements IRepositoryAggregateVm {
+    id?: number;
+    name?: string;
+    remoteUrl?: string;
+    branch?: string;
+    projects?: ProjectVm2[];
+
+    constructor(data?: IRepositoryAggregateVm) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.remoteUrl = _data["remoteUrl"];
+            this.branch = _data["branch"];
+            if (Array.isArray(_data["projects"])) {
+                this.projects = [] as any;
+                for (let item of _data["projects"])
+                    this.projects!.push(ProjectVm2.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): RepositoryAggregateVm {
+        data = typeof data === 'object' ? data : {};
+        let result = new RepositoryAggregateVm();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["remoteUrl"] = this.remoteUrl;
+        data["branch"] = this.branch;
+        if (Array.isArray(this.projects)) {
+            data["projects"] = [];
+            for (let item of this.projects)
+                data["projects"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IRepositoryAggregateVm {
+    id?: number;
+    name?: string;
+    remoteUrl?: string;
+    branch?: string;
+    projects?: ProjectVm2[];
+}
+
+export class ProjectVm2 implements IProjectVm2 {
+    id?: number;
+    type?: string;
+    name?: string;
+    version?: string;
+    path?: string;
+    dependencyInstances?: DependencyInstanceVm2[];
+
+    constructor(data?: IProjectVm2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.type = _data["type"];
+            this.name = _data["name"];
+            this.version = _data["version"];
+            this.path = _data["path"];
+            if (Array.isArray(_data["dependencyInstances"])) {
+                this.dependencyInstances = [] as any;
+                for (let item of _data["dependencyInstances"])
+                    this.dependencyInstances!.push(DependencyInstanceVm2.fromJS(item));
+            }
+        }
+    }
+
+    static fromJS(data: any): ProjectVm2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new ProjectVm2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["type"] = this.type;
+        data["name"] = this.name;
+        data["version"] = this.version;
+        data["path"] = this.path;
+        if (Array.isArray(this.dependencyInstances)) {
+            data["dependencyInstances"] = [];
+            for (let item of this.dependencyInstances)
+                data["dependencyInstances"].push(item.toJSON());
+        }
+        return data;
+    }
+}
+
+export interface IProjectVm2 {
+    id?: number;
+    type?: string;
+    name?: string;
+    version?: string;
+    path?: string;
+    dependencyInstances?: DependencyInstanceVm2[];
+}
+
+export class DependencyInstanceVm2 implements IDependencyInstanceVm2 {
+    id?: number;
+    source?: string;
+    name?: string;
+    version?: string;
+
+    constructor(data?: IDependencyInstanceVm2) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.source = _data["source"];
+            this.name = _data["name"];
+            this.version = _data["version"];
+        }
+    }
+
+    static fromJS(data: any): DependencyInstanceVm2 {
+        data = typeof data === 'object' ? data : {};
+        let result = new DependencyInstanceVm2();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["source"] = this.source;
+        data["name"] = this.name;
+        data["version"] = this.version;
+        return data;
+    }
+}
+
+export interface IDependencyInstanceVm2 {
+    id?: number;
+    source?: string;
+    name?: string;
+    version?: string;
 }
 
 export class SourcesVm implements ISourcesVm {

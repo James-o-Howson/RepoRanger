@@ -2,15 +2,16 @@
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Application.Common.Pagination;
+using RepoRanger.Application.DependencyInstances.Common;
 using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.DependencyInstances.Queries.SearchDependencyInstancesWithPagination;
 
 public sealed record SearchDependencyInstancesWithPaginationQuery : PaginatedRequest<DependencyInstanceVm>
 {
-    public IReadOnlyCollection<int>? SourceIds { get; init; }
-    public IReadOnlyCollection<int>? RepositoryIds { get; init; }
-    public IReadOnlyCollection<int>? ProjectIds { get; init; }
+    public IReadOnlyCollection<int>? SourceIds { get; init; } = Array.Empty<int>();
+    public IReadOnlyCollection<int>? RepositoryIds { get; init; } = Array.Empty<int>();
+    public IReadOnlyCollection<int>? ProjectIds { get; init; } = Array.Empty<int>();
 }
 
 internal sealed class SearchDependencyInstancesWithPaginationQueryHandler : IRequestHandler<SearchDependencyInstancesWithPaginationQuery, PaginatedList<DependencyInstanceVm>>
@@ -32,7 +33,8 @@ internal sealed class SearchDependencyInstancesWithPaginationQueryHandler : IReq
                 Source = d.Source,
                 Name = d.DependencyName,
                 Version = d.Version,
-                ProjectName = d.Project.Name
+                ProjectName = d.Project.Name,
+                RepositoryName = d.Project.Repository.Name
             })
             .ToPaginatedListAsync(request, cancellationToken);
     }

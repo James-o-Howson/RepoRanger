@@ -1,54 +1,70 @@
-<p-table #dt [value]="items" sortField="name" sortMode="single" [rowsPerPageOptions]="[10, 25, 50]"
-  [paginator]="true" [rows]="pageSize" [totalRecords]="totalRecords" [showCurrentPageReport]="true"
-  [scrollable]="true" scrollHeight="550px" [rowHover]="true" [resizableColumns]="true" columnResizeMode="expand"
-  [lazy]="true" (onLazyLoad)="loadDependencies($event)" dataKey="id" [loading]="loading" class="p-datatable-sm" 
-  [tableStyle]="{ 'min-width': '50rem' }" [autoLayout]="true" selectionMode="single" [(selection)]="selectedDependency"
-  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} rows" (selectionChange)="selectedDependencyChanged(selectedDependency)">
-  <ng-template pTemplate="caption">
-      <div class="table-header">
-          Dependencies
-          <span class="p-input-icon-left">
-              <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash" (click)="clear(dt)"></button>
-          </span>
-      </div>
-  </ng-template>
-  <ng-template pTemplate="header">
-    <tr>
-      <th pResizableColumn pSortableColumn="name">
-          <div class="flex justify-content-between align-items-center">
-              Name
-              <p-sortIcon field="name"></p-sortIcon>
-              <p-columnFilter type="text" field="name" display="menu" class="ml-auto"></p-columnFilter>
-          </div>
-      </th>
-      <th pResizableColumn pSortableColumn="version">
-          <div class="flex justify-content-between align-items-center">
-              Version
-              <p-sortIcon field="version"></p-sortIcon>
-              <p-columnFilter type="text" field="version" display="menu" class="ml-auto"></p-columnFilter>
-          </div>
-      </th>
-      <th pResizableColumn pSortableColumn="source">
-        <div class="flex justify-content-between align-items-center">
-            Source
-            <p-sortIcon field="source"></p-sortIcon>
-            <p-columnFilter type="text" field="source" display="menu" class="ml-auto"></p-columnFilter>
+<p-table #dt [value]="items" sortField="name" sortMode="single" [rowsPerPageOptions]="[10, 25, 50]" [paginator]="true"
+    [rows]="pageSize" [totalRecords]="totalRecords" [showCurrentPageReport]="true" [scrollable]="true"
+    scrollHeight="550px" [rowHover]="true" [resizableColumns]="true" columnResizeMode="expand" [lazy]="true"
+    (onLazyLoad)="loadDependencies($event)" dataKey="id" [loading]="loading" class="p-datatable-sm"
+    [tableStyle]="{ 'min-width': '50rem' }" [autoLayout]="true" selectionMode="single"
+    [(selection)]="selectedDependency" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} rows"
+    (selectionChange)="selectedDependencyChanged(selectedDependency)">
+    <ng-template pTemplate="caption">
+        <div class="table-header">
+            Dependency Instances
+            <span class="p-input-icon-left">
+                <button pButton label="Clear" class="p-button-outlined" icon="pi pi-filter-slash"
+                    (click)="clear(dt)"></button>
+            </span>
         </div>
-    </th>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="body" let-dependency>
-    <tr [pSelectableRow]="dependency">
-      <td>
-          {{ dependency.name }}
-      </td>
-      <td>{{ dependency.version }}</td>
-      <td>{{ dependency.source }}</td>
-    </tr>
-  </ng-template>
-  <ng-template pTemplate="emptymessage">
-      <tr>
-          <td colspan="8">No dependencies found.</td>
-      </tr>
-  </ng-template>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th pResizableColumn pSortableColumn="name">
+                <div class="flex justify-content-between align-items-center">
+                    Name
+                    <p-sortIcon field="name"></p-sortIcon>
+                    <p-columnFilter type="text" field="name" display="menu" class="ml-auto"></p-columnFilter>
+                </div>
+            </th>
+            <th pResizableColumn pSortableColumn="version">
+                <div class="flex justify-content-between align-items-center">
+                    Version
+                    <p-sortIcon field="version"></p-sortIcon>
+                    <p-columnFilter type="text" field="version" display="menu" class="ml-auto"></p-columnFilter>
+                </div>
+            </th>
+            <th pResizableColumn pSortableColumn="source">
+                <div class="flex justify-content-between align-items-center">
+                    Source
+                    <p-sortIcon field="source"></p-sortIcon>
+                    <p-columnFilter type="text" field="source" display="menu" class="ml-auto"></p-columnFilter>
+                </div>
+            </th>
+            <th pResizableColumn pSortableColumn="repository">
+                <div class="flex justify-content-between align-items-center">
+                    Repository
+                    <p-sortIcon field="repository"></p-sortIcon>
+                    <p-columnFilter type="text" field="repository" display="menu" class="ml-auto"></p-columnFilter>
+                </div>
+            </th>
+            <th pResizableColumn pSortableColumn="project">
+                <div class="flex justify-content-between align-items-center">
+                    Project
+                    <p-sortIcon field="project"></p-sortIcon>
+                    <p-columnFilter type="text" field="project" display="menu" class="ml-auto"></p-columnFilter>
+                </div>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-dependency>
+        <tr [pSelectableRow]="dependency">
+            <td>{{ dependency.name }}</td>
+            <td>{{ dependency.version }}</td>
+            <td>{{ dependency.source }}</td>
+            <td>{{ dependency.repositoryName}}</td>
+            <td>{{ dependency.projectName}}</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="8">No dependencies found.</td>
+        </tr>
+    </ng-template>
 </p-table>

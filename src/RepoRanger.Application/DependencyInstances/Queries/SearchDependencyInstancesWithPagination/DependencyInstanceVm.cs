@@ -7,4 +7,5 @@ public class DependencyInstanceVm
     public string Name { get; init; } = string.Empty;
     public string Version { get; init; } = string.Empty;
     public string ProjectName { get; init; } = string.Empty;
+    public string RepositoryName { get; set; } = string.Empty;
 }
