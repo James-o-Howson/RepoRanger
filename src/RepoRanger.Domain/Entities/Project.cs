@@ -80,6 +80,9 @@ public class Project : Auditable, IEquatable<Project>
     {
         _dependencyInstances.Clear();
     }
+    
+    public bool HasDependency(string dependencyName, string version) =>
+        DependencyInstances.Any(di => di.DependencyName == dependencyName && di.Version == version);
 
     public bool Equals(Project? other)
     {

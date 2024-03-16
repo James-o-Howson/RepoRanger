@@ -1,4 +1,4 @@
-﻿namespace RepoRanger.Application.Sources.Queries.GetByName;
+﻿namespace RepoRanger.Application.Sources.Queries.GetSourceByName;
 
 public sealed class SourcePreviewDto
 {

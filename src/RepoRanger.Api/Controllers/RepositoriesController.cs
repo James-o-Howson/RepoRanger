@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RepoRanger.Application.Repositories.Common;
 using RepoRanger.Application.Repositories.Queries.GetRepositoriesBySourceId;
-using RepoRanger.Application.Repositories.Queries.GetRepositoriesByDependencyName;
 using RepoRanger.Application.Repositories.Queries.ListRepositories;
 using RepoRanger.Application.Repositories.ViewModels;
 
@@ -17,10 +15,5 @@ public sealed class RepositoriesController : ApiControllerBase
     [HttpGet("[action]")]
     [ProducesResponseType(typeof(RepositorySummariesVm), 200)]
     public async Task<ActionResult<RepositorySummariesVm>> GetBySourceId([FromQuery] GetRepositoriesBySourceIdQuery query) => 
-        await Mediator.Send(query);
-    
-    [HttpGet("[action]")]
-    [ProducesResponseType(typeof(RepositoryAggregatesVm), 200)]
-    public async Task<ActionResult<RepositoryAggregatesVm>> GetByDependencyName([FromQuery] GetRepositoriesByDependencyNameQuery query) => 
         await Mediator.Send(query);
 }

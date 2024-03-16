@@ -26,6 +26,7 @@ internal sealed class ListProjectsQueryHandler : IRequestHandler<ListProjectsQue
                 .Select(p => new ProjectVm
                 {
                     Id = p.Id,
+                    Type = p.Type,
                     Name = p.Name,
                     Version = p.Version,
                     DependencyCount = p.DependencyInstances.Count

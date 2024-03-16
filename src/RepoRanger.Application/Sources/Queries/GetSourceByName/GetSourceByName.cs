@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Common.Interfaces.Persistence;
 
-namespace RepoRanger.Application.Sources.Queries.GetByName;
+namespace RepoRanger.Application.Sources.Queries.GetSourceByName;
 
 public sealed record GetSourceByNameQuery : IRequest<SourcePreviewDto?>
 {

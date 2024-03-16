@@ -4,6 +4,7 @@ public sealed class ProjectVm
 {
     public int Id { get; init; }
     public string Name { get; init; } = string.Empty;
+    public string Type { get; set; } = string.Empty;
     public string Version { get; init; } = string.Empty;
     public int DependencyCount { get; init; }
     public int RepositoryId { get; init; }

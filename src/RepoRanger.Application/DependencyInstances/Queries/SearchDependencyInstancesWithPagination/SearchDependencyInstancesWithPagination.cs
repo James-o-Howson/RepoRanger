@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Common.Interfaces.Persistence;
 using RepoRanger.Application.Common.Pagination;
-using RepoRanger.Application.DependencyInstances.Common;
 using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.DependencyInstances.Queries.SearchDependencyInstancesWithPagination;

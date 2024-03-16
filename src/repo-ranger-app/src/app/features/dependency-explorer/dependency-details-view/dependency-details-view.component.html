@@ -11,7 +11,8 @@
             <b>Contained In</b>
             </p-divider>
         
-            <p-tree [value]="repositoryTreeNodes" [filter]="true" filterPlaceholder="Filter" class="w-full md:w-30rem" selectionMode="single" [(selection)]="selectedTreeNode"></p-tree>
+            <p-tree [value]="treeNodes" [filter]="true" filterPlaceholder="Filter" class="w-full md:w-30rem" 
+                selectionMode="single" [(selection)]="selectedTreeNode" (selectionChange)="treeNodeSelectionChanged($event)" />
     
         <p-divider type="solid">
         <b>{{getSelectedTreeNodeDetailsLabel()}}</b>

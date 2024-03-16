@@ -48,6 +48,7 @@ internal sealed class GetProjectsByRepositoryIdsQueryHandler : IRequestHandler<G
         {
             Id = p.Id,
             Name = p.Name,
+            Type = p.Type,
             Version = p.Version,
             DependencyCount = p.DependencyInstances.Count,
             RepositoryId = repository.Id,

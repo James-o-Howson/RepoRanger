@@ -193,6 +193,60 @@ export class ProjectsClient {
         }
         return _observableOf(null as any);
     }
+
+    projects_GetByDependency(dependencyName: string | undefined, version: string | null | undefined): Observable<ProjectsVm> {
+        let url_ = this.baseUrl + "/api/Projects/GetByDependency?";
+        if (dependencyName === null)
+            throw new Error("The parameter 'dependencyName' cannot be null.");
+        else if (dependencyName !== undefined)
+            url_ += "DependencyName=" + encodeURIComponent("" + dependencyName) + "&";
+        if (version !== undefined && version !== null)
+            url_ += "Version=" + encodeURIComponent("" + version) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processProjects_GetByDependency(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processProjects_GetByDependency(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ProjectsVm>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ProjectsVm>;
+        }));
+    }
+
+    protected processProjects_GetByDependency(response: HttpResponseBase): Observable<ProjectsVm> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ProjectsVm.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
 }
 
 @Injectable()
@@ -298,58 +352,6 @@ export class RepositoriesClient {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result200 = RepositorySummariesVm.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
-
-    repositories_GetByDependencyName(dependencyName: string | undefined): Observable<RepositoryAggregatesVm> {
-        let url_ = this.baseUrl + "/api/Repositories/GetByDependencyName?";
-        if (dependencyName === null)
-            throw new Error("The parameter 'dependencyName' cannot be null.");
-        else if (dependencyName !== undefined)
-            url_ += "DependencyName=" + encodeURIComponent("" + dependencyName) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_ : any = {
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRepositories_GetByDependencyName(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processRepositories_GetByDependencyName(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<RepositoryAggregatesVm>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<RepositoryAggregatesVm>;
-        }));
-    }
-
-    protected processRepositories_GetByDependencyName(response: HttpResponseBase): Observable<RepositoryAggregatesVm> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = RepositoryAggregatesVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -782,6 +784,7 @@ export interface IProjectsVm {
 export class ProjectVm implements IProjectVm {
     id?: number;
     name?: string;
+    type?: string;
     version?: string;
     dependencyCount?: number;
     repositoryId?: number;
@@ -800,6 +803,7 @@ export class ProjectVm implements IProjectVm {
         if (_data) {
             this.id = _data["id"];
             this.name = _data["name"];
+            this.type = _data["type"];
             this.version = _data["version"];
             this.dependencyCount = _data["dependencyCount"];
             this.repositoryId = _data["repositoryId"];
@@ -818,6 +822,7 @@ export class ProjectVm implements IProjectVm {
         data = typeof data === 'object' ? data : {};
         data["id"] = this.id;
         data["name"] = this.name;
+        data["type"] = this.type;
         data["version"] = this.version;
         data["dependencyCount"] = this.dependencyCount;
         data["repositoryId"] = this.repositoryId;
@@ -829,6 +834,7 @@ export class ProjectVm implements IProjectVm {
 export interface IProjectVm {
     id?: number;
     name?: string;
+    type?: string;
     version?: string;
     dependencyCount?: number;
     repositoryId?: number;
@@ -989,222 +995,6 @@ export class ListRepositoriesQuery implements IListRepositoriesQuery {
 }
 
 export interface IListRepositoriesQuery {
-}
-
-export class RepositoryAggregatesVm implements IRepositoryAggregatesVm {
-    repositoryAggregates?: RepositoryAggregateVm[];
-
-    constructor(data?: IRepositoryAggregatesVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            if (Array.isArray(_data["repositoryAggregates"])) {
-                this.repositoryAggregates = [] as any;
-                for (let item of _data["repositoryAggregates"])
-                    this.repositoryAggregates!.push(RepositoryAggregateVm.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): RepositoryAggregatesVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new RepositoryAggregatesVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.repositoryAggregates)) {
-            data["repositoryAggregates"] = [];
-            for (let item of this.repositoryAggregates)
-                data["repositoryAggregates"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IRepositoryAggregatesVm {
-    repositoryAggregates?: RepositoryAggregateVm[];
-}
-
-export class RepositoryAggregateVm implements IRepositoryAggregateVm {
-    id?: number;
-    name?: string;
-    remoteUrl?: string;
-    branch?: string;
-    projects?: ProjectVm2[];
-
-    constructor(data?: IRepositoryAggregateVm) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.remoteUrl = _data["remoteUrl"];
-            this.branch = _data["branch"];
-            if (Array.isArray(_data["projects"])) {
-                this.projects = [] as any;
-                for (let item of _data["projects"])
-                    this.projects!.push(ProjectVm2.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): RepositoryAggregateVm {
-        data = typeof data === 'object' ? data : {};
-        let result = new RepositoryAggregateVm();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["remoteUrl"] = this.remoteUrl;
-        data["branch"] = this.branch;
-        if (Array.isArray(this.projects)) {
-            data["projects"] = [];
-            for (let item of this.projects)
-                data["projects"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IRepositoryAggregateVm {
-    id?: number;
-    name?: string;
-    remoteUrl?: string;
-    branch?: string;
-    projects?: ProjectVm2[];
-}
-
-export class ProjectVm2 implements IProjectVm2 {
-    id?: number;
-    type?: string;
-    name?: string;
-    version?: string;
-    path?: string;
-    dependencyInstances?: DependencyInstanceVm2[];
-
-    constructor(data?: IProjectVm2) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.type = _data["type"];
-            this.name = _data["name"];
-            this.version = _data["version"];
-            this.path = _data["path"];
-            if (Array.isArray(_data["dependencyInstances"])) {
-                this.dependencyInstances = [] as any;
-                for (let item of _data["dependencyInstances"])
-                    this.dependencyInstances!.push(DependencyInstanceVm2.fromJS(item));
-            }
-        }
-    }
-
-    static fromJS(data: any): ProjectVm2 {
-        data = typeof data === 'object' ? data : {};
-        let result = new ProjectVm2();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["type"] = this.type;
-        data["name"] = this.name;
-        data["version"] = this.version;
-        data["path"] = this.path;
-        if (Array.isArray(this.dependencyInstances)) {
-            data["dependencyInstances"] = [];
-            for (let item of this.dependencyInstances)
-                data["dependencyInstances"].push(item.toJSON());
-        }
-        return data;
-    }
-}
-
-export interface IProjectVm2 {
-    id?: number;
-    type?: string;
-    name?: string;
-    version?: string;
-    path?: string;
-    dependencyInstances?: DependencyInstanceVm2[];
-}
-
-export class DependencyInstanceVm2 implements IDependencyInstanceVm2 {
-    id?: number;
-    source?: string;
-    name?: string;
-    version?: string;
-
-    constructor(data?: IDependencyInstanceVm2) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.source = _data["source"];
-            this.name = _data["name"];
-            this.version = _data["version"];
-        }
-    }
-
-    static fromJS(data: any): DependencyInstanceVm2 {
-        data = typeof data === 'object' ? data : {};
-        let result = new DependencyInstanceVm2();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["source"] = this.source;
-        data["name"] = this.name;
-        data["version"] = this.version;
-        return data;
-    }
-}
-
-export interface IDependencyInstanceVm2 {
-    id?: number;
-    source?: string;
-    name?: string;
-    version?: string;
 }
 
 export class SourcesVm implements ISourcesVm {
