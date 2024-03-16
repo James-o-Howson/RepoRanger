@@ -22,7 +22,27 @@
             Repository Details
         </div>
         <div *ngIf="selectedTreeNodeIsProject()">
-            Project Details
+            <div class="flex flex-column gap-2">
+                <label for="name">Name</label>
+                <input readonly="true" pInputText id="name" [(ngModel)]="projectVm!.name" />
+            </div>
+
+            <div class="flex justify-content-left mt-2">
+                <div class="flex flex-column gap-2">
+                    <label for="type">Type</label>
+                    <input readonly="true" pInputText id="type" [(ngModel)]="projectVm!.type" />
+                </div>
+    
+                <div class="flex flex-column gap-2 ml-2">
+                    <label for="version">Version</label>
+                    <input readonly="true" pInputText id="version" [(ngModel)]="projectVm!.version" />
+                </div>
+            </div>
+            
+            <div class="flex flex-column gap-2 mt-2">
+                <label for="repositoryName">Repository</label>
+                <input readonly="true" pInputText id="repositoryName" [(ngModel)]="projectVm!.repositoryName" />
+            </div>
         </div>
     </p-panel>
 </div>

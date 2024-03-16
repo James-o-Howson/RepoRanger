@@ -11,11 +11,12 @@ import { TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
 import { CheckboxModule } from 'primeng/checkbox';
 import { FormsModule } from '@angular/forms';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-dependency-details-view',
   standalone: true,
-  imports: [PanelModule, FieldsetModule, DividerModule, CommonModule, TreeModule, CheckboxModule, FormsModule],
+  imports: [PanelModule, FieldsetModule, DividerModule, CommonModule, TreeModule, CheckboxModule, FormsModule, InputTextModule ],
   templateUrl: './dependency-details-view.component.html',
   styleUrl: './dependency-details-view.component.scss'
 })
@@ -25,9 +26,11 @@ export class DependencyDetailsViewComponent implements OnInit {
   public dependencyInstance$: Observable<DependencyInstanceVm | null> | null = null;
 
   public projectsVm: ProjectsVm | null = null;
+  public specificVersionOnly: boolean = true;
+
   public treeNodes: TreeNode[] | null = [];
   public selectedTreeNode: TreeNode<any> | TreeNode<any>[] | null = null;
-  public specificVersionOnly: boolean = true;
+  public projectVm: ProjectVm | null = null;
 
   constructor(private readonly selectedDependencyService: SelectedDependencyService, private readonly apiClient: ProjectsClient) { }
 
@@ -75,8 +78,8 @@ export class DependencyDetailsViewComponent implements OnInit {
   }
 
   getSelectedTreeNodeDetailsLabel(): string {
-    if(this.selectedTreeNodeIsProject()) return 'Project Details';
-    if(this.selectedTreeNodeIsRepository()) return 'Repository Details';
+    if(this.selectedTreeNodeIsProject()) return 'Project';
+    if(this.selectedTreeNodeIsRepository()) return 'Repository';
     return '';
   }
 
@@ -86,7 +89,7 @@ export class DependencyDetailsViewComponent implements OnInit {
       if (typeof $event.data === 'string') {
 
       } else if ($event.data instanceof ProjectVm) {
-
+        this.projectVm = $event.data;
       }
   }
 
