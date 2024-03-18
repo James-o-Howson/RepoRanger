@@ -12,6 +12,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { DependencyDetailsViewComponent } from './dependency-details-view/dependency-details-view.component';
 import { CommonModule } from '@angular/common';
 import { ListProjectsQuery, ListRepositoriesQuery, ProjectVm, ProjectsClient, ProjectsVm, RepositoriesClient, RepositorySummariesVm, RepositorySummaryVm } from '../../api-client';
+import { FilterService } from './filter.service';
 
 @Component({
   selector: 'app-dependency-explorer',
@@ -44,7 +45,8 @@ export class DependencyExplorerComponent implements OnInit {
 
   constructor(
     private readonly projectsClient: ProjectsClient, 
-    private readonly repositoriesClient: RepositoriesClient
+    private readonly repositoriesClient: RepositoriesClient,
+    private readonly filterService: FilterService
   ) {}
 
   ngOnInit(): void {
@@ -83,21 +85,29 @@ export class DependencyExplorerComponent implements OnInit {
       if(!this.projectsVm.projects) return;
 
       this.projects = this.projectsVm.projects;
+      this.filterService.setSelectedRepositories([]);
       return;
     }
     else {
       const repositoryIds: number[] = this.selectedRepositories
-      .filter(r => r.id !== undefined)
-      .map(r => r.id!);
+        .filter(r => r.id !== undefined)
+        .map(r => r.id!);
 
       this.projects = this.projectsVm.projects ?? [];
       this.projects = this.projects.filter(p => repositoryIds.includes(p.repositoryId!))
+      this.filterService.setSelectedRepositories(repositoryIds);
     }
   }
 
   selectedProjectsChanged($event: MultiSelectChangeEvent) {
     this.ToggleFilterIcon();
     this.selectedProjects = $event.value;
+
+    const projectIds: number[] = this.selectedProjects
+        .filter(r => r.id !== undefined)
+        .map(r => r.id!);
+
+    this.filterService.setSelectedProjects(projectIds);
   }
 
   hasSelectedRepositories(): boolean { 
