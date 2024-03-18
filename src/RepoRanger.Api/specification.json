@@ -143,6 +143,48 @@
         }
       }
     },
+    "/api/Repositories/{id}": {
+      "get": {
+        "tags": [
+          "Repositories"
+        ],
+        "operationId": "Repositories_GetById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RepositorySummaryVm"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProblemDetails"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/Repositories": {
       "get": {
         "tags": [
@@ -466,18 +508,6 @@
         "type": "object",
         "additionalProperties": false
       },
-      "RepositorySummariesVm": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "repositorySummaries": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RepositorySummaryVm"
-            }
-          }
-        }
-      },
       "RepositorySummaryVm": {
         "type": "object",
         "additionalProperties": false,
@@ -501,6 +531,47 @@
           "parseTime": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "ProblemDetails": {
+        "type": "object",
+        "additionalProperties": {
+          "nullable": true
+        },
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true
+          },
+          "title": {
+            "type": "string",
+            "nullable": true
+          },
+          "status": {
+            "type": "integer",
+            "format": "int32",
+            "nullable": true
+          },
+          "detail": {
+            "type": "string",
+            "nullable": true
+          },
+          "instance": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "RepositorySummariesVm": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "repositorySummaries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RepositorySummaryVm"
+            }
           }
         }
       },

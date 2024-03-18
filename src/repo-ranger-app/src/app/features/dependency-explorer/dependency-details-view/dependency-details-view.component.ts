@@ -1,4 +1,4 @@
-import { ProjectVm, ProjectsClient, ProjectsVm } from './../../../api-client';
+import { ProjectVm, ProjectsClient, ProjectsVm, RepositorySummaryVm } from './../../../api-client';
 import { Component, OnInit } from '@angular/core';
 import { PanelModule } from 'primeng/panel';
 import { FieldsetModule } from 'primeng/fieldset';
@@ -6,7 +6,7 @@ import { DividerModule } from 'primeng/divider';
 import { DependencyInstanceVm, RepositoriesClient, } from '../../../api-client'
 import { SelectedDependencyService } from '../dependency-table/selected-dependency.service';
 import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { TreeModule } from 'primeng/tree';
 import { TreeNode } from 'primeng/api';
 import { CheckboxModule } from 'primeng/checkbox';
@@ -30,9 +30,14 @@ export class DependencyDetailsViewComponent implements OnInit {
 
   public treeNodes: TreeNode[] | null = [];
   public selectedTreeNode: TreeNode<any> | TreeNode<any>[] | null = null;
-  public projectVm: ProjectVm | null = null;
+  public project: ProjectVm | null = null;
+  public repositorySummary: RepositorySummaryVm | null = null;
 
-  constructor(private readonly selectedDependencyService: SelectedDependencyService, private readonly apiClient: ProjectsClient) { }
+  constructor(
+    private readonly datePipe: DatePipe,
+    private readonly selectedDependencyService: SelectedDependencyService, 
+    private readonly projectsClient: ProjectsClient, 
+    private readonly repositoriesClient: RepositoriesClient) { }
 
   ngOnInit(): void {
     this.dependencyInstance$ = this.selectedDependencyService.getSelectedDependencyInstance();
@@ -48,7 +53,7 @@ export class DependencyDetailsViewComponent implements OnInit {
 
     const version = this.specificVersionOnly ? dependencyInstance?.version : null;
 
-    this.apiClient.projects_GetByDependency(dependencyInstance?.name, version).subscribe({
+    this.projectsClient.projects_GetByDependency(dependencyInstance?.name, version).subscribe({
       next: (projectsVm) => {
         this.projectsVm = projectsVm;
         this.convertProjectsToTreeNodes(projectsVm);
@@ -63,12 +68,10 @@ export class DependencyDetailsViewComponent implements OnInit {
     this.loadProjectsByDependency(this.dependencyInstance);
   }
 
-  selectedTreeNodeIsRepository(): boolean {
-    if(Array.isArray(this.selectedTreeNode) || !this.selectedTreeNode) return false;
-    if(!this.selectedTreeNode.leaf) return true;
-
-    return false;
+  canDisplayRepositorySummary(): boolean {
+    return this.selectedTreeNodeIsRepository() && this.repositorySummary !== null;
   }
+
 
   selectedTreeNodeIsProject(): boolean {
     if(Array.isArray(this.selectedTreeNode) || !this.selectedTreeNode) return false;
@@ -87,10 +90,26 @@ export class DependencyDetailsViewComponent implements OnInit {
       if(!$event || Array.isArray($event)) return;
 
       if (typeof $event.data === 'string') {
-
+        this.repositoriesClient.repositories_GetById(Number($event.data)).subscribe({
+          next: (repositorySummary) => {
+            this.repositorySummary = repositorySummary;
+          },
+          error: (error) => console.error("failed to load repository summary", error)
+        });
       } else if ($event.data instanceof ProjectVm) {
-        this.projectVm = $event.data;
+        this.project = $event.data;
       }
+  }
+
+  formatDate(date: Date | undefined): string {
+    return this.datePipe.transform(date, 'short') ?? '';
+  }
+
+  private selectedTreeNodeIsRepository(): boolean {
+    if(Array.isArray(this.selectedTreeNode) || !this.selectedTreeNode) return false;
+    if(!this.selectedTreeNode.leaf) return true;
+
+    return false;
   }
 
   private convertProjectsToTreeNodes(projectsVm: ProjectsVm) {
@@ -111,7 +130,7 @@ export class DependencyDetailsViewComponent implements OnInit {
 
   private convertRepositoryProjectsGroupToTreeNode(projects: ProjectVm[]): TreeNode {
 
-    const repositoryId = projects[0].id?.toString();
+    const repositoryId = projects[0].repositoryId?.toString();
     const repositoryName = projects[0].repositoryName || '';
 
     const treeNode: TreeNode = {
