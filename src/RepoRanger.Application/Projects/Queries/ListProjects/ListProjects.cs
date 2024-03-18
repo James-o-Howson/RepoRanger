@@ -23,13 +23,17 @@ internal sealed class ListProjectsQueryHandler : IRequestHandler<ListProjectsQue
             Projects = await _context.Projects
                 .AsNoTracking()
                 .Include(p => p.DependencyInstances)
+                .Include(p => p.Repository)
                 .Select(p => new ProjectVm
                 {
                     Id = p.Id,
                     Type = p.Type,
                     Name = p.Name,
                     Version = p.Version,
-                    DependencyCount = p.DependencyInstances.Count
+                    DependencyCount = p.DependencyInstances.Count,
+                    RepositoryId = p.RepositoryId,
+                    RepositoryName = p.Repository.Name,
+
                 })
                 .ToListAsync(cancellationToken)
         };

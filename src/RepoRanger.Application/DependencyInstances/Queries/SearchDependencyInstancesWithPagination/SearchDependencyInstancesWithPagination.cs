@@ -55,7 +55,9 @@ internal sealed class SearchDependencyInstancesWithPaginationQueryHandler : IReq
         }
         else
         {
-            query = _context.DependencyInstances;
+            query = _context.DependencyInstances
+                .Include(di => di.Project)
+                .ThenInclude(p => p.Repository);
         }
 
         return query;
@@ -64,6 +66,7 @@ internal sealed class SearchDependencyInstancesWithPaginationQueryHandler : IReq
     private IQueryable<DependencyInstance> QueryProjectDependencies(IReadOnlyCollection<int> projectIds) =>
         _context.Projects
             .Include(p => p.DependencyInstances)
+            .Include(p => p.Repository)
             .Where(p => projectIds.Contains(p.Id))
             .SelectMany(p => p.DependencyInstances);
     

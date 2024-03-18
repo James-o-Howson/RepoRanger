@@ -42,7 +42,10 @@ export class DependencyExplorerComponent implements OnInit {
 
   filterIcon: string = 'pi-filter';
 
-  constructor(private readonly projectsClient: ProjectsClient, private readonly repositoriesClient: RepositoriesClient) {}
+  constructor(
+    private readonly projectsClient: ProjectsClient, 
+    private readonly repositoriesClient: RepositoriesClient
+  ) {}
 
   ngOnInit(): void {
 
@@ -76,7 +79,7 @@ export class DependencyExplorerComponent implements OnInit {
     this.ToggleFilterIcon();
     this.selectedRepositories = $event.value;
 
-    if(!this.selectedRepositories) {
+    if(!this.selectedRepositories || this.selectedRepositories.length === 0) {
       if(!this.projectsVm.projects) return;
 
       this.projects = this.projectsVm.projects;
@@ -90,7 +93,6 @@ export class DependencyExplorerComponent implements OnInit {
       this.projects = this.projectsVm.projects ?? [];
       this.projects = this.projects.filter(p => repositoryIds.includes(p.repositoryId!))
     }
-
   }
 
   selectedProjectsChanged($event: MultiSelectChangeEvent) {
