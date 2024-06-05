@@ -1,11 +1,11 @@
-﻿namespace RepoRanger.Infrastructure.SourceParsing.Common;
+﻿namespace RepoRanger.Domain.SourceParsing.Common;
 
-internal sealed class SourceParserOptions
+public sealed class SourceContexts
 {
-    public List<SourceOptions> Sources { get; set; } = [];
+    public List<SourceContext> Sources { get; set; } = [];
 }
 
-public class SourceOptions
+public class SourceContext
 {
     public string Name { get; set; } = string.Empty;
     public string Location { get; set; }  = string.Empty;

@@ -1,5 +1,6 @@
 ﻿using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.Git;
+using RepoRanger.Domain.SourceParsing.Common;
 
 namespace RepoRanger.Domain.SourceParsing;
 

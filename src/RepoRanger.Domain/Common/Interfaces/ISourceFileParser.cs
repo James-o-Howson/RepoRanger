@@ -1,5 +1,6 @@
 ﻿using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.SourceParsing;
+using RepoRanger.Domain.SourceParsing.Common;
 
 namespace RepoRanger.Domain.Common.Interfaces;
 

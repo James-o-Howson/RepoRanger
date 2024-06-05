@@ -29,8 +29,8 @@
                     </ng-template>
                     <div class="flex justify-content-left m-3">
                         <div class="flex flex-column gap-2 p-float-label">
-                            <p-multiSelect id="repositories" [options]="repositories" [(ngModel)]="selectedRepositories" (onChange)="selectedRepositoriesChanged($event)" 
-                                [filter]="true" optionLabel="name" placeholder="Select Repositories"></p-multiSelect>
+                            <p-multiSelect id="repositories" [showToggleAll]="true" [disabled]="repositoriesFilterDisabled" [selectAll]="" [options]="repositories" [(ngModel)]="selectedRepositories" (onChange)="selectedRepositoriesChanged($event)" 
+                                [filter]="true" optionLabel="name" placeholder="Select Repositories" (onSelectAllChange)="repositoriesSelectAllChanged($event)" ></p-multiSelect>
                             <label for="repositories">Repositories</label>
                         </div>
                         <div class="flex flex-column gap-2 ml-2 p-float-label">

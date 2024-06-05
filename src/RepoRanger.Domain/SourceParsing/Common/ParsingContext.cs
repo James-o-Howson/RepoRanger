@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using RepoRanger.Domain.Common.Interfaces;
 
-namespace RepoRanger.Domain.SourceParsing;
+namespace RepoRanger.Domain.SourceParsing.Common;
 
 public sealed class ParsingContext
 {

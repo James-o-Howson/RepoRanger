@@ -7,6 +7,9 @@ public sealed class Dependency : Auditable, IEquatable<Dependency>
     private readonly List<DependencyInstance> _dependencyInstances = [];
 
     private Dependency() { }
+
+    public static IEnumerable<Dependency> Create(IEnumerable<string> values) =>
+        values.Select(Create);
     
     public static Dependency Create(string name) => new() 
     {

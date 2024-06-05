@@ -6,7 +6,7 @@ import {
 import { DependencyTableComponent } from './dependency-table/dependency-table.component';
 import { CardModule } from 'primeng/card';
 import { ChipModule } from 'primeng/chip';
-import { MultiSelectChangeEvent, MultiSelectModule } from 'primeng/multiselect';
+import { MultiSelectChangeEvent, MultiSelectModule, MultiSelectSelectAllChangeEvent } from 'primeng/multiselect';
 import { InputTextModule } from 'primeng/inputtext';
 import { AccordionModule } from 'primeng/accordion';
 import { DependencyDetailsViewComponent } from './dependency-details-view/dependency-details-view.component';
@@ -36,10 +36,13 @@ export class DependencyExplorerComponent implements OnInit {
 
   selectedRepositories: RepositorySummaryVm[] = [];
   repositories: RepositorySummaryVm[] = [];
+  repositoriesFilterDisabled: boolean = false;
+  repositoriesSelectAll: boolean = false;
 
   selectedProjects: ProjectVm[] = [];
   projects: ProjectVm[] = [];
   projectsVm!: ProjectsVm;
+  projectsSelectAll: boolean = false;
 
   filterIcon: string = 'pi-filter';
 
@@ -77,11 +80,16 @@ export class DependencyExplorerComponent implements OnInit {
     console.error('Error fetching data', error)
   }
 
-  selectedRepositoriesChanged($event: MultiSelectChangeEvent) {
+  repositoriesSelectAllChanged(event: MultiSelectSelectAllChangeEvent) {
     this.ToggleFilterIcon();
-    this.selectedRepositories = $event.value;
+    this.repositoriesSelectAll = event.checked;
+    
+  }
 
-    if(!this.selectedRepositories || this.selectedRepositories.length === 0) {
+  selectedRepositoriesChanged(event: MultiSelectChangeEvent) {
+    this.selectedRepositories = event.value;
+
+    if(!this.hasSelectedRepositories()) {
       if(!this.projectsVm.projects) return;
 
       this.projects = this.projectsVm.projects;
@@ -97,17 +105,28 @@ export class DependencyExplorerComponent implements OnInit {
       this.projects = this.projects.filter(p => repositoryIds.includes(p.repositoryId!))
       this.filterService.setSelectedRepositories(repositoryIds);
     }
+
+    this.ToggleFilterIcon();
   }
 
-  selectedProjectsChanged($event: MultiSelectChangeEvent) {
+  selectedProjectsChanged(event: MultiSelectChangeEvent) {
+    this.selectedProjects = event.value;
+
+    if(!this.hasSelectedProjects() && !this.hasSelectedRepositories()) {
+      this.repositoriesFilterDisabled = false;
+    } else if(this.hasSelectedProjects() && !this.hasSelectedRepositories()){
+      this.repositoriesFilterDisabled = true;
+    }
+    else {
+      const projectIds: number[] = this.selectedProjects
+      .filter(r => r.id !== undefined)
+      .map(r => r.id!);
+
+      this.filterService.setSelectedProjects(projectIds);
+    }
+
     this.ToggleFilterIcon();
-    this.selectedProjects = $event.value;
 
-    const projectIds: number[] = this.selectedProjects
-        .filter(r => r.id !== undefined)
-        .map(r => r.id!);
-
-    this.filterService.setSelectedProjects(projectIds);
   }
 
   hasSelectedRepositories(): boolean { 

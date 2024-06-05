@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using RepoRanger.Application.Common.Interfaces;
 using RepoRanger.Domain.Git;
 using RepoRanger.Domain.SourceParsing;
+using RepoRanger.Domain.SourceParsing.Common;
 using RepoRanger.Infrastructure.Services;
 using RepoRanger.Infrastructure.SourceParsing;
 using RepoRanger.Infrastructure.SourceParsing.Angular;
@@ -34,8 +35,9 @@ public static class ServiceConfiguration
         IConfiguration configuration,
         Action<ISourceParserConfigurator> configure)
     {
-        services.Configure<SourceParserOptions>(configuration.GetSection("SourceParserOptions"));
+        services.Configure<SourceContexts>(configuration.GetSection("SourceParserOptions"));
         services.TryAddTransient<ISourceParserService, SourceParserService>();
+        services.TryAddTransient<ISourceParserResultHandler, SourceParserResultHandler>();
         
         var configurator = new SourceParserConfigurator(services, configuration);
         configure.Invoke(configurator);

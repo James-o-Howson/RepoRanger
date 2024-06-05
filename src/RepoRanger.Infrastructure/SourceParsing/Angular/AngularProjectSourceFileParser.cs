@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using RepoRanger.Domain.Common.Interfaces;
 using RepoRanger.Domain.Entities;
 using RepoRanger.Domain.SourceParsing;
+using RepoRanger.Domain.SourceParsing.Common;
 using RepoRanger.Domain.ValueObjects;
 
 namespace RepoRanger.Infrastructure.SourceParsing.Angular;

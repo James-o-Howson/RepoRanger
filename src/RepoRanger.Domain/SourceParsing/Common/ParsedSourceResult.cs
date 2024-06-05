@@ -1,8 +1,8 @@
 ﻿using RepoRanger.Domain.Entities;
 
-namespace RepoRanger.Infrastructure.SourceParsing;
+namespace RepoRanger.Domain.SourceParsing.Common;
 
-internal sealed class ParsedSourceResult
+public sealed class ParsedSourceResult
 {
     public static ParsedSourceResult CreateInstance(Source? existing, Source parsed) => new()
     {
