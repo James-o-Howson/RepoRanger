@@ -3,7 +3,7 @@ using RepoRanger.Domain.ValueObjects;
 
 namespace RepoRanger.Domain.Entities;
 
-public class DependencyInstance : Auditable, IEquatable<DependencyInstance>
+public class DependencyInstance : Entity, IEquatable<DependencyInstance>
 {
     private DependencyInstance() { }
 

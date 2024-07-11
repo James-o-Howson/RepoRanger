@@ -3,7 +3,7 @@ using RepoRanger.Domain.ValueObjects;
 
 namespace RepoRanger.Domain.Entities;
 
-public class Project : Auditable, IEquatable<Project>
+public class Project : Entity, IEquatable<Project>
 {
     private readonly List<DependencyInstance> _dependencyInstances = [];
     private readonly List<Metadata> _metadata = [];

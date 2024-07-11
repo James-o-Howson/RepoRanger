@@ -2,7 +2,7 @@
 
 namespace RepoRanger.Domain.Entities;
 
-public sealed class Dependency : Auditable, IEquatable<Dependency>
+public sealed class Dependency : Entity, IEquatable<Dependency>
 {
     private readonly List<DependencyInstance> _dependencyInstances = [];
 

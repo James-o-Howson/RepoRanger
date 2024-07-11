@@ -17,6 +17,7 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<Metadata> Metadata { get; set; }
     public DbSet<DependencyInstance> DependencyInstances { get; set; }
     public DbSet<Dependency> Dependencies { get; set; }
+    public DbSet<Message> Messages { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

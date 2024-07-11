@@ -28,7 +28,7 @@ internal sealed class CreateRepositoryCommandHandler : IRequestHandler<CreateRep
 
         await _context.Repositories.AddAsync(repository, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);
-
+        
         return repository.Id;
     }
 }

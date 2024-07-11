@@ -2,11 +2,13 @@
 
 namespace RepoRanger.Domain.Entities;
 
-public class Repository : Auditable, IEquatable<Repository>
+public class Repository : Entity, IEquatable<Repository>
 {
     private readonly List<Project> _projects = [];
-    
-    private Repository() { }
+
+    private Repository()
+    {
+    }
     
     public static Repository Create(string name, string remoteUrl, string defaultBranch)
     {
@@ -69,7 +71,6 @@ public class Repository : Auditable, IEquatable<Repository>
         var added = projects.Except(Projects);
         _projects.AddRange(added);
     }
-    
     
     internal void Delete()
     {

@@ -33,14 +33,11 @@ internal sealed class SourceParser : ISourceParser
 
     private async Task<ParsedSourceResult> ParseSourceAsync(SourceContext sourceContext, CancellationToken cancellationToken)
     {
-        // _logger.LogInformation("Parsing Source {SourceName}", sourceOptions.Name);
-        
         var repositories = await ParseRepositoriesAsync(sourceContext);
         var source = Source.Create(sourceContext.Name, sourceContext.Location, repositories);
         
         var existing = await _sourceRepository.GetSourceAsync(sourceContext.Name, cancellationToken);
 
-        // _logger.LogInformation("Finished Parsing Source {SourceName}", sourceOptions.Name);
         return ParsedSourceResult.CreateInstance(existing, source);
     }
     
@@ -57,12 +54,6 @@ internal sealed class SourceParser : ISourceParser
     {
         var gitRepository = new DirectoryInfo(repositoryPath);
 
-        // _logger.LogInformation("Parsing Repository {RepositoryName}", gitRepository.FullName);
-
-        var repository = await _repositoryParser.ParseAsync(gitRepository, _parseContext);
-
-        // _logger.LogInformation("Finished Parsing Repository {RepositoryName}", gitRepository.Name);
-
-        return repository;
+        return await _repositoryParser.ParseAsync(gitRepository, _parseContext);
     }
 }

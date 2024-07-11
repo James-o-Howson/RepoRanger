@@ -1,0 +1,13 @@
+﻿namespace RepoRanger.Domain.Common.Events;
+
+public class Event : IEvent
+{
+    public DateTime OccuredOn { get; }
+    public EventType Type { get; }
+
+    protected Event(DateTime occuredOn, EventType type)
+    {
+        OccuredOn = occuredOn;
+        Type = type;
+    }
+}

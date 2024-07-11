@@ -2,7 +2,7 @@
 
 namespace RepoRanger.Domain.Entities;
 
-public sealed class Metadata : Auditable
+public sealed class Metadata : Entity
 {
     private Metadata() { }
 

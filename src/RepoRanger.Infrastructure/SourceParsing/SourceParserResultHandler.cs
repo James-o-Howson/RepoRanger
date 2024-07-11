@@ -31,19 +31,23 @@ internal sealed class SourceParserResultHandler : ISourceParserResultHandler
     {
         if (result.IsNewSource)
         {
-            await CreateOrUpdateDependencies(result.Parsed.Dependencies, cancellationToken);
-            await _dbContext.Sources.AddAsync(result.Parsed, cancellationToken);
+            var source = result.Parsed;
+            
+            await CreateOrUpdateDependencies(source.Dependencies, cancellationToken);
+            await _dbContext.Sources.AddAsync(source, cancellationToken);
+            
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
         else
         {
             ArgumentNullException.ThrowIfNull(result.Existing);
-            await CreateOrUpdateDependencies(result.Existing.Dependencies, cancellationToken);
+             await CreateOrUpdateDependencies(result.Existing.Dependencies, cancellationToken);
             result.Existing.Update(result.Existing.Location, result.Existing.Repositories.ToList());
+            
+            await _dbContext.SaveChangesAsync(cancellationToken);
         }
-        
-        await _dbContext.SaveChangesAsync(cancellationToken);
     }
-    
+
     private async Task CreateOrUpdateDependencies(IEnumerable<string> dependencies, CancellationToken cancellationToken)
     {
         var existing = await _dbContext.Dependencies.ToListAsync(cancellationToken);

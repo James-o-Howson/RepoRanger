@@ -1,8 +1,9 @@
 ﻿using RepoRanger.Domain.Common;
+using RepoRanger.Domain.Events;
 
 namespace RepoRanger.Domain.Entities;
 
-public sealed class Source : Auditable, IEquatable<Source>
+public sealed class Source : Entity, IEquatable<Source>
 {
     private readonly List<Repository> _repositories = [];
     

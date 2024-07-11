@@ -11,6 +11,7 @@ public interface IApplicationDbContext
     DbSet<DependencyInstance> DependencyInstances { get; set; }
     DbSet<Dependency> Dependencies { get; set; }
     DbSet<Metadata> Metadata { get; set; }
+    DbSet<Message> Messages { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     DbSet<TEntity> Set<TEntity>() where TEntity : class;
