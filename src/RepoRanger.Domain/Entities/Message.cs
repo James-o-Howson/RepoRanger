@@ -1,10 +1,16 @@
 ﻿using System.Text.Json;
 using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Events;
-using RepoRanger.Domain.Enums;
 using RepoRanger.Domain.Exceptions;
 
 namespace RepoRanger.Domain.Entities;
+
+public enum MessageStatus
+{
+    None = 0,
+    Succeeded = 1,
+    Failed = 2,
+}
 
 public class Message : Entity
 {
