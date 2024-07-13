@@ -1,8 +1,16 @@
+using RepoRanger.Domain.Common;
+
 // ReSharper disable once CheckNamespace
 namespace Microsoft.EntityFrameworkCore.ChangeTracking;
 
 public static class EntityEntryExtensions
 {
+    public static List<TEntity> WithEvents<TEntity>(
+        this IEnumerable<EntityEntry<TEntity>> entityEntries) where TEntity : Entity =>
+        entityEntries.Where(e => e.Entity.GetEvents().Count != 0)
+            .Select(e => e.Entity)
+            .ToList();
+
     public static bool IsCreated(this EntityEntry entry) => 
         entry.State == EntityState.Added;
 

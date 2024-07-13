@@ -15,6 +15,7 @@ public static class ServiceConfiguration
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         services.AddScoped<ITransientEventDispatcher, TransientEventDispatcher>();
         services.AddScoped<IDurableEventDispatcher, DurableEventDispatcher>();
+        services.AddScoped<IEventDispatcher, EventDispatcher>();
     }
     
     private static void AddMediatrServices(this IServiceCollection services)

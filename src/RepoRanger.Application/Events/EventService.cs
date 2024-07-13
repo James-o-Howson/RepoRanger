@@ -2,17 +2,17 @@
 
 namespace RepoRanger.Application.Events;
 
-public interface IEventService
+public interface IEventDispatcher
 {
     Task DispatchEventAsync(IEvent @event, CancellationToken cancellationToken);
 }
 
-public class EventService : IEventService
+public class EventDispatcher : IEventDispatcher
 {
     private readonly ITransientEventDispatcher _transientEventDispatcher;
     private readonly IDurableEventDispatcher _durableEventDispatcher;
 
-    public EventService(ITransientEventDispatcher transientEventDispatcher, IDurableEventDispatcher durableEventDispatcher)
+    public EventDispatcher(ITransientEventDispatcher transientEventDispatcher, IDurableEventDispatcher durableEventDispatcher)
     {
         _transientEventDispatcher = transientEventDispatcher;
         _durableEventDispatcher = durableEventDispatcher;

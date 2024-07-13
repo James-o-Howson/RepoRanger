@@ -3,17 +3,16 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using RepoRanger.Application.Events;
 using RepoRanger.Domain.Common;
-using RepoRanger.Domain.Common.Events;
 
 namespace RepoRanger.Persistence.Interceptors;
 
 public class EventDispatcherSaveChangesInterceptor : SaveChangesInterceptor
 {
-    private readonly IEventService _eventService;
+    private readonly IEventDispatcher _eventDispatcher;
 
-    public EventDispatcherSaveChangesInterceptor(IEventService eventService)
+    public EventDispatcherSaveChangesInterceptor(IEventDispatcher eventDispatcher)
     {
-        _eventService = eventService;
+        _eventDispatcher = eventDispatcher;
     }
 
     public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
@@ -36,28 +35,16 @@ public class EventDispatcherSaveChangesInterceptor : SaveChangesInterceptor
     
     private async Task DispatchEventsAsync(DbContext context, CancellationToken cancellationToken)
     {
-        var events = ExtractDomainEvents(context.ChangeTracker);
+        var events = context.ChangeTracker
+            .Entries<Entity>()
+            .WithEvents()
+            .ExtractEvents();
+        
         if (events.Count == 0) return;
 
         foreach (var @event in events)
         {
-            await _eventService.DispatchEventAsync(@event, cancellationToken);
+            await _eventDispatcher.DispatchEventAsync(@event, cancellationToken);
         }
-    }
-    
-    private static IReadOnlyCollection<IEvent> ExtractDomainEvents(ChangeTracker changeTracker)
-    {
-        var entitiesWithEvents = changeTracker
-            .Entries<Entity>()
-            .Where(e => e.Entity.GetEvents().Count != 0)
-            .Select(e => e.Entity)
-            .ToList();
-
-        var events = entitiesWithEvents
-            .SelectMany(e => e.GetEvents()).ToList();
-    
-        entitiesWithEvents.ForEach(e => e.ClearEvents());
-    
-        return events;
     }
 }

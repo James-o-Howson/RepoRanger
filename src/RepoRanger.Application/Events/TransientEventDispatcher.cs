@@ -28,7 +28,7 @@ internal sealed class TransientEventDispatcher : ITransientEventDispatcher
         
         foreach (var handler in handlers)
         {
-            var handleMethod = handlerType.GetMethod("HandleAsync");
+            var handleMethod = handlerType.GetMethod(ITransientEventHandler<IEvent>.HandleMethodName);
             if (handleMethod is null || handler is null) return;
             
             await (Task) handleMethod.Invoke(handler, [@event, cancellationToken])!;
