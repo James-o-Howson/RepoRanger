@@ -1,6 +1,6 @@
 ﻿using ThirdPartyApiClient;
 
-namespace RepoRanger.Api.IntegrationTests;
+namespace RepoRanger.Api.IntegrationTests.ThirdPartyApis;
 
 [TestFixture]
 public class ConnectivityTests : TestBase
@@ -14,7 +14,7 @@ public class ConnectivityTests : TestBase
     }
 
     [Test]
-    public async Task CanReachThirdPartyVulnerabilitiesApi()
+    public async Task CanReachOpenSourceVulnerabilitiesApi()
     {
         var v1Query = new V1Query
         {
