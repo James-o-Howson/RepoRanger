@@ -6,18 +6,13 @@ namespace RepoRanger.Api.Filters;
 
 public class ApiExceptionFilterAttribute : ExceptionFilterAttribute
 {
-    private readonly IDictionary<Type, Action<ExceptionContext>> _exceptionHandlers;
-
-    public ApiExceptionFilterAttribute()
+    // Register known exception types and handlers.
+    private readonly Dictionary<Type, Action<ExceptionContext>> _exceptionHandlers = new()
     {
-        // Register known exception types and handlers.
-        _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
-            {
-                { typeof(ValidationException), HandleValidationException },
-                { typeof(NotFoundException), HandleNotFoundException },
-                { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException }
-            };
-    }
+        { typeof(ValidationException), HandleValidationException },
+        { typeof(NotFoundException), HandleNotFoundException },
+        { typeof(UnauthorizedAccessException), HandleUnauthorizedAccessException }
+    };
 
     public override void OnException(ExceptionContext context)
     {

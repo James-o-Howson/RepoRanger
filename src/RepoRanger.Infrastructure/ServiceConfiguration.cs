@@ -11,6 +11,7 @@ using RepoRanger.Infrastructure.SourceParsing.Angular;
 using RepoRanger.Infrastructure.SourceParsing.Common;
 using RepoRanger.Infrastructure.SourceParsing.DotNet;
 using RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
+using ThirdPartyApiClient;
 
 namespace RepoRanger.Infrastructure;
 
@@ -28,6 +29,11 @@ public static class ServiceConfiguration
         {
             c.AddFileContentParser<DotNetSourceFileParser>();
             c.AddFileContentParser<AngularProjectSourceFileParser>();
+        });
+
+        services.AddHttpClient<IOpenSourceVulnerabilitiesClient, OpenSourceVulnerabilitiesClient>(client =>
+        {
+            client.BaseAddress = new Uri("https://api.osv.dev/");
         });
     }
     

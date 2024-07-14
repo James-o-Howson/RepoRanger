@@ -7,7 +7,7 @@ using RepoRanger.Persistence;
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 
-builder.Services.AddApiServices(builder.Configuration);
+builder.Services.AddApiServices(builder.Configuration, builder.Environment);
 builder.Services.AddInfrastructureServices(builder.Configuration);
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddApplicationServices();
@@ -31,3 +31,8 @@ app.UseHealthChecks("/_health");
 app.MapControllers();
 
 app.Run();
+
+namespace RepoRanger.Api
+{
+    public partial class Program { }
+}

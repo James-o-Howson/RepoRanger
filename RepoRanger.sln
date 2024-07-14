@@ -23,12 +23,24 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
 		.gitignore = .gitignore
-		readme.md = readme.md
+		README.md = README.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{7B95C951-F51F-431C-B326-1343928C5A17}"
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\build.yml = .github\workflows\build.yml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{1421804D-77B3-414A-80F7-37E8F71EE1C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Api.IntegrationTests", "tests\RepoRanger.Api.IntegrationTests\RepoRanger.Api.IntegrationTests.csproj", "{6B8BFA90-BEC4-401F-94AA-94581495A233}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A5B1D6AA-B055-4654-95F2-B1FB84254CD5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientGeneration", "ClientGeneration", "{9C255FCD-5129-485E-8AB2-BABF7B085B5C}"
+	ProjectSection(SolutionItems) = preProject
+		ClientGeneration\client-angular-app.nswag = ClientGeneration\client-angular-app.nswag
+		ClientGeneration\client-csharp-open-source-vulnerabilities.nswag = ClientGeneration\client-csharp-open-source-vulnerabilities.nswag
 	EndProjectSection
 EndProject
 Global
@@ -57,6 +69,10 @@ Global
 		{26415894-B262-4DF7-B269-09C064FFC6FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{26415894-B262-4DF7-B269-09C064FFC6FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{26415894-B262-4DF7-B269-09C064FFC6FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B8BFA90-BEC4-401F-94AA-94581495A233}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B8BFA90-BEC4-401F-94AA-94581495A233}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B8BFA90-BEC4-401F-94AA-94581495A233}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B8BFA90-BEC4-401F-94AA-94581495A233}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -69,7 +85,10 @@ Global
 		{26415894-B262-4DF7-B269-09C064FFC6FF} = {55E4975D-BFEE-48DC-AFD1-0BCF6202BE28}
 		{FCD76C69-4602-4A53-ADD2-D0E82D0F345F} = {55E4975D-BFEE-48DC-AFD1-0BCF6202BE28}
 		{B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1} = {55E4975D-BFEE-48DC-AFD1-0BCF6202BE28}
-		{7B95C951-F51F-431C-B326-1343928C5A17} = {3E3F722A-B706-4C9E-B1A8-FD58B29BB7F9}
+		{6B8BFA90-BEC4-401F-94AA-94581495A233} = {1421804D-77B3-414A-80F7-37E8F71EE1C3}
+		{A5B1D6AA-B055-4654-95F2-B1FB84254CD5} = {3E3F722A-B706-4C9E-B1A8-FD58B29BB7F9}
+		{7B95C951-F51F-431C-B326-1343928C5A17} = {A5B1D6AA-B055-4654-95F2-B1FB84254CD5}
+		{9C255FCD-5129-485E-8AB2-BABF7B085B5C} = {3E3F722A-B706-4C9E-B1A8-FD58B29BB7F9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F829DB12-3606-4221-8194-EE18B9DCBC43}

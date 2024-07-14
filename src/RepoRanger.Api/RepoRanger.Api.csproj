@@ -34,6 +34,7 @@
         <DependentUpon>appsettings.json</DependentUpon>
       </Content>
       <Content Remove="Logs\**" />
+      <Content Remove="specification.json" />
     </ItemGroup>
 
     <ItemGroup>
@@ -52,15 +53,30 @@
 
     <ItemGroup>
       <None Remove="Logs\**" />
+      <None Update="client-csharp-open-source-vulnerabilities.nswag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="client-angular-app.nswag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Remove="RepoRangerDev.db" />
     </ItemGroup>
-    
-    <!-- Auto-generated Open API specification and Angular TypeScript clients -->
-    <PropertyGroup>
-        <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
-    </PropertyGroup>
 
-    <Target Name="NSwag" AfterTargets="PostBuildEvent" Condition=" '$(Configuration)' == 'Debug' ">
-        <Exec WorkingDirectory="$(ProjectDir)" EnvironmentVariables="ASPNETCORE_ENVIRONMENT=Development" Command="$(NSwagExe_Net80) run config-angular.nswag /variables:Configuration=$(Configuration)" />
+    <ItemGroup>
+        <InternalsVisibleTo Include="RepoRanger.Api.IntegrationTests" />
+    </ItemGroup>
+
+    <!-- Build Actions-->
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+        <!-- Remove Generated Folder -->
+        <RemoveDir Directories="$(ProjectDir)..\RepoRanger.Infrastructure\Generated" Condition="Exists('$(ProjectDir)..\RepoRanger.Infrastructure\Generated')" />
+        <!-- Generate Google OSV Api C# Client -->
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net80) run client-csharp-open-source-vulnerabilities.nswag /variables:Configuration=$(Configuration)" />
+    </Target>
+
+    <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+        <!-- Generate Angular TypeScript Client -->
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net80) run client-angular-app.nswag /variables:Configuration=$(Configuration)" />
     </Target>
 
 </Project>

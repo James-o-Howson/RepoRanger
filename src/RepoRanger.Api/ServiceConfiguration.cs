@@ -11,10 +11,10 @@ namespace RepoRanger.Api;
 
 internal static class ServiceConfiguration
 {
-    public static void AddApiServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddApiServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
         services.AddCors();
-        services.AddQuartzServices(configuration);
+        services.AddQuartzServices(configuration, environment);
         services.AddExceptionHandlerServices();
         services.AddControllers();
         services.AddEndpointsApiExplorer();
@@ -41,16 +41,17 @@ internal static class ServiceConfiguration
         services.AddProblemDetails();
     }
     
-    private static void AddQuartzServices(this IServiceCollection services, IConfiguration configuration)
+    private static void AddQuartzServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
     {
         services.Configure<QuartzOptions>(configuration.GetSection("QuartzOptions"));
 
-        services.AddQuartz(options =>
+        if (environment.IsIntegrationTest()) return;
+        services.AddQuartz(configurator =>
         {
-            options.UseSimpleTypeLoader();
-            options.UseInMemoryStore();
+            configurator.UseSimpleTypeLoader();
+            configurator.UseInMemoryStore();
 
-            options.AddJob<RepoRangerJob>(RepoRangerJob.JobKey)
+            configurator.AddJob<RepoRangerJob>(RepoRangerJob.JobKey)
                 .AddTrigger(trigger => trigger.ForJob(RepoRangerJob.JobKey).StartNow()
                     .WithSimpleSchedule(schedule => schedule.WithIntervalInMinutes(60).RepeatForever()));
         });
