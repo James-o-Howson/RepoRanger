@@ -42,5 +42,4 @@ The following pre-build steps are defined:
 - Generate [osv.dev](https://osv.dev/) C# Client
 
 The following post-build steps are defined:
-- Generate swagger.json openapi specification
 - Generate Angular Typescript Client
