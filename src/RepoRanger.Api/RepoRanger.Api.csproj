@@ -63,13 +63,13 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Remove="RepoRangerDev.db" />
-      <None Update="ClientGeneration\client-csharp-open-source-vulnerabilities.nswag">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="ClientGeneration\client-angular-app.nswag">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Remove="ClientGeneration\obj\**" />
+      <None Update="client-angular-app.nswag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="client-csharp-open-source-vulnerabilities.nswag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
     <ItemGroup>
@@ -79,12 +79,12 @@
     <!-- Build Actions-->
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
         <!-- Generate Google OSV Api C# Client -->
-        <Exec WorkingDirectory="$(ProjectDir)ClientGeneration" Command="$(NSwagExe_Net80) run client-csharp-open-source-vulnerabilities.nswag /variables:Configuration=$(Configuration)" />
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net80) run client-csharp-open-source-vulnerabilities.nswag /variables:Configuration=$(Configuration)" />
     </Target>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <!-- Generate Angular TypeScript Client -->
-        <Exec WorkingDirectory="$(ProjectDir)ClientGeneration" Command="$(NSwagExe_Net80) run client-angular-app.nswag /variables:Configuration=$(Configuration)" />
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net80) run client-angular-app.nswag /variables:Configuration=$(Configuration)" />
     </Target>
 
 </Project>
