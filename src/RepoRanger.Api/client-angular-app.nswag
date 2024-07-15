@@ -76,7 +76,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../../repo-ranger-app/src/app/api-client.ts",
+      "output": "../repo-ranger-app/src/app/api-client.ts",
       "newLineBehavior": "Auto"
     }
   }
