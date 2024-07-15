@@ -1,4 +1,5 @@
 # RepoRanger
+[![Build](https://github.com/James-o-Howson/RepoRanger/actions/workflows/build.yml/badge.svg)](https://github.com/James-o-Howson/RepoRanger/actions/workflows/build.yml)
 
 RepoRanger is a comprehensive tool designed to clone repositories, parse them, and maintain a detailed list of their
 projects and dependencies. With RepoRanger, you can easily manage and monitor your project dependencies, ensuring your
