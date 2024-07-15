@@ -13,19 +13,19 @@ internal sealed class VulnerabilitiesService : IVulnerabilityService
         _vulnerabilitiesClient = vulnerabilitiesClient;
     }
 
-    public async Task<IEnumerable<Vulnerability>> QueryAffectedAsync(string packageName, string ecosystem, string? version, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Vulnerability>> QueryAffectedAsync(string dependencyName, string ecosystem, string? version, CancellationToken cancellationToken = default)
     {
         var result = await _vulnerabilitiesClient.QueryAffectedAsync(new V1Query
         {
             Version = version,
             Package = new OsvPackage
             {
-                Name = packageName,
+                Name = dependencyName,
                 Ecosystem = ecosystem
             },
         }, cancellationToken);
 
         return result.Vulns.Select(v =>
-            Vulnerability.Create(v.Id, v.Published, v.Withdrawn, v.Summary, v.Details));
+            Vulnerability.Create(v.Id, dependencyName, v.Published, v.Withdrawn, v.Summary, v.Details));
     }
 }
