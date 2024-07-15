@@ -21,6 +21,7 @@ public static class ServiceConfiguration
     {
         services.AddTransient<IGitDetailService, GitDetailService>();
         services.AddTransient<IDateTime, DateTimeService>();
+        services.AddTransient<IVulnerabilityService, VulnerabilitiesService>();
         
         services.AddTransient<IProjectParser, ProjectPackageReferenceAttributeParser>();
         services.AddTransient<IProjectParser, ProjectReferenceAttributeParser>();

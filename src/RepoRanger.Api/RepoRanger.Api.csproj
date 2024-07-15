@@ -56,12 +56,6 @@
 
     <ItemGroup>
       <None Remove="Logs\**" />
-      <None Update="client-csharp-open-source-vulnerabilities.nswag">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
-      <None Update="client-angular-app.nswag">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </None>
       <None Remove="RepoRangerDev.db" />
       <None Remove="ClientGeneration\obj\**" />
       <None Update="client-angular-app.nswag">
@@ -70,6 +64,8 @@
       <None Update="client-csharp-open-source-vulnerabilities.nswag">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
+      <None Remove="client-angular-app.nswag" />
+      <None Remove="client-csharp-open-source-vulnerabilities.nswag" />
     </ItemGroup>
 
     <ItemGroup>
