@@ -31,7 +31,7 @@ public static class ServiceConfiguration
             c.AddFileContentParser<AngularProjectSourceFileParser>();
         });
 
-        services.AddHttpClient<IOpenSourceVulnerabilitiesClient, Connectivity>(client =>
+        services.AddHttpClient<IOpenSourceVulnerabilitiesClient, OpenSourceVulnerabilitiesClient>(client =>
         {
             client.BaseAddress = new Uri("https://api.osv.dev/");
         });

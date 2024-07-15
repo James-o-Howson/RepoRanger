@@ -37,12 +37,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Api.IntegrationT
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A5B1D6AA-B055-4654-95F2-B1FB84254CD5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ClientGeneration", "ClientGeneration", "{9C255FCD-5129-485E-8AB2-BABF7B085B5C}"
-	ProjectSection(SolutionItems) = preProject
-		ClientGeneration\client-angular-app.nswag = ClientGeneration\client-angular-app.nswag
-		ClientGeneration\client-csharp-open-source-vulnerabilities.nswag = ClientGeneration\client-csharp-open-source-vulnerabilities.nswag
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -88,7 +82,6 @@ Global
 		{6B8BFA90-BEC4-401F-94AA-94581495A233} = {1421804D-77B3-414A-80F7-37E8F71EE1C3}
 		{A5B1D6AA-B055-4654-95F2-B1FB84254CD5} = {3E3F722A-B706-4C9E-B1A8-FD58B29BB7F9}
 		{7B95C951-F51F-431C-B326-1343928C5A17} = {A5B1D6AA-B055-4654-95F2-B1FB84254CD5}
-		{9C255FCD-5129-485E-8AB2-BABF7B085B5C} = {3E3F722A-B706-4C9E-B1A8-FD58B29BB7F9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F829DB12-3606-4221-8194-EE18B9DCBC43}

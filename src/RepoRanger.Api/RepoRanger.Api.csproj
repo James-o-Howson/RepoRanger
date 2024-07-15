@@ -35,6 +35,7 @@
       </Content>
       <Content Remove="Logs\**" />
       <Content Remove="specification.json" />
+      <Content Remove="ClientGeneration\obj\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -45,10 +46,12 @@
 
     <ItemGroup>
       <Compile Remove="Logs\**" />
+      <Compile Remove="ClientGeneration\obj\**" />
     </ItemGroup>
 
     <ItemGroup>
       <EmbeddedResource Remove="Logs\**" />
+      <EmbeddedResource Remove="ClientGeneration\obj\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -60,6 +63,13 @@
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
       <None Remove="RepoRangerDev.db" />
+      <None Update="ClientGeneration\client-csharp-open-source-vulnerabilities.nswag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Update="ClientGeneration\client-angular-app.nswag">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <None Remove="ClientGeneration\obj\**" />
     </ItemGroup>
 
     <ItemGroup>
@@ -68,15 +78,13 @@
 
     <!-- Build Actions-->
     <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-        <!-- Remove Generated Folder -->
-        <RemoveDir Directories="$(ProjectDir)..\RepoRanger.Infrastructure\Generated" Condition="Exists('$(ProjectDir)..\RepoRanger.Infrastructure\Generated')" />
         <!-- Generate Google OSV Api C# Client -->
-        <Exec WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net80) run client-csharp-open-source-vulnerabilities.nswag /variables:Configuration=$(Configuration)" />
+        <Exec WorkingDirectory="$(ProjectDir)ClientGeneration" Command="$(NSwagExe_Net80) run client-csharp-open-source-vulnerabilities.nswag /variables:Configuration=$(Configuration)" />
     </Target>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <!-- Generate Angular TypeScript Client -->
-        <Exec WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net80) run client-angular-app.nswag /variables:Configuration=$(Configuration)" />
+        <Exec WorkingDirectory="$(ProjectDir)ClientGeneration" Command="$(NSwagExe_Net80) run client-angular-app.nswag /variables:Configuration=$(Configuration)" />
     </Target>
 
 </Project>

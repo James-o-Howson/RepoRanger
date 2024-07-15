@@ -93,7 +93,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../RepoRanger.Infrastructure/Generated/OpenSourceVulnerabilitiesClient.cs",
+      "output": "../../RepoRanger.Infrastructure/Generated/OpenSourceVulnerabilitiesClient.cs",
       "newLineBehavior": "Auto"
     }
   }
