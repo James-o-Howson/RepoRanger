@@ -4,13 +4,13 @@ namespace RepoRanger.Api.IntegrationTests;
 
 public class TestBase : IDisposable
 {
-    protected IntegrationTestWebApplicationFactory Factory;
+    protected RepoRangerWebApplicationFactory Factory;
     protected HttpClient Client;
 
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
-        Factory = new IntegrationTestWebApplicationFactory();
+        Factory = new RepoRangerWebApplicationFactory();
     }
 
     [SetUp]

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace RepoRanger.Api.IntegrationTests;
 
-public sealed class IntegrationTestWebApplicationFactory : WebApplicationFactory<Program>
+public sealed class RepoRangerWebApplicationFactory : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
