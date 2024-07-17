@@ -1,5 +1,5 @@
 {
-  "x-generator": "NSwag v14.0.3.0 (NJsonSchema v11.0.0.0 (Newtonsoft.Json v13.0.0.0))",
+  "x-generator": "NSwag v14.0.8.0 (NJsonSchema v11.0.1.0 (Newtonsoft.Json v13.0.0.0))",
   "openapi": "3.0.0",
   "info": {
     "title": "My Title",
@@ -83,8 +83,8 @@
             "schema": {
               "type": "array",
               "items": {
-                "type": "integer",
-                "format": "int32"
+                "type": "string",
+                "format": "guid"
               }
             },
             "x-position": 1
@@ -226,8 +226,8 @@
             "name": "SourceId",
             "in": "query",
             "schema": {
-              "type": "integer",
-              "format": "int32",
+              "type": "string",
+              "format": "guid",
               "nullable": true
             },
             "x-position": 1
@@ -315,8 +315,8 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "guid"
           },
           "source": {
             "type": "string"
@@ -348,24 +348,24 @@
                 "type": "array",
                 "nullable": true,
                 "items": {
-                  "type": "integer",
-                  "format": "int32"
+                  "type": "string",
+                  "format": "guid"
                 }
               },
               "repositoryIds": {
                 "type": "array",
                 "nullable": true,
                 "items": {
-                  "type": "integer",
-                  "format": "int32"
+                  "type": "string",
+                  "format": "guid"
                 }
               },
               "projectIds": {
                 "type": "array",
                 "nullable": true,
                 "items": {
-                  "type": "integer",
-                  "format": "int32"
+                  "type": "string",
+                  "format": "guid"
                 }
               }
             }
@@ -479,8 +479,8 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "guid"
           },
           "name": {
             "type": "string"
@@ -496,8 +496,8 @@
             "format": "int32"
           },
           "repositoryId": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "guid"
           },
           "repositoryName": {
             "type": "string"
@@ -513,8 +513,8 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "guid"
           },
           "name": {
             "type": "string",
@@ -596,8 +596,8 @@
         "additionalProperties": false,
         "properties": {
           "id": {
-            "type": "integer",
-            "format": "int32"
+            "type": "string",
+            "format": "guid"
           },
           "name": {
             "type": "string"

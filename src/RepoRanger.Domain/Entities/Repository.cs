@@ -31,15 +31,13 @@ public class Repository : Entity, IEquatable<Repository>
         return repository;
     }
 
-    public int Id { get; set; }
+    public Guid Id { get; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
     public string RemoteUrl { get; set; } = string.Empty;
-    public int SourceId { get; set; }
+    public Guid SourceId { get; set; }
     public Source Source { get; private set; } = null!;
     public string DefaultBranch { get; set; } = string.Empty;
     public IReadOnlyCollection<Project> Projects => _projects;
-
-    public bool IsNew => Id == 0;
 
     public IEnumerable<DependencyInstance> DependencyInstances => Projects
         .SelectMany(p => p.DependencyInstances)

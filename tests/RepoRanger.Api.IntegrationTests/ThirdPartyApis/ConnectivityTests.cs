@@ -1,8 +1,9 @@
-﻿using ThirdPartyApiClient;
+﻿using RepoRanger.Application.Common.Interfaces;
+using RepoRanger.Application.Events;
+using ThirdPartyApiClient;
 
 namespace RepoRanger.Api.IntegrationTests.ThirdPartyApis;
 
-[TestFixture]
 public class ConnectivityTests : TestBase
 {
     private IOpenSourceVulnerabilitiesClient _vulnerabilitiesClient;
@@ -11,10 +12,12 @@ public class ConnectivityTests : TestBase
     public void SetUp()
     {
         _vulnerabilitiesClient = GetRequiredService<IOpenSourceVulnerabilitiesClient>();
+        var s = GetRequiredService<IVulnerabilityService>();
+        var a = GetRequiredService<IEventDispatcher>();
     }
 
     [Test]
-    public async Task CanReachOpenSourceVulnerabilitiesApi()
+    public async Task OsvVulnerabilitiesApi_ShouldBeReachable()
     {
         var v1Query = new V1Query
         {

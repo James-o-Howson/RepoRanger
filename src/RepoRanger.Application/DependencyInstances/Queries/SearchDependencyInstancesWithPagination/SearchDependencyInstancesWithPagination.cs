@@ -8,9 +8,9 @@ namespace RepoRanger.Application.DependencyInstances.Queries.SearchDependencyIns
 
 public sealed record SearchDependencyInstancesWithPaginationQuery : PaginatedRequest<DependencyInstanceVm>
 {
-    public IReadOnlyCollection<int>? SourceIds { get; init; } = Array.Empty<int>();
-    public IReadOnlyCollection<int>? RepositoryIds { get; init; } = Array.Empty<int>();
-    public IReadOnlyCollection<int>? ProjectIds { get; init; } = Array.Empty<int>();
+    public IReadOnlyCollection<Guid>? SourceIds { get; init; } = Array.Empty<Guid>();
+    public IReadOnlyCollection<Guid>? RepositoryIds { get; init; } = Array.Empty<Guid>();
+    public IReadOnlyCollection<Guid>? ProjectIds { get; init; } = Array.Empty<Guid>();
 }
 
 internal sealed class SearchDependencyInstancesWithPaginationQueryHandler : IRequestHandler<SearchDependencyInstancesWithPaginationQuery, PaginatedList<DependencyInstanceVm>>
@@ -63,21 +63,21 @@ internal sealed class SearchDependencyInstancesWithPaginationQueryHandler : IReq
         return query;
     }
     
-    private IQueryable<DependencyInstance> QueryProjectDependencies(IReadOnlyCollection<int> projectIds) =>
+    private IQueryable<DependencyInstance> QueryProjectDependencies(IReadOnlyCollection<Guid> projectIds) =>
         _context.Projects
             .Include(p => p.DependencyInstances)
             .Include(p => p.Repository)
             .Where(p => projectIds.Contains(p.Id))
             .SelectMany(p => p.DependencyInstances);
     
-    private IQueryable<DependencyInstance> QueryRepositoryDependencies(IReadOnlyCollection<int> repositoryIds) =>
+    private IQueryable<DependencyInstance> QueryRepositoryDependencies(IReadOnlyCollection<Guid> repositoryIds) =>
         _context.Repositories
             .Include(b => b.Projects)
             .ThenInclude(p => p.DependencyInstances)
             .Where(r => repositoryIds.Contains(r.Id))
             .SelectMany(r => r.DependencyInstances);
 
-    private IQueryable<DependencyInstance> QuerySourceDependencies(IReadOnlyCollection<int> sourceIds) =>
+    private IQueryable<DependencyInstance> QuerySourceDependencies(IReadOnlyCollection<Guid> sourceIds) =>
         _context.Sources
             .Include(r => r.Repositories)
             .ThenInclude(b => b.Projects)

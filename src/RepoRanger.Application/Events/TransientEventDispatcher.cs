@@ -11,15 +11,15 @@ public interface ITransientEventDispatcher
 internal sealed class TransientEventDispatcher : ITransientEventDispatcher
 {
     private readonly IServiceProvider _serviceProvider;
-
+    
     public TransientEventDispatcher(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
-
+    
     public async Task DispatchAsync(IEvent @event, CancellationToken cancellationToken) => 
         await DispatchEventAsync(@event, cancellationToken);
-
+    
     private async Task DispatchEventAsync(IEvent @event, CancellationToken cancellationToken)
     {
         var eventHandlerType = typeof(ITransientEventHandler<>);

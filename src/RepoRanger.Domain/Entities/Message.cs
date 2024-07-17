@@ -24,7 +24,7 @@ public class Message : Entity
         Name = @event.GetType().Name
     };
     
-    public int Id { get; set; }
+    public Guid Id { get; } = Guid.NewGuid();
     public string Data { get; init; } = string.Empty;
     public string Name { get; init; } = string.Empty;
     public int RetryCount { get; private set; }

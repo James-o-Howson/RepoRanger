@@ -26,11 +26,10 @@ public sealed class Source : Entity, IEquatable<Source>
         return source;
     }
 
-    public int Id { get; set; }
+    public Guid Id { get; } = Guid.NewGuid();
     public string Name { get; private set; } = string.Empty;
     public string Location { get; set; } = string.Empty;
     public IReadOnlyCollection<Repository> Repositories => _repositories;
-    public bool IsNew => Id == 0;
     
     public IEnumerable<DependencyInstance> DependencyInstances => Repositories
         .SelectMany(r => r.DependencyInstances)

@@ -8,7 +8,7 @@ namespace RepoRanger.Application.Projects.Queries.GetProjectsByRepositoryIds;
 
 public sealed record GetProjectsByRepositoryIdsQuery : IRequest<ProjectsVm>
 {
-    public IReadOnlyCollection<int> RepositoryIds { get; init; } = Array.Empty<int>();
+    public IReadOnlyCollection<Guid> RepositoryIds { get; init; } = Array.Empty<Guid>();
 }
 
 internal sealed class GetProjectsByRepositoryIdsQueryHandler : IRequestHandler<GetProjectsByRepositoryIdsQuery, ProjectsVm>

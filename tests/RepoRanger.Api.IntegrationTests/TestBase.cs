@@ -2,6 +2,7 @@
 
 namespace RepoRanger.Api.IntegrationTests;
 
+[TestFixture]
 public class TestBase : IDisposable
 {
     protected RepoRangerWebApplicationFactory Factory;
@@ -20,4 +21,7 @@ public class TestBase : IDisposable
 
     public TService GetRequiredService<TService>() where TService : notnull
         => Factory.Services.GetRequiredService<TService>();
+
+    public object? GetService(Type serviceType) 
+        => Factory.Services.GetService(serviceType);
 }

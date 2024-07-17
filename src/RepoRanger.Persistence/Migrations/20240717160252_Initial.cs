@@ -28,8 +28,7 @@ namespace RepoRanger.Persistence.Migrations
                 name: "Messages",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Data = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     RetryCount = table.Column<int>(type: "INTEGER", nullable: false),
@@ -50,8 +49,7 @@ namespace RepoRanger.Persistence.Migrations
                 name: "Sources",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Location = table.Column<string>(type: "TEXT", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
@@ -63,14 +61,33 @@ namespace RepoRanger.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Repositories",
+                name: "Vulnerabilities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    OsvId = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
+                    DependencyName = table.Column<string>(type: "TEXT", nullable: false),
+                    Published = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    Withdrawn = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    Summary = table.Column<string>(type: "TEXT", nullable: false),
+                    Details = table.Column<string>(type: "TEXT", nullable: false),
+                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vulnerabilities", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Repositories",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     RemoteUrl = table.Column<string>(type: "TEXT", nullable: false),
-                    SourceId = table.Column<int>(type: "INTEGER", nullable: false),
+                    SourceId = table.Column<Guid>(type: "TEXT", nullable: false),
                     DefaultBranch = table.Column<string>(type: "TEXT", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
@@ -91,13 +108,12 @@ namespace RepoRanger.Persistence.Migrations
                 name: "Projects",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Type_Value = table.Column<string>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Path = table.Column<string>(type: "TEXT", nullable: false),
                     Version = table.Column<string>(type: "TEXT", nullable: false),
-                    RepositoryId = table.Column<int>(type: "INTEGER", nullable: false),
+                    RepositoryId = table.Column<Guid>(type: "TEXT", nullable: false),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
                 },
@@ -117,14 +133,13 @@ namespace RepoRanger.Persistence.Migrations
                 name: "DependencyInstances",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Source_Value = table.Column<string>(type: "TEXT", nullable: false),
                     DependencyName = table.Column<string>(type: "TEXT", nullable: false),
                     Version = table.Column<string>(type: "TEXT", nullable: false),
-                    ProjectId = table.Column<int>(type: "INTEGER", nullable: false),
-                    RepositoryId = table.Column<int>(type: "INTEGER", nullable: true),
-                    SourceId = table.Column<int>(type: "INTEGER", nullable: true),
+                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RepositoryId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    SourceId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false)
                 },
@@ -160,11 +175,10 @@ namespace RepoRanger.Persistence.Migrations
                 name: "Metadata",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     Value = table.Column<string>(type: "TEXT", nullable: false),
-                    ProjectId = table.Column<int>(type: "INTEGER", nullable: true),
+                    ProjectId = table.Column<Guid>(type: "TEXT", nullable: true),
                     Created = table.Column<DateTime>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", nullable: true)
                 },
@@ -217,6 +231,9 @@ namespace RepoRanger.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Metadata");
+
+            migrationBuilder.DropTable(
+                name: "Vulnerabilities");
 
             migrationBuilder.DropTable(
                 name: "Dependencies");

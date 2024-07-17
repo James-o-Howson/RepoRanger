@@ -12,7 +12,7 @@ public sealed class Metadata : Entity
         Value = value
     };
 
-    public int Id { get; set; }
+    public Guid Id { get; } = Guid.NewGuid();
     public string Name { get; private init; } = string.Empty;
     public string Value { get; private init; } = string.Empty;
 }

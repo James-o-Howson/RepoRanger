@@ -34,14 +34,14 @@ public class Project : Entity, IEquatable<Project>
         return project;
     }
 
-    public int Id { get; set; }
+    public Guid Id { get; } = Guid.NewGuid();
     public IReadOnlyCollection<Metadata> Metadata => _metadata;
     public ProjectType Type { get; private set; } = null!;
     public string Name { get; private set; } = string.Empty;
     public string Path { get; private set; } = string.Empty;
     public string Version { get; private set; } = string.Empty;
     public IReadOnlyCollection<DependencyInstance> DependencyInstances => _dependencyInstances;
-    public int RepositoryId { get; private set; }
+    public Guid RepositoryId { get; private set; }
     public Repository Repository { get; private set; } = null!;
 
     public void AddDependencyInstances(IEnumerable<DependencyInstance> dependencies)

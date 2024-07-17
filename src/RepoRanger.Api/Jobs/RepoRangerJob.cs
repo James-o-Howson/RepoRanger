@@ -1,5 +1,4 @@
-﻿using MediatR;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Quartz;
 using RepoRanger.Domain.SourceParsing;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
@@ -14,15 +13,12 @@ internal sealed class RepoRangerJob : IJob
     private readonly ISourceParserService _sourceParserService;
     private readonly ILogger<RepoRangerJob> _logger;
     private readonly QuartzOptions _quartzOptions;
-    private readonly IMediator _mediator;
 
     public RepoRangerJob(ILogger<RepoRangerJob> logger,
-        IOptions<QuartzOptions> options,
-        IMediator mediator, 
+        IOptions<QuartzOptions> options, 
         ISourceParserService sourceParserService)
     {
         _logger = logger;
-        _mediator = mediator;
         _sourceParserService = sourceParserService;
         _quartzOptions = options.Value;
     }

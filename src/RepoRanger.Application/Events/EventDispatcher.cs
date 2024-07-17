@@ -12,10 +12,10 @@ public class EventDispatcher : IEventDispatcher
     private readonly ITransientEventDispatcher _transientEventDispatcher;
     private readonly IDurableEventDispatcher _durableEventDispatcher;
 
-    public EventDispatcher(ITransientEventDispatcher transientEventDispatcher, IDurableEventDispatcher durableEventDispatcher)
+    public EventDispatcher(ITransientEventDispatcher transientEventDispatcher)
     {
         _transientEventDispatcher = transientEventDispatcher;
-        _durableEventDispatcher = durableEventDispatcher;
+        // _durableEventDispatcher = durableEventDispatcher;
     }
     
     public async Task DispatchEventAsync(IEvent @event, CancellationToken cancellationToken)

@@ -14,11 +14,11 @@ public class DependencyInstance : Entity, IEquatable<DependencyInstance>
         Version = Normalise(source, version)
     };
 
-    public int Id { get; set; }
+    public Guid Id { get; } = Guid.NewGuid();
     public DependencySource Source { get; private set; } = null!;
     public string DependencyName { get; private set; } = string.Empty;
     public string Version { get; private set; } = string.Empty;
-    public int ProjectId { get; private set; }
+    public Guid ProjectId { get; private set; }
     public Project Project { get; private set; } = null!;
     
     public void Update(DependencySource source, string version)
