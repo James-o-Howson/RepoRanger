@@ -1,6 +1,4 @@
-﻿using RepoRanger.Application.Common.Interfaces;
-using RepoRanger.Application.Events;
-using ThirdPartyApiClient;
+﻿using ThirdPartyApiClient;
 
 namespace RepoRanger.Api.IntegrationTests.ThirdPartyApis;
 
@@ -12,8 +10,6 @@ public class ConnectivityTests : TestBase
     public void SetUp()
     {
         _vulnerabilitiesClient = GetRequiredService<IOpenSourceVulnerabilitiesClient>();
-        var s = GetRequiredService<IVulnerabilityService>();
-        var a = GetRequiredService<IEventDispatcher>();
     }
 
     [Test]

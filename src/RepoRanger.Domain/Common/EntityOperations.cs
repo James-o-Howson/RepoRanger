@@ -4,7 +4,7 @@ namespace RepoRanger.Domain.Common;
 
 public static class EntityOperations
 {
-    public static IReadOnlyCollection<IEvent> ExtractEvents(this List<Entity> entities)
+    public static IReadOnlyCollection<IEvent> GetEvents(this List<Entity> entities)
     {
         var events = entities
             .SelectMany(e => e.GetEvents()).ToList();

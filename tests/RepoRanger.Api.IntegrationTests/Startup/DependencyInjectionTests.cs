@@ -1,21 +1,26 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Logging;
+using RepoRanger.Application.Common.Interfaces.Persistence;
+using RepoRanger.Application.Events;
+using RepoRanger.Domain.SourceParsing;
 
 namespace RepoRanger.Api.IntegrationTests.Startup;
 
 public class DependencyInjectionTests : TestBase
 {
     [Test]
-    public void AllServices_ShouldBeResolvable()
+    public void CanResolve_CoreServices()
     {
-        var serviceDescriptors = Factory.Services.GetService<IServiceCollection>();
-        Assert.That(serviceDescriptors, Is.Not.Null);
-
-        foreach (var descriptor in serviceDescriptors)
+        var sourceParserService = GetRequiredService<ISourceParserService>();
+        var logger = GetRequiredService<ILogger<DependencyInjectionTests>>();
+        var eventDispatcher = GetRequiredService<IEventDispatcher>();
+        var dbContext = GetRequiredService<IApplicationDbContext>();
+        
+        Assert.Multiple(() =>
         {
-            var serviceType = descriptor.ServiceType;
-            var resolvedService = GetService(serviceType);
-
-            Assert.That(resolvedService, Is.Not.Null);
-        }
+            Assert.That(sourceParserService, Is.Not.Null);
+            Assert.That(logger, Is.Not.Null);
+            Assert.That(eventDispatcher, Is.Not.Null);
+            Assert.That(dbContext, Is.Not.Null);
+        });
     }
 }

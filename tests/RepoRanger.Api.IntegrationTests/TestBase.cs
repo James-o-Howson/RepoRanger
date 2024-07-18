@@ -21,7 +21,4 @@ public class TestBase : IDisposable
 
     public TService GetRequiredService<TService>() where TService : notnull
         => Factory.Services.GetRequiredService<TService>();
-
-    public object? GetService(Type serviceType) 
-        => Factory.Services.GetService(serviceType);
 }
