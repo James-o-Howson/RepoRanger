@@ -11,10 +11,10 @@ public static class EntityEntryExtensions
             .Select(e => e.Entity)
             .ToList();
 
-    public static bool CanSetCreatedAuditData(this EntityEntry entry) => 
+    public static bool IsCreated(this EntityEntry entry) => 
         entry.State == EntityState.Added;
 
-    public static bool CanSetModifiedAuditData(this EntityEntry entry) =>
+    public static bool IsModified(this EntityEntry entry) =>
         entry.State == EntityState.Added || 
         entry.State == EntityState.Modified ||
         entry.HasChangedOwnedEntities();

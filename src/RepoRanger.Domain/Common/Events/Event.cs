@@ -1,6 +1,8 @@
-﻿namespace RepoRanger.Domain.Common.Events;
+﻿using MediatR;
 
-public interface IEvent
+namespace RepoRanger.Domain.Common.Events;
+
+public interface IEvent : INotification
 {
     DateTime OccuredOn { get; }
     EventType Type { get; }

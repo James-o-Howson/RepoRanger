@@ -43,7 +43,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     {
         foreach (var entry in context.ChangeTracker.Entries<ICreatedAuditableEntity>())
         {
-            if (!entry.CanSetCreatedAuditData()) continue;
+            if (!entry.IsCreated()) continue;
             
             entry.Entity.CreatedBy = _currentUserService.UserId;
             entry.Entity.Created = _dateTime.Now;
@@ -54,7 +54,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
     {
         foreach (var entry in context.ChangeTracker.Entries<IModifiedAuditableEntity>())
         {
-            if (!entry.CanSetModifiedAuditData()) continue;
+            if (!entry.IsModified()) continue;
             
             entry.Entity.LastModifiedBy = _currentUserService.UserId;
             entry.Entity.LastModified = _dateTime.Now;

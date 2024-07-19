@@ -3,7 +3,6 @@ using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 using RepoRanger.Application.Common.Behaviours;
-using RepoRanger.Application.Events;
 
 namespace RepoRanger.Application;
 
@@ -13,9 +12,6 @@ public static class ServiceConfiguration
     {
         services.AddMediatrServices();
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddScoped<ITransientEventDispatcher, TransientEventDispatcher>();
-        services.AddScoped<IDurableEventDispatcher, DurableEventDispatcher>();
-        services.AddScoped<IEventDispatcher, EventDispatcher>();
     }
     
     private static void AddMediatrServices(this IServiceCollection services)

@@ -1,18 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using RepoRanger.Application.Events;
 using RepoRanger.Domain.Common;
 
 namespace RepoRanger.Persistence.Interceptors;
 
 public class EventDispatcherSaveChangesInterceptor : SaveChangesInterceptor
 {
-    private readonly IEventDispatcher _eventDispatcher;
+    private readonly IMediator _mediator;
 
-    public EventDispatcherSaveChangesInterceptor(IEventDispatcher eventDispatcher)
+    public EventDispatcherSaveChangesInterceptor(IMediator mediator)
     {
-        _eventDispatcher = eventDispatcher;
+        _mediator = mediator;
     }
 
     public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
@@ -44,7 +44,7 @@ public class EventDispatcherSaveChangesInterceptor : SaveChangesInterceptor
 
         foreach (var @event in events)
         {
-            await _eventDispatcher.DispatchEventAsync(@event, cancellationToken);
+            await _mediator.Publish(@event, cancellationToken);
         }
     }
 }
