@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RepoRanger.Application.Repositories.Queries.GetRepositoriesBySourceId;
-using RepoRanger.Application.Repositories.Queries.GetRepositoryById;
-using RepoRanger.Application.Repositories.Queries.ListRepositories;
-using RepoRanger.Application.Repositories.ViewModels;
+using RepoRanger.Application.Contracts.Repositories;
+using RepoRanger.Application.Queries.Repositories.GetRepositoriesBySourceId;
+using RepoRanger.Application.Queries.Repositories.GetRepositoryById;
+using RepoRanger.Application.Queries.Repositories.ListRepositories;
 
 namespace RepoRanger.Api.Controllers;
 

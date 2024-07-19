@@ -7,7 +7,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RepoRanger.Application\RepoRanger.Application.csproj" />
+      <ProjectReference Include="..\RepoRanger.Application.Abstractions\RepoRanger.Application.Abstractions.csproj" />
     </ItemGroup>
 
     <ItemGroup>

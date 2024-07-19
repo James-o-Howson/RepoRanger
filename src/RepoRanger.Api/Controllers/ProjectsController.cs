@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RepoRanger.Application.Projects.Queries.GetProjectsByDependency;
-using RepoRanger.Application.Projects.Queries.GetProjectsByRepositoryIds;
-using RepoRanger.Application.Projects.Queries.ListProjects;
-using RepoRanger.Application.Projects.ViewModels;
+using RepoRanger.Application.Contracts.Projects;
+using RepoRanger.Application.Queries.Projects.GetProjectsByDependency;
+using RepoRanger.Application.Queries.Projects.GetProjectsByRepositoryIds;
+using RepoRanger.Application.Queries.Projects.ListProjects;
 
 namespace RepoRanger.Api.Controllers;
 

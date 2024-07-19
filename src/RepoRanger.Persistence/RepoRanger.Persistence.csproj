@@ -11,7 +11,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RepoRanger.Application\RepoRanger.Application.csproj" />
+      <ProjectReference Include="..\RepoRanger.Application.Abstractions\RepoRanger.Application.Abstractions.csproj" />
       <ProjectReference Include="..\RepoRanger.Domain\RepoRanger.Domain.csproj" />
     </ItemGroup>
 

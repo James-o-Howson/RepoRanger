@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Infrastructure", "src\RepoRanger.Infrastructure\RepoRanger.Infrastructure.csproj", "{7DEB0DD2-C88A-44F4-B250-362D3DDDC628}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Application", "src\RepoRanger.Application\RepoRanger.Application.csproj", "{F04CFCDD-2B43-4A0B-9B6D-ED518B2181BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Application.Abstractions", "src\RepoRanger.Application.Abstractions\RepoRanger.Application.Abstractions.csproj", "{F04CFCDD-2B43-4A0B-9B6D-ED518B2181BF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Domain", "src\RepoRanger.Domain\RepoRanger.Domain.csproj", "{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08}"
 EndProject
@@ -37,6 +37,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Api.IntegrationT
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A5B1D6AA-B055-4654-95F2-B1FB84254CD5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Application.Contracts", "src\RepoRanger.Application.Contracts\RepoRanger.Application.Contracts.csproj", "{F3076EC4-2AFA-4BF4-ADF7-F021052FD7EF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Application.Queries", "src\RepoRanger.Application.Queries\RepoRanger.Application.Queries.csproj", "{7F8BF851-B239-4259-A4F9-D4F15A432755}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Application.Commands", "src\RepoRanger.Application.Commands\RepoRanger.Application.Commands.csproj", "{9B90EDF1-F746-4381-A70B-966EB78A4AF5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -67,6 +73,18 @@ Global
 		{6B8BFA90-BEC4-401F-94AA-94581495A233}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B8BFA90-BEC4-401F-94AA-94581495A233}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B8BFA90-BEC4-401F-94AA-94581495A233}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F3076EC4-2AFA-4BF4-ADF7-F021052FD7EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F3076EC4-2AFA-4BF4-ADF7-F021052FD7EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F3076EC4-2AFA-4BF4-ADF7-F021052FD7EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F3076EC4-2AFA-4BF4-ADF7-F021052FD7EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7F8BF851-B239-4259-A4F9-D4F15A432755}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7F8BF851-B239-4259-A4F9-D4F15A432755}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7F8BF851-B239-4259-A4F9-D4F15A432755}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7F8BF851-B239-4259-A4F9-D4F15A432755}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B90EDF1-F746-4381-A70B-966EB78A4AF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B90EDF1-F746-4381-A70B-966EB78A4AF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B90EDF1-F746-4381-A70B-966EB78A4AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B90EDF1-F746-4381-A70B-966EB78A4AF5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -82,6 +100,9 @@ Global
 		{6B8BFA90-BEC4-401F-94AA-94581495A233} = {1421804D-77B3-414A-80F7-37E8F71EE1C3}
 		{A5B1D6AA-B055-4654-95F2-B1FB84254CD5} = {3E3F722A-B706-4C9E-B1A8-FD58B29BB7F9}
 		{7B95C951-F51F-431C-B326-1343928C5A17} = {A5B1D6AA-B055-4654-95F2-B1FB84254CD5}
+		{F3076EC4-2AFA-4BF4-ADF7-F021052FD7EF} = {B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}
+		{7F8BF851-B239-4259-A4F9-D4F15A432755} = {B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}
+		{9B90EDF1-F746-4381-A70B-966EB78A4AF5} = {B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F829DB12-3606-4221-8194-EE18B9DCBC43}

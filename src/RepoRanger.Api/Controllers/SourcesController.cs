@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RepoRanger.Application.Sources.Queries.ListSources;
+using RepoRanger.Application.Contracts.Sources;
+using RepoRanger.Application.Queries.Sources.ListSources;
 
 namespace RepoRanger.Api.Controllers;
 

@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="DependencyInstances\" />
+      <Folder Include="Projects\" />
+      <Folder Include="Repositories\" />
+      <Folder Include="Sources\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="12.3.0" />
+      <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\RepoRanger.Application.Abstractions\RepoRanger.Application.Abstractions.csproj" />
+      <ProjectReference Include="..\RepoRanger.Application.Contracts\RepoRanger.Application.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

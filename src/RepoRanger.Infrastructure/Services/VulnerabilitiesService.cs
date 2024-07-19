@@ -1,4 +1,4 @@
-﻿using RepoRanger.Application.Common.Interfaces;
+﻿using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Domain.Vulnerabilities;
 using ThirdPartyApiClient;
 

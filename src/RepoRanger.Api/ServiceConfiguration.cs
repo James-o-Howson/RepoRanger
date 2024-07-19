@@ -2,7 +2,7 @@
 using RepoRanger.Api.Jobs;
 using RepoRanger.Api.Middleware;
 using RepoRanger.Api.Services;
-using RepoRanger.Application.Common.Interfaces;
+using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Persistence;
 using Serilog;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;

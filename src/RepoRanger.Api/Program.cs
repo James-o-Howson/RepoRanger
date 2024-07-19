@@ -1,5 +1,6 @@
 using RepoRanger.Api;
 using RepoRanger.Application;
+using RepoRanger.Application.Abstractions;
 using RepoRanger.Domain;
 using RepoRanger.Infrastructure;
 using RepoRanger.Persistence;
