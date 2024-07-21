@@ -17,7 +17,7 @@ namespace RepoRanger.Infrastructure;
 
 public static class ServiceConfiguration
 {
-    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IGitDetailService, GitDetailService>();
         services.AddTransient<IDateTime, DateTimeService>();
@@ -35,7 +35,7 @@ public static class ServiceConfiguration
         services.AddHttpClient<IOpenSourceVulnerabilitiesClient, OpenSourceVulnerabilitiesClient>(client =>
         {
             client.BaseAddress = new Uri("https://api.osv.dev/");
-        });
+        }).AddStandardResilienceHandler();
     }
     
     private static void AddSourceParser(this IServiceCollection services, 

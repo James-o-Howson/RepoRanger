@@ -61,26 +61,6 @@ namespace RepoRanger.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Vulnerabilities",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    OsvId = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
-                    DependencyName = table.Column<string>(type: "TEXT", nullable: false),
-                    Published = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    Withdrawn = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    Summary = table.Column<string>(type: "TEXT", nullable: false),
-                    Details = table.Column<string>(type: "TEXT", nullable: false),
-                    Created = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "TEXT", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Vulnerabilities", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Repositories",
                 columns: table => new
                 {
@@ -231,9 +211,6 @@ namespace RepoRanger.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "Metadata");
-
-            migrationBuilder.DropTable(
-                name: "Vulnerabilities");
 
             migrationBuilder.DropTable(
                 name: "Dependencies");

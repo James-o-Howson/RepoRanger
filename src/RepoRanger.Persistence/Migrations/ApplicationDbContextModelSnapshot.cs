@@ -256,46 +256,6 @@ namespace RepoRanger.Persistence.Migrations
                     b.ToTable("Sources");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Vulnerabilities.Vulnerability", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("DependencyName")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Details")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("OsvId")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset?>("Published")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Summary")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset?>("Withdrawn")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Vulnerabilities");
-                });
-
             modelBuilder.Entity("RepoRanger.Domain.Entities.DependencyInstance", b =>
                 {
                     b.HasOne("RepoRanger.Domain.Entities.Dependency", null)

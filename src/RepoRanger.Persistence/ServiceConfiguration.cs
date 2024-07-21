@@ -15,7 +15,7 @@ namespace RepoRanger.Persistence;
 
 public static class ServiceConfiguration
 {
-    public static void AddPersistenceServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<ConnectionStringOptions>(configuration.GetSection("ConnectionStrings"));
         

@@ -21,4 +21,11 @@ public class TestBase : IDisposable
 
     public TService GetRequiredService<TService>() where TService : notnull
         => Factory.Services.GetRequiredService<TService>();
+
+    [OneTimeTearDown]
+    public void TearDown()
+    {
+        Client.Dispose();
+        Factory.Dispose();
+    }
 }

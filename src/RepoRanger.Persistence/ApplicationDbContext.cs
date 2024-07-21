@@ -19,7 +19,7 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<DependencyInstance> DependencyInstances { get; set; }
     public DbSet<Dependency> Dependencies { get; set; }
     public DbSet<Message> Messages { get; set; }
-    public DbSet<Vulnerability> Vulnerabilities { get; set; }
+    // public DbSet<Vulnerability> Vulnerabilities { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

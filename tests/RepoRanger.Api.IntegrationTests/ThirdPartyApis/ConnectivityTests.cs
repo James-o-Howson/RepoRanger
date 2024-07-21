@@ -15,7 +15,7 @@ public class ConnectivityTests : TestBase
     [Test]
     public async Task OsvVulnerabilitiesApi_ShouldBeReachable()
     {
-        var v1Query = new V1Query
+        var query = new V1Query
         {
             Package = new OsvPackage
             {
@@ -24,7 +24,7 @@ public class ConnectivityTests : TestBase
             }
         };
         
-        var response = await _vulnerabilitiesClient.QueryAffectedAsync(v1Query);
+        var response = await _vulnerabilitiesClient.QueryAffectedAsync(query);
         
         Assert.That(response, Is.Not.Null);
         Assert.That(response, Is.TypeOf<V1VulnerabilityList>());

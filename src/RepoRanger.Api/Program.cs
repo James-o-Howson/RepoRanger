@@ -1,6 +1,4 @@
 using RepoRanger.Api;
-using RepoRanger.Application;
-using RepoRanger.Application.Abstractions;
 using RepoRanger.Domain;
 using RepoRanger.Infrastructure;
 using RepoRanger.Persistence;
@@ -8,11 +6,10 @@ using RepoRanger.Persistence;
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
 
-builder.Services.AddApiServices(builder.Configuration, builder.Environment);
-builder.Services.AddInfrastructureServices(builder.Configuration);
-builder.Services.AddPersistenceServices(builder.Configuration);
-builder.Services.AddApplicationServices();
-builder.Services.AddDomainServices();
+builder.Services.AddApi(builder.Configuration, builder.Environment);
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddPersistence(builder.Configuration);
+builder.Services.AddDomain();
 
 var app = builder.Build();
 
@@ -33,7 +30,5 @@ app.MapControllers();
 
 app.Run();
 
-namespace RepoRanger.Api
-{
-    public partial class Program { }
-}
+// ReSharper disable once ClassNeverInstantiated.Global
+public partial class Program {}

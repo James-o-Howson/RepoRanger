@@ -3,15 +3,15 @@ namespace System.IO;
 
 public static class FileInfoExtensions
 {
-    public static string RelativeTo(this FileInfo fileInfo, DirectoryInfo parent)
+    public static string RelativeTo(this FileInfo fileInfo, DirectoryInfo ancestorDirectory)
     {
-        var parentUri = new Uri($@"{parent.FullName}\");
+        var ancestorUri = new Uri($@"{ancestorDirectory.FullName}\");
         var fullUri = new Uri(fileInfo.FullName);
 
-        if (!parentUri.Scheme.Equals(fullUri.Scheme, StringComparison.OrdinalIgnoreCase))
+        if (!ancestorUri.Scheme.Equals(fullUri.Scheme, StringComparison.OrdinalIgnoreCase))
             throw new ArgumentException("The parent directory and the full path must have the same scheme.");
         
-        var relativeUri = parentUri.MakeRelativeUri(fullUri);
+        var relativeUri = ancestorUri.MakeRelativeUri(fullUri);
         var relativePath = Uri.UnescapeDataString(relativeUri.ToString());
 
         return relativePath.Replace('/', '\\');
