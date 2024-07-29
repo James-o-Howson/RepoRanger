@@ -1,17 +1,22 @@
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Domain.Entities;
-using RepoRanger.Domain.Vulnerabilities;
+using RepoRanger.Domain.Dependencies;
+using RepoRanger.Domain.Dependencies.Entities;
+using RepoRanger.Domain.Messages;
+using RepoRanger.Domain.VersionControlSystems;
+using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Application.Abstractions.Interfaces.Persistence;
 
 public interface IApplicationDbContext
 {
-    DbSet<Source> Sources { get; set; }
+    DbSet<VersionControlSystem> VersionControlSystems { get; set; }
     DbSet<Repository> Repositories { get; set; }
     DbSet<Project> Projects { get; set; }
-    DbSet<DependencyInstance> DependencyInstances { get; set; }
+    DbSet<ProjectDependency> ProjectDependencies { get; set; }
     DbSet<Dependency> Dependencies { get; set; }
-    DbSet<Metadata> Metadata { get; set; }
+    DbSet<DependencyVersion> DependencyVersions { get; set; }
+    DbSet<DependencySource> DependencySources { get; set; }
+    DbSet<ProjectMetadata> ProjectMetadata { get; set; }
     DbSet<Message> Messages { get; set; }
     // DbSet<Vulnerability> Vulnerabilities { get; set; }
 

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 using RepoRanger.Application.Abstractions.Pagination;
 using RepoRanger.Application.Contracts.DependencyInstances;
-using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Queries.DependencyInstances.SearchDependencyInstancesWithPagination;
 
@@ -56,7 +55,7 @@ internal sealed class SearchDependencyInstancesWithPaginationQueryHandler : IReq
         }
         else
         {
-            query = _context.DependencyInstances
+            query = _context.ProjectDependencies
                 .Include(di => di.Project)
                 .ThenInclude(p => p.Repository);
         }
@@ -66,23 +65,23 @@ internal sealed class SearchDependencyInstancesWithPaginationQueryHandler : IReq
     
     private IQueryable<DependencyInstance> QueryProjectDependencies(IReadOnlyCollection<Guid> projectIds) =>
         _context.Projects
-            .Include(p => p.DependencyInstances)
+            .Include(p => p.ProjectDependencies)
             .Include(p => p.Repository)
             .Where(p => projectIds.Contains(p.Id))
-            .SelectMany(p => p.DependencyInstances);
+            .SelectMany(p => p.ProjectDependencies);
     
     private IQueryable<DependencyInstance> QueryRepositoryDependencies(IReadOnlyCollection<Guid> repositoryIds) =>
         _context.Repositories
             .Include(b => b.Projects)
-            .ThenInclude(p => p.DependencyInstances)
+            .ThenInclude(p => p.ProjectDependencies)
             .Where(r => repositoryIds.Contains(r.Id))
-            .SelectMany(r => r.DependencyInstances);
+            .SelectMany(r => r.Dependencies);
 
     private IQueryable<DependencyInstance> QuerySourceDependencies(IReadOnlyCollection<Guid> sourceIds) =>
-        _context.Sources
+        _context.VersionControlSystems
             .Include(r => r.Repositories)
             .ThenInclude(b => b.Projects)
-            .ThenInclude(p => p.DependencyInstances)
+            .ThenInclude(p => p.ProjectDependencies)
             .Where(r => sourceIds.Contains(r.Id))
-            .SelectMany(r => r.DependencyInstances);
+            .SelectMany(r => r.Dependencies);
 }

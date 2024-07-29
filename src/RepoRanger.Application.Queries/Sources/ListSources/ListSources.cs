@@ -20,7 +20,7 @@ internal sealed class ListSourcesQueryHandler : IRequestHandler<ListSourcesQuery
     {
         return new SourcesVm
         {
-            Sources = await _context.Sources.AsNoTracking()
+            Sources = await _context.VersionControlSystems.AsNoTracking()
                 .Select(s => new SourceVm
                 {
                     Id = s.Id,

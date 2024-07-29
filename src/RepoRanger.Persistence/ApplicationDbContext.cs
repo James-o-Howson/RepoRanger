@@ -1,8 +1,11 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
-using RepoRanger.Domain.Entities;
-using RepoRanger.Domain.Vulnerabilities;
+using RepoRanger.Domain.Dependencies;
+using RepoRanger.Domain.Dependencies.Entities;
+using RepoRanger.Domain.Messages;
+using RepoRanger.Domain.VersionControlSystems;
+using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Persistence;
 
@@ -12,12 +15,15 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     {
     }
 
-    public DbSet<Source> Sources { get; set; }
+    public DbSet<VersionControlSystem> VersionControlSystems { get; set; }
     public DbSet<Repository> Repositories { get; set; }
     public DbSet<Project> Projects { get; set; }
-    public DbSet<Metadata> Metadata { get; set; }
-    public DbSet<DependencyInstance> DependencyInstances { get; set; }
+    public DbSet<ProjectMetadata> ProjectMetadata { get; set; }
+    public DbSet<ProjectDependency> ProjectDependencies { get; set; }
     public DbSet<Dependency> Dependencies { get; set; }
+    public DbSet<DependencySource> DependencySources { get; set; }
+    public DbSet<DependencyVersion> DependencyVersions { get; set; }
+
     public DbSet<Message> Messages { get; set; }
     // public DbSet<Vulnerability> Vulnerabilities { get; set; }
     

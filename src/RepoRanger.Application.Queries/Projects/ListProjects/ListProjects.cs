@@ -22,7 +22,7 @@ internal sealed class ListProjectsQueryHandler : IRequestHandler<ListProjectsQue
         {
             Projects = await _context.Projects
                 .AsNoTracking()
-                .Include(p => p.DependencyInstances)
+                .Include(p => p.ProjectDependencies)
                 .Include(p => p.Repository)
                 .Select(p => new ProjectVm
                 {
@@ -30,7 +30,7 @@ internal sealed class ListProjectsQueryHandler : IRequestHandler<ListProjectsQue
                     Type = p.Type,
                     Name = p.Name,
                     Version = p.Version,
-                    DependencyCount = p.DependencyInstances.Count,
+                    DependencyCount = p.ProjectDependencies.Count,
                     RepositoryId = p.RepositoryId,
                     RepositoryName = p.Repository.Name,
 

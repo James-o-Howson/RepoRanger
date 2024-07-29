@@ -21,7 +21,7 @@ internal sealed class GetSourceByNameQueryHandler : IRequestHandler<GetSourceByN
 
     public async Task<SourcePreviewDto?> Handle(GetSourceByNameQuery request, CancellationToken cancellationToken)
     {
-        var source = await _applicationDbContext.Sources
+        var source = await _applicationDbContext.VersionControlSystems
             .FirstOrDefaultAsync(s => s.Name == request.Name, cancellationToken);
 
         if (source is null) return null;

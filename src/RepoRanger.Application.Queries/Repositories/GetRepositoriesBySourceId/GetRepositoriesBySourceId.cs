@@ -25,7 +25,7 @@ internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<Ge
             .AsNoTracking()
             .AsSplitQuery()
             .Include(r => r.DefaultBranch)
-            .Where(r => r.SourceId == request.SourceId)
+            .Where(r => r.VcsId == request.SourceId)
             .Select(r => new RepositorySummaryVm
             {
                 Id = r.Id,

@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Dependencies;
 
 namespace RepoRanger.Persistence.Configuration;
 
@@ -10,8 +10,8 @@ internal sealed class DependencyConfiguration : IEntityTypeConfiguration<Depende
     {
         builder.HasKey(d => d.Name);
         
-        builder.HasMany(d => d.DependencyInstances)
-            .WithOne()
-            .HasForeignKey(di => di.DependencyName);
+        // builder.HasMany(d => d.DependencyInstances)
+        //     .WithOne()
+        //     .HasForeignKey(di => di.DependencyName);
     }
 }

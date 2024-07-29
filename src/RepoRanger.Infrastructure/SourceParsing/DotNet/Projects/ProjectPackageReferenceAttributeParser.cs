@@ -1,34 +1,33 @@
 ﻿using System.Xml.Linq;
-using RepoRanger.Domain.Entities;
-using RepoRanger.Domain.ValueObjects;
+using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 
 namespace RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
 
 internal sealed class ProjectPackageReferenceAttributeParser : IProjectParser
 {
-    public IEnumerable<DependencyInstance> ParseAsync(string projectContent)
+    public IEnumerable<ProjectDependencyDescriptor> ParseAsync(string projectContent)
     {
         ArgumentException.ThrowIfNullOrEmpty(projectContent);
         
         return ParseProject(XDocument.Parse(projectContent));
     }
 
-    private static IEnumerable<DependencyInstance> ParseProject(XContainer projectContainer)
+    private static IEnumerable<ProjectDependencyDescriptor> ParseProject(XContainer projectContainer)
     {
         var dependencyViewModels = projectContainer.Descendants()
             .Where(e => e.Name.LocalName == "PackageReference")
             .Select(pr =>
             {
-                var name = pr.Attribute("Include")?.Value.Trim() ?? string.Empty;
+                var dependencyName = pr.Attribute("Include")?.Value.Trim() ?? string.Empty;
                 var versionElement = pr.Elements().FirstOrDefault(e => e.Name.LocalName == "Version");
-                var version = versionElement?.Value.Trim() ?? string.Empty;
+                var versionValue = versionElement?.Value.Trim() ?? string.Empty;
 
-                if (string.IsNullOrEmpty(version))
+                if (string.IsNullOrEmpty(versionValue))
                 {
-                    version = pr.Attribute("Version")?.Value.Trim() ?? string.Empty;
+                    versionValue = pr.Attribute("Version")?.Value.Trim() ?? string.Empty;
                 }
 
-                return DependencyInstance.Create(DependencySource.Nuget, name, version);
+                return new ProjectDependencyDescriptor(dependencyName, "Nuget", versionValue);
             });
         
         return dependencyViewModels;

@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using Quartz;
 using RepoRanger.Api.Jobs;

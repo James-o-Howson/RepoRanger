@@ -1,8 +1,8 @@
-﻿using RepoRanger.Domain.Entities;
+﻿using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 
 namespace RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
 
 internal interface IProjectParser
 {
-    IEnumerable<DependencyInstance> ParseAsync(string projectContent);
+    IEnumerable<ProjectDependencyDescriptor> ParseAsync(string projectContent);
 }

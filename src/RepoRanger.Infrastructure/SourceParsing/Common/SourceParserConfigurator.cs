@@ -1,13 +1,13 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using RepoRanger.Domain.Common.Interfaces;
+using RepoRanger.Domain.VersionControlSystems.Parsing;
 
 namespace RepoRanger.Infrastructure.SourceParsing.Common;
 
 internal interface ISourceParserConfigurator
 {
     void AddFileContentParser<TFileContentParser>()
-        where TFileContentParser : class, ISourceFileParser;
+        where TFileContentParser : class, IProjectFileParser;
 }
 
 internal sealed class SourceParserConfigurator : ISourceParserConfigurator
@@ -22,9 +22,9 @@ internal sealed class SourceParserConfigurator : ISourceParserConfigurator
     }
 
     public void AddFileContentParser<TProjectExtractor>()
-        where TProjectExtractor : class, ISourceFileParser
+        where TProjectExtractor : class, IProjectFileParser
     {
-        _services.AddTransient<ISourceFileParser, TProjectExtractor>(provider => 
+        _services.AddTransient<IProjectFileParser, TProjectExtractor>(provider => 
             ActivatorUtilities.CreateInstance<TProjectExtractor>(provider));
     }
 }

@@ -2,9 +2,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Domain.Git;
-using RepoRanger.Domain.SourceParsing;
-using RepoRanger.Domain.SourceParsing.Common;
+using RepoRanger.Domain.VersionControlSystems.Git;
+using RepoRanger.Domain.VersionControlSystems.Parsing;
+using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
 using RepoRanger.Infrastructure.Services;
 using RepoRanger.Infrastructure.SourceParsing;
 using RepoRanger.Infrastructure.SourceParsing.Angular;
@@ -19,7 +19,7 @@ public static class ServiceConfiguration
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddTransient<IGitDetailService, GitDetailService>();
+        services.AddTransient<IGitRepositoryDetailFactory, GitRepositoryDetailFactory>();
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IVulnerabilityService, VulnerabilitiesService>();
         
@@ -28,8 +28,8 @@ public static class ServiceConfiguration
         
         services.AddSourceParser(configuration, c =>
         {
-            c.AddFileContentParser<DotNetSourceFileParser>();
-            c.AddFileContentParser<AngularProjectSourceFileParser>();
+            c.AddFileContentParser<DotNetProjectFileParser>();
+            c.AddFileContentParser<AngularProjectProjectFileParser>();
         });
 
         services.AddHttpClient<IOpenSourceVulnerabilitiesClient, OpenSourceVulnerabilitiesClient>(client =>
@@ -42,8 +42,8 @@ public static class ServiceConfiguration
         IConfiguration configuration,
         Action<ISourceParserConfigurator> configure)
     {
-        services.Configure<SourceContexts>(configuration.GetSection("SourceParserOptions"));
-        services.TryAddTransient<ISourceParserService, SourceParserService>();
+        services.Configure<VersionControlSystemContexts>(configuration.GetSection("SourceParserOptions"));
+        services.TryAddTransient<IVersionControlSystemParserService, VersionControlSystemParserService>();
         services.TryAddTransient<ISourceParserResultHandler, SourceParserResultHandler>();
         
         var configurator = new SourceParserConfigurator(services, configuration);

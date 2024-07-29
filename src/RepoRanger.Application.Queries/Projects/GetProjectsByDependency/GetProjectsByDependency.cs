@@ -25,8 +25,8 @@ internal sealed class GetProjectsByDependencyQueryHandler : IRequestHandler<GetP
         var projects = await _context.Projects
             .AsNoTracking()
             .Include(p => p.Repository)
-            .Include(p => p.DependencyInstances)
-            .Where(p => p.DependencyInstances.Any(di => di.DependencyName == request.DependencyName))
+            .Include(p => p.ProjectDependencies)
+            .Where(p => p.ProjectDependencies.Any(di => di.DependencyName == request.DependencyName))
             .ToListAsync(cancellationToken);
 
         if (request.Version != null)

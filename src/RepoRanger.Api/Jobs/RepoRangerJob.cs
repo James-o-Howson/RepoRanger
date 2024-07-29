@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using Quartz;
-using RepoRanger.Domain.SourceParsing;
+using RepoRanger.Domain.VersionControlSystems.Parsing;
 using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
 
 namespace RepoRanger.Api.Jobs;
@@ -10,16 +10,16 @@ internal sealed class RepoRangerJob : IJob
 {
     internal static readonly JobKey JobKey = new(nameof(RepoRangerJob));
     
-    private readonly ISourceParserService _sourceParserService;
+    private readonly IVersionControlSystemParserService _versionControlSystemParserService;
     private readonly ILogger<RepoRangerJob> _logger;
     private readonly QuartzOptions _quartzOptions;
 
     public RepoRangerJob(ILogger<RepoRangerJob> logger,
         IOptions<QuartzOptions> options, 
-        ISourceParserService sourceParserService)
+        IVersionControlSystemParserService versionControlSystemParserService)
     {
         _logger = logger;
-        _sourceParserService = sourceParserService;
+        _versionControlSystemParserService = versionControlSystemParserService;
         _quartzOptions = options.Value;
     }
 
@@ -46,7 +46,7 @@ internal sealed class RepoRangerJob : IJob
 
     private async Task StartRanging(CancellationToken cancellationToken)
     {
-        await _sourceParserService.ParseAsync(cancellationToken);
+        await _versionControlSystemParserService.ParseAsync(cancellationToken);
         _logger.LogInformation("Repo Ranger Job Finished");
     }
 }

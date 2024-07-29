@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
-using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.VersionControlSystems;
+using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Application.Commands.Repositories.CreateRepository;
 
@@ -24,7 +25,7 @@ internal sealed class CreateRepositoryCommandHandler : IRequestHandler<CreateRep
     public async Task<Guid> Handle(CreateRepositoryCommand request, CancellationToken cancellationToken)
     {
         var repository = Repository.Create(request.Name, request.RemoteUrl, request.BranchName);
-        repository.SourceId = request.SourceId;
+        repository.VcsId = request.SourceId;
 
         await _context.Repositories.AddAsync(repository, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

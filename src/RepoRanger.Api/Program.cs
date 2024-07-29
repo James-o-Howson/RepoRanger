@@ -31,4 +31,7 @@ app.MapControllers();
 app.Run();
 
 // ReSharper disable once ClassNeverInstantiated.Global
-public partial class Program {}
+namespace RepoRanger.Api
+{
+    public partial class Program {}
+}

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Abstractions.Exceptions;
 using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
-using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Commands.Sources.DeleteSourceCommand;
 
@@ -33,18 +32,18 @@ internal sealed class DeleteSourceCommandHandler : IRequestHandler<DeleteSourceC
 
     private async Task DeleteSourceAsync(DeleteSourceCommand request, CancellationToken cancellationToken)
     {
-        var source = await _context.Sources
+        var source = await _context.VersionControlSystems
             .Include(s => s.Repositories)
                 .ThenInclude(r => r.DefaultBranch)
             .Include(s => s.Repositories)
                 .ThenInclude(b => b.Projects)
-                .ThenInclude(p => p.DependencyInstances)
+                .ThenInclude(p => p.ProjectDependencies)
             .SingleOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
 
         if (source is null) throw new NotFoundException($"Delete Failed - Unable find Source with Id: {request.Id}.");
         
         source.Delete();
-        _context.Sources.Remove(source);
+        _context.VersionControlSystems.Remove(source);
         await _context.SaveChangesAsync(cancellationToken);
     }
     private async Task DeleteOrphanedDependenciesAsync(CancellationToken cancellationToken)
@@ -53,7 +52,7 @@ internal sealed class DeleteSourceCommandHandler : IRequestHandler<DeleteSourceC
             .ExecuteEmbeddedResource<DependencyInstance>(_resourceNameService.GetOrphanedDependenciesResourceName)
             .ToList();
         
-        _context.DependencyInstances.RemoveRange(orphanedDependencies);
+        _context.ProjectDependencies.RemoveRange(orphanedDependencies);
     
         await _context.SaveChangesAsync(cancellationToken);
     }

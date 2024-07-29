@@ -1,18 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.VersionControlSystems;
+using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Persistence.Configuration;
 
-internal sealed class SourceConfiguration : IEntityTypeConfiguration<Source>
+internal sealed class SourceConfiguration : IEntityTypeConfiguration<VersionControlSystem>
 {
-    public void Configure(EntityTypeBuilder<Source> builder)
+    public void Configure(EntityTypeBuilder<VersionControlSystem> builder)
     {
         builder.HasKey(e => e.Id);
             
         builder.HasMany(s => s.Repositories)
-            .WithOne(s => s.Source)
-            .HasForeignKey(s => s.SourceId)
+            .WithOne(s => s.VersionControlSystem)
+            .HasForeignKey(s => s.VcsId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 

@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using System.Xml.Linq;
-using RepoRanger.Domain.Entities;
-using RepoRanger.Domain.ValueObjects;
+using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 
 namespace RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
 
@@ -10,14 +9,14 @@ internal sealed partial class ProjectReferenceAttributeParser : IProjectParser
     [GeneratedRegex(@"\d+(?:\.\d+)+")]
     private static partial Regex VersionRegex();
     
-    public IEnumerable<DependencyInstance> ParseAsync(string projectContent)
+    public IEnumerable<ProjectDependencyDescriptor> ParseAsync(string projectContent)
     {
         ArgumentException.ThrowIfNullOrEmpty(projectContent);
         
         return ParseProject(XDocument.Parse(projectContent));
     }
 
-    private static IEnumerable<DependencyInstance> ParseProject(XContainer project)
+    private static IEnumerable<ProjectDependencyDescriptor> ParseProject(XContainer project)
     {
         var dependencyViewModels = project.Descendants()
             .Where(e => e.Name.LocalName == "Reference")
@@ -26,30 +25,30 @@ internal sealed partial class ProjectReferenceAttributeParser : IProjectParser
                 var include = pr.Attribute("Include")?.Value.Trim() ?? string.Empty;
                 var parts = include.Split(",");
 
-                var name = string.Empty;
-                var version = string.Empty;
+                var dependencyName = string.Empty;
+                var versionValue = string.Empty;
                 
                 switch (parts.Length)
                 {
                     case > 1:
-                        name = parts.First();
-                        version = parts[1].Trim()["Version=".Length..];
+                        dependencyName = parts.First();
+                        versionValue = parts[1].Trim()["Version=".Length..];
                         break;
                     case 1:
                     {
-                        name = parts.First();
+                        dependencyName = parts.First();
                         var hintPath = pr.Elements().FirstOrDefault(e => e.Name.LocalName == "HintPath");
                         if (hintPath is not null)
                         {
                             var matches = VersionRegex().Match(hintPath.Value.Trim());
-                            version = matches.Value;
+                            versionValue = matches.Value;
                         }
 
                         break;
                     }
                 }
-                    
-                return DependencyInstance.Create(DependencySource.Local, name, version);
+
+                return new ProjectDependencyDescriptor(dependencyName, "Local", versionValue);
             });
         
         return dependencyViewModels;

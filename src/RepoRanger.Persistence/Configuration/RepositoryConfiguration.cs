@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.VersionControlSystems;
+using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Persistence.Configuration;
 
@@ -12,7 +13,7 @@ internal sealed class RepositoryConfiguration : IEntityTypeConfiguration<Reposit
 
         builder.HasAlternateKey(r => new
         {
-            r.SourceId, r.Name, r.RemoteUrl
+            SourceId = r.VcsId, r.Name, r.RemoteUrl
         });
 
         builder.HasMany(r => r.Projects)

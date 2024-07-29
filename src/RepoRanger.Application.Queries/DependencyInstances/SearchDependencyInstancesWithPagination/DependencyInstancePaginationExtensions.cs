@@ -1,7 +1,6 @@
 ﻿using System.Linq.Expressions;
 using RepoRanger.Application.Abstractions.Pagination;
 using RepoRanger.Application.Abstractions.Pagination.Enums;
-using RepoRanger.Domain.Entities;
 
 namespace RepoRanger.Application.Queries.DependencyInstances.SearchDependencyInstancesWithPagination;
 

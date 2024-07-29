@@ -2,7 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 using RepoRanger.Application.Contracts.Projects;
-using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.VersionControlSystems;
+using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Application.Queries.Projects.GetProjectsByRepositoryIds;
 
@@ -26,7 +27,7 @@ internal sealed class GetProjectsByRepositoryIdsQueryHandler : IRequestHandler<G
             .AsNoTracking()
             .Include(r => r.DefaultBranch)
             .Include(b => b.Projects)
-                .ThenInclude(p => p.DependencyInstances)
+                .ThenInclude(p => p.ProjectDependencies)
             .Where(r => request.RepositoryIds.Contains(r.Id))
             .ToListAsync(cancellationToken);
 
@@ -50,7 +51,7 @@ internal sealed class GetProjectsByRepositoryIdsQueryHandler : IRequestHandler<G
             Name = p.Name,
             Type = p.Type,
             Version = p.Version,
-            DependencyCount = p.DependencyInstances.Count,
+            DependencyCount = p.ProjectDependencies.Count,
             RepositoryId = repository.Id,
             RepositoryName = repository.Name
         };

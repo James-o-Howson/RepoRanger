@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.Messages;
 
 namespace RepoRanger.Persistence.Configuration;
 

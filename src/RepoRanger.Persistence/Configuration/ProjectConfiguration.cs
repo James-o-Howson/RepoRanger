@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RepoRanger.Domain.Entities;
+using RepoRanger.Domain.VersionControlSystems;
+using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Persistence.Configuration;
 
@@ -15,7 +16,7 @@ internal sealed class ProjectConfiguration : IEntityTypeConfiguration<Project>
             p.RepositoryId, p.Name, p.Path
         });
         
-        builder.HasMany(p => p.DependencyInstances)
+        builder.HasMany(p => p.ProjectDependencies)
             .WithOne(d => d.Project)
             .HasForeignKey(d => d.ProjectId)
             .OnDelete(DeleteBehavior.Cascade);

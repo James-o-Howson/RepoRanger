@@ -1,5 +1,6 @@
 ﻿using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Domain.Vulnerabilities;
+using RepoRanger.Domain.Dependencies;
+using RepoRanger.Domain.Dependencies.Entities;
 using ThirdPartyApiClient;
 
 namespace RepoRanger.Infrastructure.Services;
@@ -24,8 +25,9 @@ internal sealed class VulnerabilitiesService : IVulnerabilityService
                 Ecosystem = ecosystem
             },
         }, cancellationToken);
-
-        return result.Vulns.Select(v =>
-            Vulnerability.Create(v.Id, dependencyName, v.Published, v.Withdrawn, v.Summary, v.Details));
+        
+        return [];
+        // return result.Vulns.Select(v =>
+        //     Vulnerability.Create(v.Id, dependencyName, v.Published, v.Withdrawn, v.Summary, v.Details));
     }
 }
