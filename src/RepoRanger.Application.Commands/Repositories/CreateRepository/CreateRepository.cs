@@ -25,7 +25,7 @@ internal sealed class CreateRepositoryCommandHandler : IRequestHandler<CreateRep
     public async Task<Guid> Handle(CreateRepositoryCommand request, CancellationToken cancellationToken)
     {
         var repository = Repository.Create(request.Name, request.RemoteUrl, request.BranchName);
-        repository.VcsId = request.SourceId;
+        repository.VersionControlSystemId = request.SourceId;
 
         await _context.Repositories.AddAsync(repository, cancellationToken);
         await _context.SaveChangesAsync(cancellationToken);

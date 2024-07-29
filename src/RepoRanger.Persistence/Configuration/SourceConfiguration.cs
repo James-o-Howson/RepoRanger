@@ -13,7 +13,7 @@ internal sealed class SourceConfiguration : IEntityTypeConfiguration<VersionCont
             
         builder.HasMany(s => s.Repositories)
             .WithOne(s => s.VersionControlSystem)
-            .HasForeignKey(s => s.VcsId)
+            .HasForeignKey(s => s.VersionControlSystemId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 

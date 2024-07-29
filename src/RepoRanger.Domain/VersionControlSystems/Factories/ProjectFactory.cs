@@ -6,7 +6,7 @@ namespace RepoRanger.Domain.VersionControlSystems.Factories;
 
 internal interface IProjectFactory
 {
-    Project Create(ProjectDescriptor descriptor, IDependencyManager dependencyManager);
+    Project Create(Repository repository, ProjectDescriptor descriptor, IDependencyManager dependencyManager);
 }
 
 internal sealed class ProjectFactory : IProjectFactory
@@ -20,10 +20,10 @@ internal sealed class ProjectFactory : IProjectFactory
         _projectDependencyFactory = projectDependencyFactory;
     }
 
-    public Project Create(ProjectDescriptor descriptor, IDependencyManager dependencyManager)
+    public Project Create(Repository repository, ProjectDescriptor descriptor, IDependencyManager dependencyManager)
     {
         var metaData = _projectMetadataFactory.Create(descriptor.Metadata);
-        var project = Project.Create(descriptor.Type, descriptor.Name, descriptor.Version,
+        var project = Project.Create(repository, descriptor.Type, descriptor.Name, descriptor.Version,
             descriptor.Path, metaData);
         
         project.AddDependencies(_projectDependencyFactory.Create(project, descriptor.ProjectDependencies, dependencyManager));

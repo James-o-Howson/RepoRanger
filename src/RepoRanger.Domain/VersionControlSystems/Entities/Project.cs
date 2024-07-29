@@ -11,14 +11,17 @@ public class Project : Entity, IEquatable<Project>
     
     private Project() { }
     
-    public static Project Create(ProjectType type, string name, string version, string path, IEnumerable<ProjectMetadata>? metadata)
+    public static Project Create(Repository repository, ProjectType type, string name, string version, string path,
+        IEnumerable<ProjectMetadata>? metadata)
     {
         var project = new Project
         {
             Name = name,
             Type = type,
             Version = version,
-            Path = path
+            Path = path,
+            Repository = repository,
+            RepositoryId = repository.Id
         };
         
         project._metadata.AddRange(metadata ?? []);

@@ -21,10 +21,11 @@ public class VersionControlSystemFactory : IVersionControlSystemFactory
     public VersionControlSystem Create(IDependencyManager dependencyManager, VersionControlSystemDescriptor descriptor)
     {
         var vcs = VersionControlSystem.Create(descriptor.Name, descriptor.Location);
-        vcs.AddRepositories(CreateRepositories(dependencyManager, descriptor));
+        vcs.AddRepositories(CreateRepositories(vcs, dependencyManager, descriptor));
         return vcs;
     }
     
-    private IEnumerable<Repository> CreateRepositories(IDependencyManager dependencyManager, VersionControlSystemDescriptor descriptor) 
-        => descriptor.Repositories.Select(d => _repositoryFactory.Create(d, dependencyManager));
+    private IEnumerable<Repository> CreateRepositories(VersionControlSystem vcs, IDependencyManager dependencyManager,
+        VersionControlSystemDescriptor descriptor) 
+        => descriptor.Repositories.Select(d => _repositoryFactory.Create(vcs, d, dependencyManager));
 }

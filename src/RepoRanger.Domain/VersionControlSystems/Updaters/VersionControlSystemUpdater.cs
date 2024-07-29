@@ -43,7 +43,7 @@ public class VersionControlSystemUpdater : IVersionControlSystemUpdater
             }
             else
             {
-                var repository = _repositoryFactory.Create(descriptor, dependencyManager);
+                var repository = _repositoryFactory.Create(versionControlSystem, descriptor, dependencyManager);
                 versionControlSystem.AddRepository(repository);
             }
         }

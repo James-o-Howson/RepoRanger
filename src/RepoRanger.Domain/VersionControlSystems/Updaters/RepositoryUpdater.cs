@@ -44,7 +44,7 @@ internal sealed class RepositoryUpdater : IRepositoryUpdater
             }
             else
             {
-                var project = _projectFactory.Create(descriptor, dependencyManager);
+                var project = _projectFactory.Create(existingRepository, descriptor, dependencyManager);
                 existingRepository.AddProject(project);
             }
         }

@@ -11,13 +11,15 @@ public class Repository : Entity, IEquatable<Repository>
     {
     }
     
-    public static Repository Create(string name, string remoteUrl, string defaultBranch)
+    public static Repository Create(VersionControlSystem vcs, string name, string remoteUrl, string defaultBranch)
     {
         var repository = new Repository
         {
             Name = name,
             RemoteUrl = remoteUrl,
-            DefaultBranch = defaultBranch
+            DefaultBranch = defaultBranch,
+            VersionControlSystem = vcs,
+            VersionControlSystemId = vcs.Id
         };
         
         return repository;
@@ -26,7 +28,7 @@ public class Repository : Entity, IEquatable<Repository>
     public Guid Id { get; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
     public string RemoteUrl { get; set; } = string.Empty;
-    public Guid VcsId { get; set; }
+    public Guid VersionControlSystemId { get; set; }
     public VersionControlSystem VersionControlSystem { get; private set; } = null!;
     public string DefaultBranch { get; set; } = string.Empty;
     public IReadOnlyCollection<Project> Projects => _projects;
@@ -74,7 +76,7 @@ public class Repository : Entity, IEquatable<Repository>
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
-        return Name == other.Name && RemoteUrl == other.RemoteUrl && VcsId == other.VcsId;
+        return Name == other.Name && RemoteUrl == other.RemoteUrl && VersionControlSystemId == other.VersionControlSystemId;
     }
 
     public override bool Equals(object? obj)
@@ -87,6 +89,6 @@ public class Repository : Entity, IEquatable<Repository>
 
     public override int GetHashCode()
     {
-        return HashCode.Combine(Name, RemoteUrl, VcsId);
+        return HashCode.Combine(Name, RemoteUrl, VersionControlSystemId);
     }
 }

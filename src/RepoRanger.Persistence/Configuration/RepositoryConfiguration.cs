@@ -13,7 +13,7 @@ internal sealed class RepositoryConfiguration : IEntityTypeConfiguration<Reposit
 
         builder.HasAlternateKey(r => new
         {
-            SourceId = r.VcsId, r.Name, r.RemoteUrl
+            SourceId = r.VersionControlSystemId, r.Name, r.RemoteUrl
         });
 
         builder.HasMany(r => r.Projects)
