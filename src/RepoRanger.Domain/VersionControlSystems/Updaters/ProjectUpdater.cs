@@ -1,4 +1,5 @@
 ﻿using RepoRanger.Domain.Dependencies;
+using RepoRanger.Domain.Dependencies.Contracts;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 
@@ -25,13 +26,44 @@ internal sealed class ProjectUpdater : IProjectUpdater
         IReadOnlyCollection<ProjectDependencyDescriptor> descriptors,
         IDependencyManager dependencyManager)
     {
-        foreach (var descriptor in descriptors)
+        var dependencyRegistrations = descriptors
+            .Select(d => RegisterDependency(dependencyManager, d))
+            .ToList();
+        
+        var existingCompositeKeys = project.ProjectDependencies
+            .ToDictionary(d => (d.DependencyId, d.VersionId));
+        var updatedCompositeKeys = dependencyRegistrations.ToDictionary(r => (r.Dependency.Id, r.Version.Id));
+
+        foreach (var dependencyRegistration in dependencyRegistrations)
         {
-            var registrationResult = dependencyManager.Register(
-                descriptor.Name, descriptor.Source, 
-                descriptor.Version ?? string.Empty);
-            
-            
+            var compositeKey = (dependencyRegistration.Dependency.Id, dependencyRegistration.Version.Id);
+            if (existingCompositeKeys.TryGetValue(compositeKey, out var existingProjectDependency))
+            {
+                existingProjectDependency.Update(dependencyRegistration.Dependency, dependencyRegistration.Version);
+            }
+            else
+            {
+                var projectDependency = ProjectDependency.Create(project, 
+                    dependencyRegistration.Dependency,
+                    dependencyRegistration.Version);
+                
+                project.AddDependency(projectDependency);
+            }
+        }
+        
+        // Delete projects that are not present in the project descriptors
+        var projectDependenciesToDelete = existingCompositeKeys.Values
+            .Where(p => !updatedCompositeKeys.ContainsKey((p.DependencyId, p.VersionId)))
+            .ToList();
+
+        foreach (var projectDependency in projectDependenciesToDelete)
+        {
+            project.Delete(projectDependency.Id);
         }
     }
+
+    private static RegistrationResult RegisterDependency(IDependencyManager dependencyManager, ProjectDependencyDescriptor descriptor) =>
+        dependencyManager.Register(
+            descriptor.Name, descriptor.Source, 
+            descriptor.Version ?? string.Empty);
 }

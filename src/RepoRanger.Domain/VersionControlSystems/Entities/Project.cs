@@ -1,4 +1,5 @@
 ﻿using RepoRanger.Domain.Common;
+using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
@@ -40,7 +41,20 @@ public class Project : Entity, IEquatable<Project>
         ArgumentNullException.ThrowIfNull(dependencies);
         _projectDependencies.AddRange(dependencies.ToHashSet());
     }
-    
+
+    public void AddDependency(ProjectDependency projectDependency)
+    {
+        DomainException.ThrowIfNull(projectDependency);
+        if (HasProjectDependency(projectDependency.Id)) return;
+        _projectDependencies.Add(projectDependency);
+    }
+
+    private bool HasProjectDependency(Guid projectDependencyId)
+    {
+        DomainException.ThrowIfNull(projectDependencyId);
+        return ProjectDependencies.Any(d => d.Id == projectDependencyId);
+    }
+
     public void Update(string version, IEnumerable<ProjectMetadata> metadata, ProjectType type)
     {
         Version = version;
@@ -53,6 +67,14 @@ public class Project : Entity, IEquatable<Project>
     internal void Delete()
     {
         _projectDependencies.Clear();
+    }
+
+    public void Delete(Guid projectDependencyId)
+    {
+        DomainException.ThrowIfNull(projectDependencyId);
+        var index = _projectDependencies.FindIndex(d => d.Id == projectDependencyId);
+        if (index < 0) return;
+
     }
     
     public bool Equals(Project? other)

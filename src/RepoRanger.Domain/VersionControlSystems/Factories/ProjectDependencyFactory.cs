@@ -7,28 +7,26 @@ namespace RepoRanger.Domain.VersionControlSystems.Factories;
 
 internal interface IProjectDependencyFactory
 {
-    IEnumerable<ProjectDependency> Create(IEnumerable<ProjectDependencyDescriptor> descriptors,
+    IEnumerable<ProjectDependency> Create(Project project, IEnumerable<ProjectDependencyDescriptor> descriptors,
         IDependencyManager dependencyManager);
 }
 
 internal sealed class ProjectDependencyFactory : IProjectDependencyFactory
 {
-    public IEnumerable<ProjectDependency> Create(IEnumerable<ProjectDependencyDescriptor> descriptors,
+    public IEnumerable<ProjectDependency> Create(Project project, IEnumerable<ProjectDependencyDescriptor> descriptors,
         IDependencyManager dependencyManager)
     {
         DomainException.ThrowIfNull(dependencyManager);
-        return descriptors.Select(d => Create(d, dependencyManager));
+        return descriptors.Select(d => Create(project, d, dependencyManager));
     }
     
-    private ProjectDependency Create(ProjectDependencyDescriptor descriptor, IDependencyManager dependencyManager)
+    private static ProjectDependency Create(Project project, ProjectDependencyDescriptor descriptor,
+        IDependencyManager dependencyManager)
     {
-        var registrationResult = dependencyManager.Register(
+        var (dependency, version, _) = dependencyManager.Register(
             descriptor.Name, descriptor.Source, 
             descriptor.Version ?? string.Empty);
-        
-        var dependencyId = registrationResult.Dependency.Id;
-        var versionId = registrationResult.Version.Id;
 
-        return ProjectDependency.Create(dependencyId, versionId);
+        return ProjectDependency.Create(project, dependency, version);
     }
 }

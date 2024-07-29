@@ -26,7 +26,7 @@ internal sealed class ProjectFactory : IProjectFactory
         var project = Project.Create(descriptor.Type, descriptor.Name, descriptor.Version,
             descriptor.Path, metaData);
         
-        project.AddDependencies(_projectDependencyFactory.Create(descriptor.ProjectDependencies, dependencyManager));
+        project.AddDependencies(_projectDependencyFactory.Create(project, descriptor.ProjectDependencies, dependencyManager));
 
         return project;
     }
