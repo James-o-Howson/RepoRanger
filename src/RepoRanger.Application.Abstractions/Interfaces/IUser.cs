@@ -1,6 +1,6 @@
 ﻿namespace RepoRanger.Application.Abstractions.Interfaces;
 
-public interface ICurrentUserService
+public interface IUser
 {
     string? UserId { get; }
 }

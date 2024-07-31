@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
-using RepoRanger.Api.Middleware;
+using RepoRanger.Api.Infrastructure;
 using RepoRanger.Api.Services;
 using RepoRanger.Application.Abstractions.Behaviours;
 using RepoRanger.Application.Abstractions.Interfaces;
@@ -26,7 +26,7 @@ internal static class ServiceConfiguration
         services.AddValidatorsFromAssemblies([CommandsAssembly.Assembly, QueriesAssembly.Assembly]);
 
 
-        services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<IUser, CurrentUser>();
     }
     
     public static void UseSerilog(this IHostBuilder hostBuilder)

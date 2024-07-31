@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RepoRanger.Api.Filters;
+using RepoRanger.Api.Infrastructure;
 
 namespace RepoRanger.Api.Controllers;
 

@@ -3,11 +3,11 @@ using RepoRanger.Application.Abstractions.Interfaces;
 
 namespace RepoRanger.Api.Services;
 
-internal sealed class CurrentUserService : ICurrentUserService
+internal sealed class CurrentUser : IUser
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public CurrentUserService(IHttpContextAccessor httpContextAccessor)
+    public CurrentUser(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }

@@ -8,12 +8,12 @@ namespace RepoRanger.Persistence.Interceptors;
 
 public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
 {
-    private readonly ICurrentUserService _currentUserService;
+    private readonly IUser _user;
     private readonly IDateTime _dateTime;
 
-    public AuditableEntitySaveChangesInterceptor(ICurrentUserService currentUserService, IDateTime dateTime)
+    public AuditableEntitySaveChangesInterceptor(IUser user, IDateTime dateTime)
     {
-        _currentUserService = currentUserService;
+        _user = user;
         _dateTime = dateTime;
     }
 
@@ -45,7 +45,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         {
             if (!entry.IsCreated()) continue;
             
-            entry.Entity.CreatedBy = _currentUserService.UserId;
+            entry.Entity.CreatedBy = _user.UserId;
             entry.Entity.Created = _dateTime.Now;
         }
     }
@@ -56,7 +56,7 @@ public class AuditableEntitySaveChangesInterceptor : SaveChangesInterceptor
         {
             if (!entry.IsModified()) continue;
             
-            entry.Entity.LastModifiedBy = _currentUserService.UserId;
+            entry.Entity.LastModifiedBy = _user.UserId;
             entry.Entity.LastModified = _dateTime.Now;
         }
     }

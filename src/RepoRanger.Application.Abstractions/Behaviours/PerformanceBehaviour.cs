@@ -9,16 +9,16 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
 {
     private readonly Stopwatch _timer;
     private readonly ILogger<TRequest> _logger;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly IUser _user;
 
     public PerformanceBehaviour(
         ILogger<TRequest> logger,
-        ICurrentUserService currentUserService)
+        IUser user)
     {
         _timer = new Stopwatch();
 
         _logger = logger;
-        _currentUserService = currentUserService;
+        _user = user;
     }
 
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
@@ -31,7 +31,7 @@ public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequ
         if (elapsedMilliseconds <= 500) return response;
         
         var requestName = typeof(TRequest).Name;
-        var userId = _currentUserService.UserId;
+        var userId = _user.UserId;
 
         _logger.LogWarning("RepoRanger Long Running Request: {Name} ({ElapsedMilliseconds} milliseconds) {@UserId} {@Request}",
             requestName, elapsedMilliseconds, userId, request);
