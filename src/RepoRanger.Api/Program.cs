@@ -3,6 +3,7 @@ using RepoRanger.BackgroundJobs;
 using RepoRanger.Domain;
 using RepoRanger.Infrastructure;
 using RepoRanger.Persistence;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Host.UseSerilog();
@@ -25,6 +26,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseSerilogRequestLogging();
 app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseHttpsRedirection();
 app.UseHealthChecks("/_health");
@@ -35,5 +37,5 @@ app.Run();
 // ReSharper disable once ClassNeverInstantiated.Global
 namespace RepoRanger.Api
 {
-    public partial class Program {}
+    public class Program {}
 }
