@@ -5,7 +5,6 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <InvariantGlobalization>true</InvariantGlobalization>
-        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -22,7 +21,6 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Quartz.Extensions.Hosting" Version="3.11.0" />
         <PackageReference Include="Serilog" Version="4.0.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="8.0.1" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
@@ -42,6 +40,7 @@
       <ProjectReference Include="..\RepoRanger.Application.Abstractions\RepoRanger.Application.Abstractions.csproj" />
       <ProjectReference Include="..\RepoRanger.Application.Commands\RepoRanger.Application.Commands.csproj" />
       <ProjectReference Include="..\RepoRanger.Application.Queries\RepoRanger.Application.Queries.csproj" />
+      <ProjectReference Include="..\RepoRanger.BackgroundJobs\RepoRanger.BackgroundJobs.csproj" />
       <ProjectReference Include="..\RepoRanger.Infrastructure\RepoRanger.Infrastructure.csproj" />
       <ProjectReference Include="..\RepoRanger.Persistence\RepoRanger.Persistence.csproj" />
     </ItemGroup>

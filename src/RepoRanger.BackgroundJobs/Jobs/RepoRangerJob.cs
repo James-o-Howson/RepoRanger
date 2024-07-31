@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Quartz;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
-using QuartzOptions = RepoRanger.Api.Options.QuartzOptions;
 
-namespace RepoRanger.Api.Jobs;
+namespace RepoRanger.BackgroundJobs.Jobs;
 
 [DisallowConcurrentExecution]
 internal sealed class RepoRangerJob : IJob
@@ -12,15 +12,15 @@ internal sealed class RepoRangerJob : IJob
     
     private readonly IVersionControlSystemParserService _versionControlSystemParserService;
     private readonly ILogger<RepoRangerJob> _logger;
-    private readonly QuartzOptions _quartzOptions;
+    private readonly BackgroundJobOptions _backgroundJobOptions;
 
     public RepoRangerJob(ILogger<RepoRangerJob> logger,
-        IOptions<QuartzOptions> options, 
+        IOptions<BackgroundJobOptions> options, 
         IVersionControlSystemParserService versionControlSystemParserService)
     {
         _logger = logger;
         _versionControlSystemParserService = versionControlSystemParserService;
-        _quartzOptions = options.Value;
+        _backgroundJobOptions = options.Value;
     }
 
     public async Task Execute(IJobExecutionContext context)
@@ -29,7 +29,7 @@ internal sealed class RepoRangerJob : IJob
         {
             _logger.LogInformation("Repo Ranger Job Starting");
 
-            if (!_quartzOptions.RepoClonerJobEnabled)
+            if (!_backgroundJobOptions.RepoClonerJobEnabled)
             {
                 _logger.LogInformation("Repo Ranger Job Disabled - Skipping");
                 return;
