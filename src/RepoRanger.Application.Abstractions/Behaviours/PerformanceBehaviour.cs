@@ -8,11 +8,11 @@ namespace RepoRanger.Application.Abstractions.Behaviours;
 public class PerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : notnull
 {
     private readonly Stopwatch _timer;
-    private readonly ILogger<TRequest> _logger;
+    private readonly ILogger<PerformanceBehaviour<TRequest, TResponse>> _logger;
     private readonly IUser _user;
 
     public PerformanceBehaviour(
-        ILogger<TRequest> logger,
+        ILogger<PerformanceBehaviour<TRequest, TResponse>> logger,
         IUser user)
     {
         _timer = new Stopwatch();

@@ -44,24 +44,6 @@ internal static class ServiceConfiguration
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
     }
-    
-    // private static void AddQuartzServices(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
-    // {
-    //     services.Configure<QuartzOptions>(configuration.GetSection("QuartzOptions"));
-    //
-    //     if (environment.IsIntegrationTest()) return;
-    //     services.AddQuartz(configurator =>
-    //     {
-    //         configurator.UseSimpleTypeLoader();
-    //         configurator.UseInMemoryStore();
-    //
-    //         configurator.AddJob<RepoRangerJob>(RepoRangerJob.JobKey)
-    //             .AddTrigger(trigger => trigger.ForJob(RepoRangerJob.JobKey).StartNow()
-    //                 .WithSimpleSchedule(schedule => schedule.WithIntervalInMinutes(60).RepeatForever()));
-    //     });
-    //
-    //     services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
-    // }
 
     private static void AddMediatr(this IServiceCollection services)
     {

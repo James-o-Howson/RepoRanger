@@ -1,11 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RepoRanger.Domain.VersionControlSystems;
-using RepoRanger.Domain.VersionControlSystems.Entities;
 
-namespace RepoRanger.Persistence.Configuration;
+namespace RepoRanger.Persistence.Configuration.VersionControlSystems;
 
-internal sealed class SourceConfiguration : IEntityTypeConfiguration<VersionControlSystem>
+internal sealed class VersionControlSystemConfiguration : IEntityTypeConfiguration<VersionControlSystem>
 {
     public void Configure(EntityTypeBuilder<VersionControlSystem> builder)
     {

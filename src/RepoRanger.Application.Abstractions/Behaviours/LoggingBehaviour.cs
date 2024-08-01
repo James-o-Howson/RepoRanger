@@ -6,10 +6,10 @@ namespace RepoRanger.Application.Abstractions.Behaviours;
 
 public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<LoggingBehaviour<TRequest>> _logger;
     private readonly IUser _user;
 
-    public LoggingBehaviour(ILogger<TRequest> logger, IUser user)
+    public LoggingBehaviour(ILogger<LoggingBehaviour<TRequest>> logger, IUser user)
     {
         _logger = logger;
         _user = user;
