@@ -58,7 +58,7 @@ internal sealed class ProjectUpdater : IProjectUpdater
 
         foreach (var projectDependency in projectDependenciesToDelete)
         {
-            project.Delete(projectDependency.Id);
+            project.DeleteProjectDependency(projectDependency.Id);
         }
     }
 

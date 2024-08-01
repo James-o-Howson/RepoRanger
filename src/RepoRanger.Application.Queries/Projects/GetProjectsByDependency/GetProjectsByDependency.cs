@@ -26,12 +26,13 @@ internal sealed class GetProjectsByDependencyQueryHandler : IRequestHandler<GetP
             .AsNoTracking()
             .Include(p => p.Repository)
             .Include(p => p.ProjectDependencies)
-            .Where(p => p.ProjectDependencies.Any(di => di.DependencyName == request.DependencyName))
+            .ThenInclude(p => p.Dependency)
+            .Where(p => p.ProjectDependencies.Any(di => di.Dependency.Name == request.DependencyName))
             .ToListAsync(cancellationToken);
 
         if (request.Version != null)
         {
-            projects = projects.Where(p => p.HasDependency(request.DependencyName, request.Version)).ToList();
+            projects = projects.Where(p => p.HasSpecificDependency(request.DependencyName, request.Version)).ToList();
         }
 
         var viewModels = projects.Select(p => new ProjectVm
@@ -40,7 +41,7 @@ internal sealed class GetProjectsByDependencyQueryHandler : IRequestHandler<GetP
             Name = p.Name,
             Type = p.Type,
             Version = p.Version,
-            DependencyCount = p.DependencyInstances.Count,
+            DependencyCount = p.ProjectDependencies.Count,
             RepositoryId = p.RepositoryId,
             RepositoryName = p.Repository.Name
         }).ToList();

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using RepoRanger.Application.Abstractions.Exceptions;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 using RepoRanger.Domain.VersionControlSystems;
 using RepoRanger.Domain.VersionControlSystems.Entities;
@@ -24,7 +25,12 @@ internal sealed class CreateRepositoryCommandHandler : IRequestHandler<CreateRep
 
     public async Task<Guid> Handle(CreateRepositoryCommand request, CancellationToken cancellationToken)
     {
-        var repository = Repository.Create(request.Name, request.RemoteUrl, request.BranchName);
+        var versionControlSystem =
+            await _context.VersionControlSystems.FindAsync([request.SourceId], cancellationToken: cancellationToken);
+        if (versionControlSystem is null)
+            throw new NotFoundException($"Cannot find Version Control System with Id = {request.SourceId}");
+
+        var repository = Repository.Create(versionControlSystem, request.Name, request.RemoteUrl, request.BranchName);
         repository.VersionControlSystemId = request.SourceId;
 
         await _context.Repositories.AddAsync(repository, cancellationToken);

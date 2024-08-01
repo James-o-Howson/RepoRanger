@@ -72,12 +72,23 @@ public class Project : Entity, IEquatable<Project>
         _projectDependencies.Clear();
     }
 
-    public void Delete(Guid projectDependencyId)
+    public void DeleteProjectDependency(Guid projectDependencyId)
     {
         DomainException.ThrowIfNull(projectDependencyId);
         var index = _projectDependencies.FindIndex(d => d.Id == projectDependencyId);
         if (index < 0) return;
 
+        _projectDependencies.RemoveAt(index);
+    }
+    
+    public bool HasSpecificDependency(string name, string versionValue)
+    {
+        DomainException.ThrowIfNullOrEmpty(name);
+        DomainException.ThrowIfNullOrEmpty(versionValue);
+        
+        return ProjectDependencies.Any(p => 
+            p.Dependency.Name == name &&
+            p.Version.Value == versionValue);
     }
     
     public bool Equals(Project? other)

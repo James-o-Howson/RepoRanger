@@ -1,6 +1,6 @@
-namespace RepoRanger.Application.Contracts.DependencyInstances;
+namespace RepoRanger.Application.Contracts.ProjectDependencies;
 
-public class DependencyInstanceVm
+public class ProjectDependencyVm
 {
     public Guid Id { get; init; }
     public string Source { get; init; } = string.Empty;

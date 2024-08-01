@@ -12,7 +12,7 @@
 
     <ItemGroup>
       <Folder Include="Repositories\" />
-      <Folder Include="Sources\" />
+      <Folder Include="VersionControlSystems\" />
     </ItemGroup>
 
     <ItemGroup>

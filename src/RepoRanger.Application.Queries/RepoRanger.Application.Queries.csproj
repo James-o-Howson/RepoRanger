@@ -7,10 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="DependencyInstances\" />
+      <Folder Include="ProjectDependencies\" />
       <Folder Include="Projects\" />
       <Folder Include="Repositories\" />
-      <Folder Include="Sources\" />
+      <Folder Include="VersionControlSystems\" />
     </ItemGroup>
 
     <ItemGroup>
