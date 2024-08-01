@@ -39,13 +39,16 @@ internal sealed class ProjectUpdater : IProjectUpdater
             var compositeKey = (dependencyRegistration.Dependency.Id, dependencyRegistration.Version.Id);
             if (existingCompositeKeys.TryGetValue(compositeKey, out var existingProjectDependency))
             {
-                existingProjectDependency.Update(dependencyRegistration.Dependency, dependencyRegistration.Version);
+                existingProjectDependency.Update(dependencyRegistration.Dependency, 
+                    dependencyRegistration.Version, 
+                    dependencyRegistration.Source);
             }
             else
             {
                 var projectDependency = ProjectDependency.Create(project, 
                     dependencyRegistration.Dependency,
-                    dependencyRegistration.Version);
+                    dependencyRegistration.Version,
+                    dependencyRegistration.Source);
                 
                 project.AddDependency(projectDependency);
             }

@@ -17,6 +17,10 @@ internal sealed class ProjectDependencyConfiguration : IEntityTypeConfiguration<
         builder.HasOne(d => d.Version)
             .WithMany()
             .HasForeignKey(d => d.VersionId);
+        
+        builder.HasOne(d => d.Source)
+            .WithMany()
+            .HasForeignKey(d => d.SourceId);
 
         builder.HasOne(d => d.Project)
             .WithMany(p => p.ProjectDependencies)

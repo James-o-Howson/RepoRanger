@@ -30,7 +30,7 @@ internal sealed class SearchProjectDependenciesWithPaginationQueryHandler : IReq
             .Select(d => new ProjectDependencyVm
             {
                 Id = d.Id,
-                // Source = d.Version,
+                Source = d.Source.Name,
                 Name = d.Dependency.Name,
                 Version = d.Version.Value,
                 ProjectName = d.Project.Name,

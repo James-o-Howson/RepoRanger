@@ -14,10 +14,12 @@ public class ProjectDependency : Entity
     public Dependency Dependency { get; private set; } = null!;
     public Guid VersionId { get; private set; }
     public DependencyVersion Version { get; private set; } = null!;
+    public Guid SourceId { get; private set; }
+    public DependencySource Source { get; private set; } = null!;
     
     private ProjectDependency() { }
 
-    public static ProjectDependency Create(Project project, Dependency dependency, DependencyVersion version) => new()
+    public static ProjectDependency Create(Project project, Dependency dependency, DependencyVersion version, DependencySource source) => new()
     {
         ProjectId = project.Id,
         Project = project,
@@ -27,14 +29,17 @@ public class ProjectDependency : Entity
         Version = version
     };
 
-    public void Update(Dependency dependency, DependencyVersion version)
+    public void Update(Dependency dependency, DependencyVersion version, DependencySource source)
     {
         DomainException.ThrowIfNull(dependency);
         DomainException.ThrowIfNull(version);
+        DomainException.ThrowIfNull(source);
 
         Dependency = dependency;
         DependencyId = dependency.Id;
         Version = version;
         VersionId = version.Id;
+        Source = source;
+        SourceId = source.Id;
     }
 }
