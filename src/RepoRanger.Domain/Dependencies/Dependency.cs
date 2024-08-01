@@ -37,9 +37,5 @@ public class Dependency : Entity
         RaiseEvent(new DependencyVulnerableEvent(Id));
     }
 
-    public bool HasVersion(Guid versionId)
-    {
-        DomainException.ThrowIfNull(versionId);
-        return Versions.Any(v => v.Id == versionId);
-    }
+    private bool HasVersion(Guid versionId) => Versions.Any(v => v.Id == versionId);
 }

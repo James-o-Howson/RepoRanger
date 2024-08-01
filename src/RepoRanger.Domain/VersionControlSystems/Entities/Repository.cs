@@ -3,13 +3,11 @@ using RepoRanger.Domain.Common.Exceptions;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
-public class Repository : Entity, IEquatable<Repository>
+public class Repository : Entity
 {
     private readonly List<Project> _projects = [];
 
-    private Repository()
-    {
-    }
+    private Repository() {}
     
     public static Repository Create(VersionControlSystem vcs, string name, string remoteUrl, string defaultBranch)
     {
@@ -40,6 +38,7 @@ public class Repository : Entity, IEquatable<Repository>
     public void AddProject(Project project)
     {
         DomainException.ThrowIfNull(project);
+        //todo: ensure unique projects
         _projects.Add(project);
     }
     
@@ -70,25 +69,5 @@ public class Repository : Entity, IEquatable<Repository>
         if (index < 0) throw new DomainException($"Cannot delete Project with Id = {projectId} from Repository {Name}");
         
         _projects.RemoveAt(index);
-    }
-
-    public bool Equals(Repository? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Name == other.Name && RemoteUrl == other.RemoteUrl && VersionControlSystemId == other.VersionControlSystemId;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
-        return Equals((Repository)obj);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Name, RemoteUrl, VersionControlSystemId);
     }
 }

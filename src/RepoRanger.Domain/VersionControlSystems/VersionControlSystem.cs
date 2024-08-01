@@ -4,7 +4,7 @@ using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Domain.VersionControlSystems;
 
-public sealed class VersionControlSystem : Entity, IEquatable<VersionControlSystem>
+public sealed class VersionControlSystem : Entity
 {
     private readonly List<Repository> _repositories = [];
     
@@ -18,13 +18,6 @@ public sealed class VersionControlSystem : Entity, IEquatable<VersionControlSyst
             Location = location ?? throw new ArgumentNullException(nameof(location), "Cannot be null")
         };
         
-        return source;
-    }
-    
-    public static VersionControlSystem Create(string name, string location, IEnumerable<Repository> repositories)
-    {
-        var source = Create(name, location);
-        source.AddRepositories(repositories);
         return source;
     }
 
@@ -68,22 +61,5 @@ public sealed class VersionControlSystem : Entity, IEquatable<VersionControlSyst
         if (index < 0) throw new DomainException($"Cannot delete Repository with Id = {repositoryId} from VCS {Name}");
         
         _repositories.RemoveAt(index);
-    }
-
-    public bool Equals(VersionControlSystem? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Name == other.Name;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        return ReferenceEquals(this, obj) || obj is VersionControlSystem other && Equals(other);
-    }
-
-    public override int GetHashCode()
-    {
-        return Name.GetHashCode();
     }
 }

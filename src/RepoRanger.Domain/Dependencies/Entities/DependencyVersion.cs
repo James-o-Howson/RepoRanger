@@ -32,12 +32,6 @@ public class DependencyVersion : Entity
         return version;
     }
 
-    public bool HasSource(string sourceName)
-    {
-        DomainException.ThrowIfNullOrEmpty(sourceName);
-        return Sources.Any(s => s.Name == sourceName);
-    }
-
     public void AddVulnerability(Vulnerability vulnerability)
     {
         DomainException.ThrowIfNull(vulnerability);
@@ -51,4 +45,6 @@ public class DependencyVersion : Entity
         _sources.Add(source);
         source.AddVersion(this);
     }
+
+    private bool HasSource(string sourceName) => Sources.Any(s => s.Name == sourceName);
 }

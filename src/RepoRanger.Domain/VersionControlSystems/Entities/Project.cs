@@ -4,7 +4,7 @@ using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
-public class Project : Entity, IEquatable<Project>
+public class Project : Entity
 {
     private readonly List<ProjectDependency> _projectDependencies = [];
     private readonly List<ProjectMetadata> _metadata = [];
@@ -32,11 +32,11 @@ public class Project : Entity, IEquatable<Project>
     public Guid Id { get; } = Guid.NewGuid();
     public IReadOnlyCollection<ProjectMetadata> Metadata => _metadata;
     public ProjectType Type { get; private set; } = null!;
-    public string Name { get; private set; } = string.Empty;
-    public string Path { get; private set; } = string.Empty;
+    public string Name { get; private init; } = string.Empty;
+    public string Path { get; private init; } = string.Empty;
     public string Version { get; private set; } = string.Empty;
     public IReadOnlyCollection<ProjectDependency> ProjectDependencies => _projectDependencies;
-    public Guid RepositoryId { get; private set; }
+    public Guid RepositoryId { get; private init; }
     public Repository Repository { get; private set; } = null!;
 
     public void AddDependencies(IEnumerable<ProjectDependency> dependencies)
@@ -89,25 +89,5 @@ public class Project : Entity, IEquatable<Project>
         return ProjectDependencies.Any(p => 
             p.Dependency.Name == name &&
             p.Version.Value == versionValue);
-    }
-    
-    public bool Equals(Project? other)
-    {
-        if (ReferenceEquals(null, other)) return false;
-        if (ReferenceEquals(this, other)) return true;
-        return Name == other.Name && Path == other.Path && RepositoryId == other.RepositoryId;
-    }
-
-    public override bool Equals(object? obj)
-    {
-        if (ReferenceEquals(null, obj)) return false;
-        if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != GetType()) return false;
-        return Equals((Project)obj);
-    }
-
-    public override int GetHashCode()
-    {
-        return HashCode.Combine(Name, Path, RepositoryId);
     }
 }
