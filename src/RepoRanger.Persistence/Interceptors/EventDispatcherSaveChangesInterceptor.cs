@@ -38,7 +38,7 @@ public class EventDispatcherSaveChangesInterceptor : SaveChangesInterceptor
         var events = context.ChangeTracker
             .Entries<Entity>()
             .GetEntitiesWithEvents()
-            .GetEvents();
+            .ExtractEventsForPublishing();
         
         if (events.Count == 0) return;
 
