@@ -26,7 +26,7 @@ export class DependencyInstancesClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    dependencyInstances_Search(query: SearchDependencyInstancesWithPaginationQuery): Observable<PaginatedListOfDependencyInstanceVm> {
+    dependencyInstances_Search(query: SearchProjectDependenciesWithPaginationQuery): Observable<PaginatedListOfProjectDependencyVm> {
         let url_ = this.baseUrl + "/api/DependencyInstances/Search";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -49,14 +49,14 @@ export class DependencyInstancesClient {
                 try {
                     return this.processDependencyInstances_Search(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<PaginatedListOfDependencyInstanceVm>;
+                    return _observableThrow(e) as any as Observable<PaginatedListOfProjectDependencyVm>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<PaginatedListOfDependencyInstanceVm>;
+                return _observableThrow(response_) as any as Observable<PaginatedListOfProjectDependencyVm>;
         }));
     }
 
-    protected processDependencyInstances_Search(response: HttpResponseBase): Observable<PaginatedListOfDependencyInstanceVm> {
+    protected processDependencyInstances_Search(response: HttpResponseBase): Observable<PaginatedListOfProjectDependencyVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -67,7 +67,7 @@ export class DependencyInstancesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = PaginatedListOfDependencyInstanceVm.fromJS(resultData200);
+            result200 = PaginatedListOfProjectDependencyVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -370,10 +370,10 @@ export class RepositoriesClient {
         return _observableOf(null as any);
     }
 
-    repositories_GetBySourceId(sourceId: string | null | undefined): Observable<RepositorySummariesVm> {
+    repositories_GetBySourceId(versionControlSystemId: string | null | undefined): Observable<RepositorySummariesVm> {
         let url_ = this.baseUrl + "/api/Repositories/GetBySourceId?";
-        if (sourceId !== undefined && sourceId !== null)
-            url_ += "SourceId=" + encodeURIComponent("" + sourceId) + "&";
+        if (versionControlSystemId !== undefined && versionControlSystemId !== null)
+            url_ += "VersionControlSystemId=" + encodeURIComponent("" + versionControlSystemId) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -422,7 +422,7 @@ export class RepositoriesClient {
 }
 
 @Injectable()
-export class SourcesClient {
+export class VersionControlSystemsClient {
     private http: HttpClient;
     private baseUrl: string;
     protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
@@ -432,8 +432,8 @@ export class SourcesClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    sources_List(query: ListSourcesQuery | undefined): Observable<SourcesVm> {
-        let url_ = this.baseUrl + "/api/Sources?";
+    versionControlSystems_List(query: ListVersionControlSystemsQuery | undefined): Observable<VersionControlSystemsVm> {
+        let url_ = this.baseUrl + "/api/VersionControlSystems?";
         if (query === null)
             throw new Error("The parameter 'query' cannot be null.");
         else if (query !== undefined)
@@ -449,20 +449,20 @@ export class SourcesClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processSources_List(response_);
+            return this.processVersionControlSystems_List(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processSources_List(response_ as any);
+                    return this.processVersionControlSystems_List(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<SourcesVm>;
+                    return _observableThrow(e) as any as Observable<VersionControlSystemsVm>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<SourcesVm>;
+                return _observableThrow(response_) as any as Observable<VersionControlSystemsVm>;
         }));
     }
 
-    protected processSources_List(response: HttpResponseBase): Observable<SourcesVm> {
+    protected processVersionControlSystems_List(response: HttpResponseBase): Observable<VersionControlSystemsVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -473,7 +473,7 @@ export class SourcesClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = SourcesVm.fromJS(resultData200);
+            result200 = VersionControlSystemsVm.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -485,15 +485,15 @@ export class SourcesClient {
     }
 }
 
-export class PaginatedListOfDependencyInstanceVm implements IPaginatedListOfDependencyInstanceVm {
-    items?: DependencyInstanceVm[];
+export class PaginatedListOfProjectDependencyVm implements IPaginatedListOfProjectDependencyVm {
+    items?: ProjectDependencyVm[];
     pageNumber?: number;
     totalPages?: number;
     totalCount?: number;
     hasPreviousPage?: boolean;
     hasNextPage?: boolean;
 
-    constructor(data?: IPaginatedListOfDependencyInstanceVm) {
+    constructor(data?: IPaginatedListOfProjectDependencyVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -507,7 +507,7 @@ export class PaginatedListOfDependencyInstanceVm implements IPaginatedListOfDepe
             if (Array.isArray(_data["items"])) {
                 this.items = [] as any;
                 for (let item of _data["items"])
-                    this.items!.push(DependencyInstanceVm.fromJS(item));
+                    this.items!.push(ProjectDependencyVm.fromJS(item));
             }
             this.pageNumber = _data["pageNumber"];
             this.totalPages = _data["totalPages"];
@@ -517,9 +517,9 @@ export class PaginatedListOfDependencyInstanceVm implements IPaginatedListOfDepe
         }
     }
 
-    static fromJS(data: any): PaginatedListOfDependencyInstanceVm {
+    static fromJS(data: any): PaginatedListOfProjectDependencyVm {
         data = typeof data === 'object' ? data : {};
-        let result = new PaginatedListOfDependencyInstanceVm();
+        let result = new PaginatedListOfProjectDependencyVm();
         result.init(data);
         return result;
     }
@@ -540,8 +540,8 @@ export class PaginatedListOfDependencyInstanceVm implements IPaginatedListOfDepe
     }
 }
 
-export interface IPaginatedListOfDependencyInstanceVm {
-    items?: DependencyInstanceVm[];
+export interface IPaginatedListOfProjectDependencyVm {
+    items?: ProjectDependencyVm[];
     pageNumber?: number;
     totalPages?: number;
     totalCount?: number;
@@ -549,7 +549,7 @@ export interface IPaginatedListOfDependencyInstanceVm {
     hasNextPage?: boolean;
 }
 
-export class DependencyInstanceVm implements IDependencyInstanceVm {
+export class ProjectDependencyVm implements IProjectDependencyVm {
     id?: string;
     source?: string;
     name?: string;
@@ -557,7 +557,7 @@ export class DependencyInstanceVm implements IDependencyInstanceVm {
     projectName?: string;
     repositoryName?: string;
 
-    constructor(data?: IDependencyInstanceVm) {
+    constructor(data?: IProjectDependencyVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -577,9 +577,9 @@ export class DependencyInstanceVm implements IDependencyInstanceVm {
         }
     }
 
-    static fromJS(data: any): DependencyInstanceVm {
+    static fromJS(data: any): ProjectDependencyVm {
         data = typeof data === 'object' ? data : {};
-        let result = new DependencyInstanceVm();
+        let result = new ProjectDependencyVm();
         result.init(data);
         return result;
     }
@@ -596,7 +596,7 @@ export class DependencyInstanceVm implements IDependencyInstanceVm {
     }
 }
 
-export interface IDependencyInstanceVm {
+export interface IProjectDependencyVm {
     id?: string;
     source?: string;
     name?: string;
@@ -605,14 +605,14 @@ export interface IDependencyInstanceVm {
     repositoryName?: string;
 }
 
-export abstract class PaginatedRequestOfDependencyInstanceVm implements IPaginatedRequestOfDependencyInstanceVm {
+export abstract class PaginatedRequestOfProjectDependencyVm implements IPaginatedRequestOfProjectDependencyVm {
     pageNumber?: number;
     pageSize?: number;
     sortField?: string;
     sortOrder?: SortOrder;
     filters?: { [key: string]: PaginatedFilter[]; } | undefined;
 
-    constructor(data?: IPaginatedRequestOfDependencyInstanceVm) {
+    constructor(data?: IPaginatedRequestOfProjectDependencyVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -637,9 +637,9 @@ export abstract class PaginatedRequestOfDependencyInstanceVm implements IPaginat
         }
     }
 
-    static fromJS(data: any): PaginatedRequestOfDependencyInstanceVm {
+    static fromJS(data: any): PaginatedRequestOfProjectDependencyVm {
         data = typeof data === 'object' ? data : {};
-        throw new Error("The abstract class 'PaginatedRequestOfDependencyInstanceVm' cannot be instantiated.");
+        throw new Error("The abstract class 'PaginatedRequestOfProjectDependencyVm' cannot be instantiated.");
     }
 
     toJSON(data?: any) {
@@ -659,7 +659,7 @@ export abstract class PaginatedRequestOfDependencyInstanceVm implements IPaginat
     }
 }
 
-export interface IPaginatedRequestOfDependencyInstanceVm {
+export interface IPaginatedRequestOfProjectDependencyVm {
     pageNumber?: number;
     pageSize?: number;
     sortField?: string;
@@ -667,22 +667,22 @@ export interface IPaginatedRequestOfDependencyInstanceVm {
     filters?: { [key: string]: PaginatedFilter[]; } | undefined;
 }
 
-export class SearchDependencyInstancesWithPaginationQuery extends PaginatedRequestOfDependencyInstanceVm implements ISearchDependencyInstancesWithPaginationQuery {
-    sourceIds?: string[] | undefined;
+export class SearchProjectDependenciesWithPaginationQuery extends PaginatedRequestOfProjectDependencyVm implements ISearchProjectDependenciesWithPaginationQuery {
+    versionControlSystemIds?: string[] | undefined;
     repositoryIds?: string[] | undefined;
     projectIds?: string[] | undefined;
 
-    constructor(data?: ISearchDependencyInstancesWithPaginationQuery) {
+    constructor(data?: ISearchProjectDependenciesWithPaginationQuery) {
         super(data);
     }
 
     override init(_data?: any) {
         super.init(_data);
         if (_data) {
-            if (Array.isArray(_data["sourceIds"])) {
-                this.sourceIds = [] as any;
-                for (let item of _data["sourceIds"])
-                    this.sourceIds!.push(item);
+            if (Array.isArray(_data["versionControlSystemIds"])) {
+                this.versionControlSystemIds = [] as any;
+                for (let item of _data["versionControlSystemIds"])
+                    this.versionControlSystemIds!.push(item);
             }
             if (Array.isArray(_data["repositoryIds"])) {
                 this.repositoryIds = [] as any;
@@ -697,19 +697,19 @@ export class SearchDependencyInstancesWithPaginationQuery extends PaginatedReque
         }
     }
 
-    static override fromJS(data: any): SearchDependencyInstancesWithPaginationQuery {
+    static override fromJS(data: any): SearchProjectDependenciesWithPaginationQuery {
         data = typeof data === 'object' ? data : {};
-        let result = new SearchDependencyInstancesWithPaginationQuery();
+        let result = new SearchProjectDependenciesWithPaginationQuery();
         result.init(data);
         return result;
     }
 
     override toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.sourceIds)) {
-            data["sourceIds"] = [];
-            for (let item of this.sourceIds)
-                data["sourceIds"].push(item);
+        if (Array.isArray(this.versionControlSystemIds)) {
+            data["versionControlSystemIds"] = [];
+            for (let item of this.versionControlSystemIds)
+                data["versionControlSystemIds"].push(item);
         }
         if (Array.isArray(this.repositoryIds)) {
             data["repositoryIds"] = [];
@@ -726,8 +726,8 @@ export class SearchDependencyInstancesWithPaginationQuery extends PaginatedReque
     }
 }
 
-export interface ISearchDependencyInstancesWithPaginationQuery extends IPaginatedRequestOfDependencyInstanceVm {
-    sourceIds?: string[] | undefined;
+export interface ISearchProjectDependenciesWithPaginationQuery extends IPaginatedRequestOfProjectDependencyVm {
+    versionControlSystemIds?: string[] | undefined;
     repositoryIds?: string[] | undefined;
     projectIds?: string[] | undefined;
 }
@@ -1119,10 +1119,10 @@ export class ListRepositoriesQuery implements IListRepositoriesQuery {
 export interface IListRepositoriesQuery {
 }
 
-export class SourcesVm implements ISourcesVm {
-    sources?: SourceVm[];
+export class VersionControlSystemsVm implements IVersionControlSystemsVm {
+    versionControlSystems?: VersionControlSystemVm[];
 
-    constructor(data?: ISourcesVm) {
+    constructor(data?: IVersionControlSystemsVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1133,41 +1133,41 @@ export class SourcesVm implements ISourcesVm {
 
     init(_data?: any) {
         if (_data) {
-            if (Array.isArray(_data["sources"])) {
-                this.sources = [] as any;
-                for (let item of _data["sources"])
-                    this.sources!.push(SourceVm.fromJS(item));
+            if (Array.isArray(_data["versionControlSystems"])) {
+                this.versionControlSystems = [] as any;
+                for (let item of _data["versionControlSystems"])
+                    this.versionControlSystems!.push(VersionControlSystemVm.fromJS(item));
             }
         }
     }
 
-    static fromJS(data: any): SourcesVm {
+    static fromJS(data: any): VersionControlSystemsVm {
         data = typeof data === 'object' ? data : {};
-        let result = new SourcesVm();
+        let result = new VersionControlSystemsVm();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        if (Array.isArray(this.sources)) {
-            data["sources"] = [];
-            for (let item of this.sources)
-                data["sources"].push(item.toJSON());
+        if (Array.isArray(this.versionControlSystems)) {
+            data["versionControlSystems"] = [];
+            for (let item of this.versionControlSystems)
+                data["versionControlSystems"].push(item.toJSON());
         }
         return data;
     }
 }
 
-export interface ISourcesVm {
-    sources?: SourceVm[];
+export interface IVersionControlSystemsVm {
+    versionControlSystems?: VersionControlSystemVm[];
 }
 
-export class SourceVm implements ISourceVm {
+export class VersionControlSystemVm implements IVersionControlSystemVm {
     id?: string;
     name?: string;
 
-    constructor(data?: ISourceVm) {
+    constructor(data?: IVersionControlSystemVm) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1183,9 +1183,9 @@ export class SourceVm implements ISourceVm {
         }
     }
 
-    static fromJS(data: any): SourceVm {
+    static fromJS(data: any): VersionControlSystemVm {
         data = typeof data === 'object' ? data : {};
-        let result = new SourceVm();
+        let result = new VersionControlSystemVm();
         result.init(data);
         return result;
     }
@@ -1198,14 +1198,14 @@ export class SourceVm implements ISourceVm {
     }
 }
 
-export interface ISourceVm {
+export interface IVersionControlSystemVm {
     id?: string;
     name?: string;
 }
 
-export class ListSourcesQuery implements IListSourcesQuery {
+export class ListVersionControlSystemsQuery implements IListVersionControlSystemsQuery {
 
-    constructor(data?: IListSourcesQuery) {
+    constructor(data?: IListVersionControlSystemsQuery) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -1217,9 +1217,9 @@ export class ListSourcesQuery implements IListSourcesQuery {
     init(_data?: any) {
     }
 
-    static fromJS(data: any): ListSourcesQuery {
+    static fromJS(data: any): ListVersionControlSystemsQuery {
         data = typeof data === 'object' ? data : {};
-        let result = new ListSourcesQuery();
+        let result = new ListVersionControlSystemsQuery();
         result.init(data);
         return result;
     }
@@ -1230,7 +1230,7 @@ export class ListSourcesQuery implements IListSourcesQuery {
     }
 }
 
-export interface IListSourcesQuery {
+export interface IListVersionControlSystemsQuery {
 }
 
 export class ApiException extends Error {

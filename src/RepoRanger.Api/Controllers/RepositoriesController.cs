@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using RepoRanger.Application.Contracts.Repositories;
-using RepoRanger.Application.Queries.Repositories.GetRepositoriesBySourceId;
+using RepoRanger.Application.Queries.Repositories.GetRepositoriesByVersionControlSystemId;
 using RepoRanger.Application.Queries.Repositories.GetRepositoryById;
 using RepoRanger.Application.Queries.Repositories.ListRepositories;
 
@@ -21,6 +21,6 @@ public sealed class RepositoriesController : ApiControllerBase
     
     [HttpGet("[action]")]
     [ProducesResponseType(typeof(RepositorySummariesVm), 200)]
-    public async Task<ActionResult<RepositorySummariesVm>> GetBySourceId([FromQuery] GetRepositoriesBySourceIdQuery query) => 
+    public async Task<ActionResult<RepositorySummariesVm>> GetBySourceId([FromQuery] GetRepositoriesByVersionControlSystemIdQuery query) => 
         await Mediator.Send(query);
 }

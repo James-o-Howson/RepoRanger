@@ -9,7 +9,7 @@ namespace RepoRanger.Application.Queries.ProjectDependencies.SearchProjectDepend
 
 public sealed record SearchProjectDependenciesWithPaginationQuery : PaginatedRequest<ProjectDependencyVm>
 {
-    public IReadOnlyCollection<Guid>? SourceIds { get; init; } = Array.Empty<Guid>();
+    public IReadOnlyCollection<Guid>? VersionControlSystemIds { get; init; } = Array.Empty<Guid>();
     public IReadOnlyCollection<Guid>? RepositoryIds { get; init; } = Array.Empty<Guid>();
     public IReadOnlyCollection<Guid>? ProjectIds { get; init; } = Array.Empty<Guid>();
 }
@@ -50,9 +50,9 @@ internal sealed class SearchProjectDependenciesWithPaginationQueryHandler : IReq
         {
             query = QueryRepositoryDependencies(request.RepositoryIds);
         }
-        else if (request.SourceIds != null && request.SourceIds.Count != 0)
+        else if (request.VersionControlSystemIds != null && request.VersionControlSystemIds.Count != 0)
         {
-            query = QuerySourceDependencies(request.SourceIds);
+            query = QueryVersionControlSystemDependencies(request.VersionControlSystemIds);
         }
         else
         {
@@ -64,25 +64,25 @@ internal sealed class SearchProjectDependenciesWithPaginationQueryHandler : IReq
         return query;
     }
     
-    private IQueryable<ProjectDependency> QueryProjectDependencies(IReadOnlyCollection<Guid> projectIds) =>
+    private IQueryable<ProjectDependency> QueryProjectDependencies(IReadOnlyCollection<Guid> ids) =>
         _context.Projects
             .Include(p => p.ProjectDependencies)
             .Include(p => p.Repository)
-            .Where(p => projectIds.Contains(p.Id))
+            .Where(p => ids.Contains(p.Id))
             .SelectMany(p => p.ProjectDependencies);
     
-    private IQueryable<ProjectDependency> QueryRepositoryDependencies(IReadOnlyCollection<Guid> repositoryIds) =>
+    private IQueryable<ProjectDependency> QueryRepositoryDependencies(IReadOnlyCollection<Guid> ids) =>
         _context.Repositories
             .Include(b => b.Projects)
             .ThenInclude(p => p.ProjectDependencies)
-            .Where(r => repositoryIds.Contains(r.Id))
+            .Where(r => ids.Contains(r.Id))
             .SelectMany(r => r.Dependencies);
 
-    private IQueryable<ProjectDependency> QuerySourceDependencies(IReadOnlyCollection<Guid> sourceIds) =>
+    private IQueryable<ProjectDependency> QueryVersionControlSystemDependencies(IReadOnlyCollection<Guid> ids) =>
         _context.VersionControlSystems
             .Include(r => r.Repositories)
             .ThenInclude(b => b.Projects)
             .ThenInclude(p => p.ProjectDependencies)
-            .Where(r => sourceIds.Contains(r.Id))
+            .Where(r => ids.Contains(r.Id))
             .SelectMany(r => r.Dependencies);
 }

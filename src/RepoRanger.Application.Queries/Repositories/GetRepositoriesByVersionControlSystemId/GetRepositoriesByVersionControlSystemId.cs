@@ -3,29 +3,29 @@ using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 using RepoRanger.Application.Contracts.Repositories;
 
-namespace RepoRanger.Application.Queries.Repositories.GetRepositoriesBySourceId;
+namespace RepoRanger.Application.Queries.Repositories.GetRepositoriesByVersionControlSystemId;
 
-public sealed record GetRepositoriesBySourceIdQuery : IRequest<RepositorySummariesVm>
+public sealed record GetRepositoriesByVersionControlSystemIdQuery : IRequest<RepositorySummariesVm>
 {
-    public Guid? SourceId { get; init; }
+    public Guid? VersionControlSystemId { get; init; }
 }
 
-internal sealed class GetRepositoriesBySourceIdQueryHandler : IRequestHandler<GetRepositoriesBySourceIdQuery, RepositorySummariesVm>
+internal sealed class GetRepositoriesByVersionControlSystemIdQueryHandler : IRequestHandler<GetRepositoriesByVersionControlSystemIdQuery, RepositorySummariesVm>
 {
     private readonly IApplicationDbContext _context;
 
-    public GetRepositoriesBySourceIdQueryHandler(IApplicationDbContext context)
+    public GetRepositoriesByVersionControlSystemIdQueryHandler(IApplicationDbContext context)
     {
         _context = context;
     }
 
-    public async Task<RepositorySummariesVm> Handle(GetRepositoriesBySourceIdQuery request, CancellationToken cancellationToken)
+    public async Task<RepositorySummariesVm> Handle(GetRepositoriesByVersionControlSystemIdQuery request, CancellationToken cancellationToken)
     {
         var repositories = await _context.Repositories
             .AsNoTracking()
             .AsSplitQuery()
             .Include(r => r.DefaultBranch)
-            .Where(r => r.VersionControlSystemId == request.SourceId)
+            .Where(r => r.VersionControlSystemId == request.VersionControlSystemId)
             .Select(r => new RepositorySummaryVm
             {
                 Id = r.Id,

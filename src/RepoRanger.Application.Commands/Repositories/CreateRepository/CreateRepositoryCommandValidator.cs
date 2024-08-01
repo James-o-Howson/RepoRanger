@@ -15,7 +15,7 @@ internal sealed class CreateRepositoryCommandValidator : AbstractValidator<Creat
         RuleFor(c => c.BranchName)
             .NotEmpty();
         
-        RuleFor(c => c.SourceId)
+        RuleFor(c => c.VersionControlSystemId)
             .NotEmpty();
     }
 }

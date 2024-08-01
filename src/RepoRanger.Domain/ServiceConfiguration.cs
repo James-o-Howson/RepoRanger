@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.VersionControlSystems.Factories;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Updaters;
@@ -21,5 +22,7 @@ public static class ServiceConfiguration
         services.AddTransient<IProjectFactory, ProjectFactory>();
         services.AddTransient<IProjectMetadataFactory, ProjectMetadataFactory>();
         services.AddTransient<IProjectDependencyFactory, ProjectDependencyFactory>();
+
+        services.AddTransient<IDependencyManager, DependencyManager>();
     }
 }

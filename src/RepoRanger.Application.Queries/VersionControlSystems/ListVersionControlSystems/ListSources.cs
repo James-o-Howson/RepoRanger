@@ -7,11 +7,11 @@ namespace RepoRanger.Application.Queries.VersionControlSystems.ListVersionContro
 
 public sealed record ListVersionControlSystemsQuery : IRequest<VersionControlSystemsVm>;
 
-internal sealed class ListSourcesQueryHandler : IRequestHandler<ListVersionControlSystemsQuery, VersionControlSystemsVm>
+internal sealed class ListVersionControlSystemsQueryHandler : IRequestHandler<ListVersionControlSystemsQuery, VersionControlSystemsVm>
 {
     private readonly IApplicationDbContext _context;
 
-    public ListSourcesQueryHandler(IApplicationDbContext context)
+    public ListVersionControlSystemsQueryHandler(IApplicationDbContext context)
     {
         _context = context;
     }

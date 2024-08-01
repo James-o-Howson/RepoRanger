@@ -17,7 +17,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SearchDependencyInstancesWithPaginationQuery"
+                "$ref": "#/components/schemas/SearchProjectDependenciesWithPaginationQuery"
               }
             }
           },
@@ -30,7 +30,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PaginatedListOfDependencyInstanceVm"
+                  "$ref": "#/components/schemas/PaginatedListOfProjectDependencyVm"
                 }
               }
             }
@@ -223,7 +223,7 @@
         "operationId": "Repositories_GetBySourceId",
         "parameters": [
           {
-            "name": "SourceId",
+            "name": "VersionControlSystemId",
             "in": "query",
             "schema": {
               "type": "string",
@@ -247,18 +247,18 @@
         }
       }
     },
-    "/api/Sources": {
+    "/api/VersionControlSystems": {
       "get": {
         "tags": [
-          "Sources"
+          "VersionControlSystems"
         ],
-        "operationId": "Sources_List",
+        "operationId": "VersionControlSystems_List",
         "parameters": [
           {
             "name": "query",
             "in": "query",
             "schema": {
-              "$ref": "#/components/schemas/ListSourcesQuery"
+              "$ref": "#/components/schemas/ListVersionControlSystemsQuery"
             },
             "x-position": 1
           }
@@ -269,7 +269,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SourcesVm"
+                  "$ref": "#/components/schemas/VersionControlSystemsVm"
                 }
               }
             }
@@ -280,14 +280,14 @@
   },
   "components": {
     "schemas": {
-      "PaginatedListOfDependencyInstanceVm": {
+      "PaginatedListOfProjectDependencyVm": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
           "items": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/DependencyInstanceVm"
+              "$ref": "#/components/schemas/ProjectDependencyVm"
             }
           },
           "pageNumber": {
@@ -310,7 +310,7 @@
           }
         }
       },
-      "DependencyInstanceVm": {
+      "ProjectDependencyVm": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -335,16 +335,16 @@
           }
         }
       },
-      "SearchDependencyInstancesWithPaginationQuery": {
+      "SearchProjectDependenciesWithPaginationQuery": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/PaginatedRequestOfDependencyInstanceVm"
+            "$ref": "#/components/schemas/PaginatedRequestOfProjectDependencyVm"
           },
           {
             "type": "object",
             "additionalProperties": false,
             "properties": {
-              "sourceIds": {
+              "versionControlSystemIds": {
                 "type": "array",
                 "nullable": true,
                 "items": {
@@ -372,7 +372,7 @@
           }
         ]
       },
-      "PaginatedRequestOfDependencyInstanceVm": {
+      "PaginatedRequestOfProjectDependencyVm": {
         "type": "object",
         "x-abstract": true,
         "additionalProperties": false,
@@ -579,19 +579,19 @@
         "type": "object",
         "additionalProperties": false
       },
-      "SourcesVm": {
+      "VersionControlSystemsVm": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "sources": {
+          "versionControlSystems": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/SourceVm"
+              "$ref": "#/components/schemas/VersionControlSystemVm"
             }
           }
         }
       },
-      "SourceVm": {
+      "VersionControlSystemVm": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -604,7 +604,7 @@
           }
         }
       },
-      "ListSourcesQuery": {
+      "ListVersionControlSystemsQuery": {
         "type": "object",
         "additionalProperties": false
       }
