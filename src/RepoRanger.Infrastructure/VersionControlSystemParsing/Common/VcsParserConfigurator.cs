@@ -2,7 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 
-namespace RepoRanger.Infrastructure.SourceParsing.Common;
+namespace RepoRanger.Infrastructure.VersionControlSystemParsing.Common;
 
 internal interface ISourceParserConfigurator
 {
@@ -10,12 +10,12 @@ internal interface ISourceParserConfigurator
         where TFileContentParser : class, IProjectFileParser;
 }
 
-internal sealed class SourceParserConfigurator : ISourceParserConfigurator
+internal sealed class VcsParserConfigurator : ISourceParserConfigurator
 {
     private readonly IServiceCollection _services;
     private readonly IConfiguration _configuration;
 
-    public SourceParserConfigurator(IServiceCollection services, IConfiguration configuration)
+    public VcsParserConfigurator(IServiceCollection services, IConfiguration configuration)
     {
         _services = services;
         _configuration = configuration;

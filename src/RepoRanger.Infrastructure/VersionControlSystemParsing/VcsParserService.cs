@@ -2,15 +2,15 @@
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
 
-namespace RepoRanger.Infrastructure.SourceParsing;
+namespace RepoRanger.Infrastructure.VersionControlSystemParsing;
 
-internal sealed class VersionControlSystemParserService : IVersionControlSystemParserService
+internal sealed class VcsParserService : IVersionControlSystemParserService
 {
     private readonly IVersionControlSystemParser _versionControlSystemParser;
     private readonly ISourceParserResultHandler _resultHandler;
     private readonly VersionControlSystemContexts _options;
 
-    public VersionControlSystemParserService(
+    public VcsParserService(
         IOptions<VersionControlSystemContexts> options,
         IVersionControlSystemParser versionControlSystemParser,
         ISourceParserResultHandler resultHandler)

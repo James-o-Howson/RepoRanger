@@ -5,9 +5,9 @@ using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
-using RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
+using RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.Projects;
 
-namespace RepoRanger.Infrastructure.SourceParsing.DotNet;
+namespace RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet;
 
 internal sealed partial class DotNetProjectFileParser : IProjectFileParser
 {

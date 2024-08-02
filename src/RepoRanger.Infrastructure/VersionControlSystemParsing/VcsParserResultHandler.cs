@@ -8,21 +8,21 @@ using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 using RepoRanger.Domain.VersionControlSystems.Updaters;
 
-namespace RepoRanger.Infrastructure.SourceParsing;
+namespace RepoRanger.Infrastructure.VersionControlSystemParsing;
 
 internal interface ISourceParserResultHandler : IDisposable
 {
     Task HandleAsync(IEnumerable<VersionControlSystemParserResult> results, CancellationToken cancellationToken);
 }
 
-internal sealed class SourceParserResultHandler : ISourceParserResultHandler
+internal sealed class VcsParserResultHandler : ISourceParserResultHandler
 {
     private readonly IApplicationDbContext _dbContext;
     private readonly IVersionControlSystemFactory _factory;
     private readonly IVersionControlSystemUpdater _updater;
     private readonly IDependencyManager _dependencyManager;
 
-    public SourceParserResultHandler(IApplicationDbContext dbContext,
+    public VcsParserResultHandler(IApplicationDbContext dbContext,
         IVersionControlSystemUpdater updater,
         IVersionControlSystemFactory factory,
         IDependencyManager dependencyManager)

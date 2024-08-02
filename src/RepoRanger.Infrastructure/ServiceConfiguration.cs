@@ -6,12 +6,13 @@ using RepoRanger.Domain.VersionControlSystems.Git;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
 using RepoRanger.Infrastructure.Services;
-using RepoRanger.Infrastructure.SourceParsing;
-using RepoRanger.Infrastructure.SourceParsing.Angular;
-using RepoRanger.Infrastructure.SourceParsing.Common;
-using RepoRanger.Infrastructure.SourceParsing.DotNet;
-using RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
+using RepoRanger.Infrastructure.VersionControlSystemParsing;
+using RepoRanger.Infrastructure.VersionControlSystemParsing.Angular;
+using RepoRanger.Infrastructure.VersionControlSystemParsing.Common;
+using RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.Projects;
 using ThirdPartyApiClient;
+using DotNetProjectFileParser = RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.DotNetProjectFileParser;
+using ProjectReferenceAttributeParser = RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.Projects.ProjectReferenceAttributeParser;
 
 namespace RepoRanger.Infrastructure;
 
@@ -43,10 +44,10 @@ public static class ServiceConfiguration
         Action<ISourceParserConfigurator> configure)
     {
         services.Configure<VersionControlSystemContexts>(configuration.GetSection("VersionControlSystemParserOptions"));
-        services.TryAddTransient<IVersionControlSystemParserService, VersionControlSystemParserService>();
-        services.TryAddTransient<ISourceParserResultHandler, SourceParserResultHandler>();
+        services.TryAddTransient<IVersionControlSystemParserService, VcsParserService>();
+        services.TryAddTransient<ISourceParserResultHandler, VcsParserResultHandler>();
         
-        var configurator = new SourceParserConfigurator(services, configuration);
+        var configurator = new VcsParserConfigurator(services, configuration);
         configure.Invoke(configurator);
     }
 }

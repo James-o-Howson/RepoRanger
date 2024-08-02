@@ -1,6 +1,6 @@
 ﻿using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 
-namespace RepoRanger.Infrastructure.SourceParsing.DotNet.Projects;
+namespace RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.Projects;
 
 internal interface IProjectParser
 {

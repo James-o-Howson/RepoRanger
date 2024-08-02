@@ -6,7 +6,7 @@ using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
-namespace RepoRanger.Infrastructure.SourceParsing.Angular;
+namespace RepoRanger.Infrastructure.VersionControlSystemParsing.Angular;
 
 internal sealed class AngularProjectProjectFileParser : IProjectFileParser
 {
