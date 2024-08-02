@@ -25,7 +25,7 @@ internal sealed class ProjectDependencyFactory : IProjectDependencyFactory
     {
         var (dependency, version, source) = dependencyManager.Register(
             descriptor.Name, descriptor.Source, 
-            descriptor.Version ?? string.Empty);
+            descriptor.Version);
 
         return ProjectDependency.Create(project, dependency, version, source);
     }

@@ -42,7 +42,7 @@ public static class ServiceConfiguration
         IConfiguration configuration,
         Action<ISourceParserConfigurator> configure)
     {
-        services.Configure<VersionControlSystemContexts>(configuration.GetSection("SourceParserOptions"));
+        services.Configure<VersionControlSystemContexts>(configuration.GetSection("VersionControlSystemParserOptions"));
         services.TryAddTransient<IVersionControlSystemParserService, VersionControlSystemParserService>();
         services.TryAddTransient<ISourceParserResultHandler, SourceParserResultHandler>();
         

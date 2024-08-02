@@ -48,7 +48,7 @@ internal sealed partial class ProjectReferenceAttributeParser : IProjectParser
                     }
                 }
 
-                return new ProjectDependencyDescriptor(dependencyName, "Local", versionValue);
+                return new ProjectDependencyDescriptor(dependencyName, "Assembly", versionValue);
             });
         
         return dependencyViewModels;

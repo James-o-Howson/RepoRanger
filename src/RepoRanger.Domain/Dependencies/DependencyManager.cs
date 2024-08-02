@@ -7,7 +7,7 @@ namespace RepoRanger.Domain.Dependencies;
 public interface IDependencyManager : IDisposable
 {
     void Manage(List<Dependency> dependencies, List<DependencyVersion> versions, List<DependencySource> sources);
-    RegistrationResult Register(string dependencyName, string sourceName, string versionValue);
+    RegistrationResult Register(string dependencyName, string sourceName, string? versionValue);
 }
 
 internal sealed class DependencyManager : IDependencyManager
@@ -30,12 +30,11 @@ internal sealed class DependencyManager : IDependencyManager
         _sources = sources;
     }
     
-    public RegistrationResult Register(string dependencyName, string sourceName, string versionValue)
+    public RegistrationResult Register(string dependencyName, string sourceName, string? versionValue)
     {
         EnsureInitialized();
         DomainException.ThrowIfNullOrEmpty(dependencyName);
         DomainException.ThrowIfNullOrEmpty(sourceName);
-        DomainException.ThrowIfNullOrEmpty(versionValue);
         
         var existing = _dependencies.FirstOrDefault(d => d.Name == dependencyName);
         if (existing is null)
@@ -46,7 +45,7 @@ internal sealed class DependencyManager : IDependencyManager
         return HandleExisting(existing, sourceName, versionValue);
     }
 
-    private RegistrationResult RegisterNewDependency(string dependencyName, string sourceName, string versionValue)
+    private RegistrationResult RegisterNewDependency(string dependencyName, string sourceName, string? versionValue)
     {
         var dependency = Dependency.Create(dependencyName);
         var source = DependencySource.Create(sourceName);
@@ -56,7 +55,7 @@ internal sealed class DependencyManager : IDependencyManager
         return new RegistrationResult(dependency, version, source);
     }
 
-    private RegistrationResult HandleExisting(Dependency dependency, string sourceName, string versionValue)
+    private RegistrationResult HandleExisting(Dependency dependency, string sourceName, string? versionValue)
     {
         var source = GetOrCreateSource(sourceName);
         var version = TryGetVersion(dependency.Id, versionValue);
@@ -75,7 +74,7 @@ internal sealed class DependencyManager : IDependencyManager
         return new RegistrationResult(dependency, version, source);;
     }
 
-    private DependencyVersion? TryGetVersion(Guid dependencyId, string versionValue) => 
+    private DependencyVersion? TryGetVersion(Guid dependencyId, string? versionValue) => 
         _versions.FirstOrDefault(v => v.DependencyId == dependencyId && v.Value == versionValue);
 
     private DependencySource GetOrCreateSource(string sourceName) =>

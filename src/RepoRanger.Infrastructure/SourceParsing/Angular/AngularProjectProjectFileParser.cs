@@ -50,7 +50,7 @@ internal sealed class AngularProjectProjectFileParser : IProjectFileParser
         if (package is null) throw new ArgumentException($"Cannot deserialize {nameof(content)} into ${typeof(PackageJson)}", content);
 
         var relativePath = fileInfo.RelativeTo(gitRepository);
-        var projectDescriptor = new ProjectDescriptor(ProjectType.Angular, package.Name, FindAngularVersion(package), relativePath, null, GetProjectDependencies(package));
+        var projectDescriptor = new ProjectDescriptor(ProjectType.Angular, package.Name, FindAngularVersion(package), relativePath, [], GetProjectDependencies(package));
         
         _logger.LogInformation("Finished Parsing package.json {PackageJsonPath}. Dependencies found = {DependencyCount}", fileInfo.FullName, projectDescriptor.ProjectDependencies.Count);
         parsingContext.MarkAsParsed(fileInfo.FullName, fileInfo);

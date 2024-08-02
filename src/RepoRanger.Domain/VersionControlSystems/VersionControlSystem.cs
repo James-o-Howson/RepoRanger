@@ -14,8 +14,8 @@ public sealed class VersionControlSystem : Entity
     {
         var source = new VersionControlSystem
         {
-            Name = name ?? throw new ArgumentNullException(nameof(name), "Cannot be null"),
-            Location = location ?? throw new ArgumentNullException(nameof(location), "Cannot be null")
+            Name = name ?? throw new DomainException($"{nameof(name)} cannot be null"),
+            Location = location ?? throw new DomainException($"{nameof(location)} cannot be null"),
         };
         
         return source;
@@ -42,7 +42,11 @@ public sealed class VersionControlSystem : Entity
     public void AddRepositories(IEnumerable<Repository> repositories)
     {
         ArgumentNullException.ThrowIfNull(repositories);
-        _repositories.AddRange(repositories);
+        
+        foreach (var repository in repositories)
+        {
+            AddRepository(repository);
+        }
     }
     
     public void Delete()
@@ -58,8 +62,9 @@ public sealed class VersionControlSystem : Entity
     public void DeleteRepository(Guid repositoryId)
     {
         var index = _repositories.FindIndex(r => r.Id == repositoryId);
-        if (index < 0) throw new DomainException($"Cannot delete Repository with Id = {repositoryId} from VCS {Name}");
-        
+        if (index < 0) throw new DomainException($"Deletion failed, cannot find Repository with Id {repositoryId} from VCS {Name}");
+
+        _repositories[index].Delete();
         _repositories.RemoveAt(index);
     }
 }

@@ -26,7 +26,9 @@ public class ProjectDependency : Entity
         DependencyId = dependency.Id,
         Dependency = dependency,
         VersionId = version.Id,
-        Version = version
+        Version = version,
+        SourceId = source.Id,
+        Source = source
     };
 
     public void Update(Dependency dependency, DependencyVersion version, DependencySource source)

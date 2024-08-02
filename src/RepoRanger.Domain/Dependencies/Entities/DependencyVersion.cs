@@ -11,13 +11,13 @@ public class DependencyVersion : Entity
     public Guid Id { get; } = Guid.NewGuid();
     public Guid DependencyId { get; private init; }
     public Dependency Dependency { get; private init; } = null!;
-    public string Value { get; private init; } = null!;
+    public string? Value { get; private init; }
     public IReadOnlyCollection<DependencySource> Sources => _sources;
     public IReadOnlyCollection<Vulnerability> Vulnerabilities => _vulnerabilities;
 
     private DependencyVersion() { }
     
-    public static DependencyVersion Create(Dependency dependency, DependencySource source, string versionValue)
+    public static DependencyVersion Create(Dependency dependency, DependencySource source, string? versionValue)
     {
         var version = new DependencyVersion
         {
