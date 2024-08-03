@@ -42,8 +42,7 @@ internal sealed class AngularProjectProjectFileParser : IProjectFileParser
             return [];
         }
         
-        await using var fileStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.None);
-        var content = await fileStream.ReadAsync();
+        var content = await File.ReadAllTextAsync(fileInfo.FullName);
         
         var package = await JsonSerializer.DeserializeAsync<PackageJson>(
             new MemoryStream(Encoding.UTF8.GetBytes(content)),
