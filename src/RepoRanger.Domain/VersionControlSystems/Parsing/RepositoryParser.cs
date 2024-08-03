@@ -26,14 +26,14 @@ internal sealed class RepositoryParser : IRepositoryParser
         var filePaths = Directory.EnumerateFiles(gitRepository.FullName, "*.*", SearchOption.AllDirectories)
             .AsParallel()
             .WithDegreeOfParallelism(Environment.ProcessorCount);
+
+        List<ProjectDescriptor> projectDescriptors = [];
+        foreach (var filePath in filePaths)
+        {
+            projectDescriptors.AddRange(await TryExtractProjectsAsync(gitRepository, filePath, parseContext));
+        }
         
-        var parseFileTasks = filePaths.Select(filePath => 
-            AddProjectsAsync(gitRepository, filePath, parseContext));
-        
-        var projects = (await Task.WhenAll(parseFileTasks)).SelectMany(p => p);
-        
-        var repository = CreateRepository(gitRepository, projects.ToList());
-        return repository;
+        return CreateRepository(gitRepository, projectDescriptors);
     }
     
     private RepositoryDescriptor CreateRepository(DirectoryInfo gitDirectory, IReadOnlyCollection<ProjectDescriptor> projectDescriptors)
@@ -43,7 +43,7 @@ internal sealed class RepositoryParser : IRepositoryParser
         return new RepositoryDescriptor(detail.Name, detail.RemoteUrl, detail.BranchName, projectDescriptors);
     }
     
-    private static async Task<IReadOnlyCollection<ProjectDescriptor>> AddProjectsAsync(DirectoryInfo gitRepository, string filePath,
+    private static async Task<IReadOnlyCollection<ProjectDescriptor>> TryExtractProjectsAsync(DirectoryInfo gitRepository, string filePath,
         ParsingContext parsingContext)
     {
         IReadOnlyCollection<ProjectDescriptor> projectDescriptors = [];
@@ -57,9 +57,9 @@ internal sealed class RepositoryParser : IRepositoryParser
 
         if (parsingContext.IsAlreadyParsed(filePath)) return projectDescriptors;
 
-        parsingContext.MarkAsParsed(filePath, fileInfo);
         projectDescriptors = await fileContentParser.ParseAsync(gitRepository, fileInfo, parsingContext);
+        parsingContext.MarkAsParsed(filePath, fileInfo);
 
-        return parsingContext.IsAlreadyParsed(filePath) ? [] : projectDescriptors;
+        return projectDescriptors;
     }
 }

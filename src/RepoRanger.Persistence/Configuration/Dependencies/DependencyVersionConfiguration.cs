@@ -14,5 +14,10 @@ internal sealed class DependencyVersionConfiguration : IEntityTypeConfiguration<
         
         builder.HasMany(v => v.Sources)
             .WithMany(s => s.Versions);
+
+        builder.HasMany(v => v.Vulnerabilities)
+            .WithOne()
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

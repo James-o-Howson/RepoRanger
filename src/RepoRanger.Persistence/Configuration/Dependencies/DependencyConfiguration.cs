@@ -14,6 +14,8 @@ internal sealed class DependencyConfiguration : IEntityTypeConfiguration<Depende
 
         builder.HasMany(d => d.Versions)
             .WithOne(v => v.Dependency)
-            .HasForeignKey(v => v.DependencyId);
+            .HasForeignKey(v => v.DependencyId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

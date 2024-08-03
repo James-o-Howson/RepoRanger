@@ -12,20 +12,22 @@ internal sealed class ProjectDependencyConfiguration : IEntityTypeConfiguration<
 
         builder.HasOne(d => d.Dependency)
             .WithMany()
-            .HasForeignKey(d => d.DependencyId);
+            .HasForeignKey(d => d.DependencyId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(d => d.Version)
             .WithMany()
-            .HasForeignKey(d => d.VersionId);
+            .HasForeignKey(d => d.VersionId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.NoAction);
         
         builder.HasOne(d => d.Source)
             .WithMany()
-            .HasForeignKey(d => d.SourceId);
+            .HasForeignKey(d => d.SourceId)
+            .IsRequired()
+            .OnDelete(DeleteBehavior.NoAction);
 
-        builder.HasOne(d => d.Project)
-            .WithMany(p => p.ProjectDependencies)
-            .HasForeignKey(d => d.ProjectId);
-        
         builder.Property(d => d.CreatedBy)
             .IsRequired()
             .HasMaxLength(150)

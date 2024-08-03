@@ -18,6 +18,7 @@ internal sealed class ProjectConfiguration : IEntityTypeConfiguration<Project>
         builder.HasMany(p => p.ProjectDependencies)
             .WithOne(d => d.Project)
             .HasForeignKey(d => d.ProjectId)
+            .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasMany(p => p.Metadata)

@@ -39,9 +39,16 @@ internal sealed class VersionControlSystemParser : IVersionControlSystemParser
     {
         var gitRepositories = versionControlSystemContext.LocationInfo.GetGitRepositoryPaths();
 
-        return await Task.WhenAll(gitRepositories
-            .Where(p => !versionControlSystemContext.IsExcluded(p))
-            .Select(ParseRepositoryAsync));
+        var repositoryPaths = gitRepositories
+            .Where(p => !versionControlSystemContext.IsExcluded(p));
+
+        List<RepositoryDescriptor> descriptors = [];
+        foreach (var repositoryPath in repositoryPaths)
+        {
+            descriptors.Add(await ParseRepositoryAsync(repositoryPath));
+        }
+
+        return descriptors;
     }
 
     private async Task<RepositoryDescriptor> ParseRepositoryAsync(string repositoryPath)
