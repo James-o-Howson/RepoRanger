@@ -1,4 +1,5 @@
-﻿using RepoRanger.Domain.VersionControlSystems.Git;
+﻿using RepoRanger.Domain.Common.Exceptions;
+using RepoRanger.Domain.VersionControlSystems.Git;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 
@@ -49,16 +50,16 @@ internal sealed class RepositoryParser : IRepositoryParser
         var fileContentParser = parsingContext.FileParsers
             .SingleOrDefault(p => p.CanParse(filePath));
         
-        if (fileContentParser == null) return projectDescriptors;
+        if (fileContentParser == null) return [];
         
         // Don't read content or make file info unless the file path matches a parser, it's expensive.
         var fileInfo = new FileInfo(filePath);  
 
         if (parsingContext.IsAlreadyParsed(filePath)) return projectDescriptors;
-        
-        projectDescriptors = await fileContentParser.ParseAsync(gitRepository, fileInfo, parsingContext);
-        parsingContext.MarkAsParsed(filePath, fileInfo);
 
-        return projectDescriptors;
+        parsingContext.MarkAsParsed(filePath, fileInfo);
+        projectDescriptors = await fileContentParser.ParseAsync(gitRepository, fileInfo, parsingContext);
+
+        return parsingContext.IsAlreadyParsed(filePath) ? [] : projectDescriptors;
     }
 }

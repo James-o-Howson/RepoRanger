@@ -35,21 +35,34 @@ public class Repository : Entity
         .SelectMany(p => p.ProjectDependencies)
         .ToList();
 
+    public bool HasProject(Project project)
+    {
+        DomainException.ThrowIfNull(project);
+        return _projects.FindIndex(p => p.Id == project.Id) >= 0;
+    }
+    
     public void AddProject(Project project)
     {
         DomainException.ThrowIfNull(project);
-        //todo: ensure unique projects
+        if (HasProject(project))
+            throw new DomainException($"Repository: Id={Id} Name={Name} already contains Project: Id={project.Id} Name={project.Name} Path={project.Path}");
+        
         _projects.Add(project);
     }
     
     public void AddProjects(IEnumerable<Project> projects)
     {
         ArgumentNullException.ThrowIfNull(projects);
-        _projects.AddRange(projects.ToHashSet());
+
+        foreach (var project in projects)
+        {
+            AddProject(project);
+        }
     }
 
     public void Update(string defaultBranch)
     {
+        DomainException.ThrowIfNullOrEmpty(defaultBranch);
         DefaultBranch = defaultBranch;
     }
     

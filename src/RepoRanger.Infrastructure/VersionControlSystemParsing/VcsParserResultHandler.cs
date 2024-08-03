@@ -10,12 +10,12 @@ using RepoRanger.Domain.VersionControlSystems.Updaters;
 
 namespace RepoRanger.Infrastructure.VersionControlSystemParsing;
 
-internal interface ISourceParserResultHandler : IDisposable
+internal interface IVcsParserResultHandler : IDisposable
 {
     Task HandleAsync(IEnumerable<VersionControlSystemParserResult> results, CancellationToken cancellationToken);
 }
 
-internal sealed class VcsParserResultHandler : ISourceParserResultHandler
+internal sealed class VcsParserResultHandler : IVcsParserResultHandler
 {
     private readonly IApplicationDbContext _dbContext;
     private readonly IVersionControlSystemFactory _factory;
@@ -90,17 +90,39 @@ internal sealed class VcsParserResultHandler : ISourceParserResultHandler
     private async Task<List<DependencyVersion>> GetDependencyVersionsAsync(CancellationToken cancellationToken) =>
         await _dbContext.DependencyVersions
             .Include(d => d.Sources)
+            .Include(v => v.Dependency)
+            .Include(v => v.Sources)
             .ToListAsync(cancellationToken);
     
     private async Task<List<DependencySource>> GetDependencySourcesAsync(CancellationToken cancellationToken) =>
         await _dbContext.DependencySources
+            .Include(s => s.Versions)
             .ToListAsync(cancellationToken);
-    
+
     private async Task<List<VersionControlSystem>> GetVersionControlSystemsAsync(CancellationToken cancellationToken) =>
         await _dbContext.VersionControlSystems
+            // Eager Load Dependency on Project Dependency
             .Include(s => s.Repositories)
             .ThenInclude(r => r.Projects)
             .ThenInclude(p => p.ProjectDependencies)
+            .ThenInclude(pd => pd.Dependency)
+            .ThenInclude(d => d.Versions)
+            .ThenInclude(v => v.Sources)
+            .ThenInclude(s => s.Versions)
+            
+            // Eager Load Version on Project Dependency
+            .Include(s => s.Repositories)
+            .ThenInclude(r => r.Projects)
+            .ThenInclude(p => p.ProjectDependencies)
+            .ThenInclude(pd => pd.Version)
+            .ThenInclude(v => v.Dependency)
+            
+            // Eager Load Source on Project Dependency
+            .Include(s => s.Repositories)
+            .ThenInclude(r => r.Projects)
+            .ThenInclude(p => p.ProjectDependencies)
+            .ThenInclude(pd => pd.Source)
+            .ThenInclude(s => s.Versions)
             .ToListAsync(cancellationToken);
 
 

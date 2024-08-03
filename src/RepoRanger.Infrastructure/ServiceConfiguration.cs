@@ -45,7 +45,7 @@ public static class ServiceConfiguration
     {
         services.Configure<VersionControlSystemContexts>(configuration.GetSection("VersionControlSystemParserOptions"));
         services.TryAddTransient<IVersionControlSystemParserService, VcsParserService>();
-        services.TryAddTransient<ISourceParserResultHandler, VcsParserResultHandler>();
+        services.TryAddTransient<IVcsParserResultHandler, VcsParserResultHandler>();
         
         var configurator = new VcsParserConfigurator(services, configuration);
         configure.Invoke(configurator);
