@@ -42,7 +42,9 @@ internal sealed class AngularProjectProjectFileParser : IProjectFileParser
             return [];
         }
         
-        var content = await File.ReadAllTextAsync(fileInfo.FullName);
+        await using var fileStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.None);
+        var content = await fileStream.ReadAsync();
+        
         var package = await JsonSerializer.DeserializeAsync<PackageJson>(
             new MemoryStream(Encoding.UTF8.GetBytes(content)),
             JsonSerializerOptions);
@@ -70,12 +72,12 @@ internal sealed class AngularProjectProjectFileParser : IProjectFileParser
         return dependencies.ToHashSet();
     }
 
-    private static string FindAngularVersion(PackageJson packageJson)
+    private static string? FindAngularVersion(PackageJson packageJson)
     {
         const string angularVersionKey = "@angular/core";
         _ = packageJson.Dependencies.TryGetValue(angularVersionKey, out var version);
 
-        return version ?? string.Empty;
+        return version;
     }
 
     private static ProjectDependencyDescriptor CreateDependencyDescriptor(string dependencyName, string? version)

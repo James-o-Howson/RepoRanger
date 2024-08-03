@@ -37,14 +37,16 @@ internal sealed partial class DotNetProjectFileParser : IProjectFileParser
         ParsingContext parsingContext)
     {
         _logger.LogInformation("Parsing C# Solution {SolutionPath}", fileInfo.FullName);
+
+        await using var fileStream = new FileStream(fileInfo.FullName, FileMode.Open, FileAccess.Read, FileShare.None);
+        var content = await fileStream.ReadAsync();
         
-        var content = await File.ReadAllTextAsync(fileInfo.FullName);
         var projectDefinitions = GetProjectDefinitions(fileInfo, content);
         var projects = await CreateProjects(parsingContext, fileInfo, projectDefinitions);
 
         _logger.LogInformation("Finished Parsing C# Solution {SolutionPath}. Projects found = {ProjectsCount}",
             fileInfo.FullName, projects.Count);
-
+        
         return projects;
     }
 

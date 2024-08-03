@@ -1,7 +1,9 @@
-﻿// ReSharper disable once CheckNamespace
+﻿using System.Text;
+
+// ReSharper disable once CheckNamespace
 namespace System.IO;
 
-public static class FileInfoExtensions
+public static class FileExtensions
 {
     public static string RelativeTo(this FileInfo fileInfo, DirectoryInfo ancestorDirectory)
     {
@@ -15,6 +17,13 @@ public static class FileInfoExtensions
         var relativePath = Uri.UnescapeDataString(relativeUri.ToString());
 
         return relativePath.Replace('/', '\\');
+    }
 
+    public static async Task<string> ReadAsync(this FileStream fileStream)
+    {
+        var buffer = new byte[fileStream.Length];
+        _ = await fileStream.ReadAsync(buffer);
+        
+        return Encoding.UTF8.GetString(buffer);
     }
 }
