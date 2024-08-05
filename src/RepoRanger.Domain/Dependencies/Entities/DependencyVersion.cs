@@ -26,7 +26,7 @@ public class DependencyVersion : Entity
             Value = versionValue
         };
 
-        version.AddSource(source);
+        version.TryAddSource(source);
         source.AddVersion(version);
         
         return version;
@@ -38,7 +38,7 @@ public class DependencyVersion : Entity
         _vulnerabilities.Add(vulnerability);
     }
 
-    public void AddSource(DependencySource source)
+    public void TryAddSource(DependencySource source)
     {
         DomainException.ThrowIfNull(source);
         if (HasSource(source.Name)) return;

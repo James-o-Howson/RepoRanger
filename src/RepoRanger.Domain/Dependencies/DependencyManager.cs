@@ -19,7 +19,7 @@ internal sealed class DependencyManager : IDependencyManager
 
     public void Manage(List<Dependency> dependencies, List<DependencyVersion> versions, List<DependencySource> sources)
     {
-        if (_initialised) throw new InvalidOperationException("DependencyManager is already initialised.");
+        if (_initialised) throw new InvalidOperationException($"{nameof(DependencyManager)} is already initialised.");
         DomainException.ThrowIfNull(dependencies);
         DomainException.ThrowIfNull(versions);
         DomainException.ThrowIfNull(sources);
@@ -32,58 +32,64 @@ internal sealed class DependencyManager : IDependencyManager
     
     public RegistrationResult Register(string dependencyName, string sourceName, string? versionValue)
     {
-        EnsureInitialized();
+        if (!_initialised) throw new InvalidOperationException($"{nameof(DependencyManager)} is not initialised.");
         DomainException.ThrowIfNullOrEmpty(dependencyName);
         DomainException.ThrowIfNullOrEmpty(sourceName);
         
         var existing = _dependencies.FirstOrDefault(d => d.Name == dependencyName);
-        if (existing is null)
-        {
-            return RegisterNewDependency(dependencyName, sourceName, versionValue);
-        }
-
-        return HandleExisting(existing, sourceName, versionValue);
+        return existing is null ?
+            RegisterNewDependency(dependencyName, sourceName, versionValue) : 
+            RegisterExisting(existing, sourceName, versionValue);
     }
 
     private RegistrationResult RegisterNewDependency(string dependencyName, string sourceName, string? versionValue)
     {
         var dependency = Dependency.Create(dependencyName);
-        var source = DependencySource.Create(sourceName);
-        var version = DependencyVersion.Create(dependency, source, versionValue);
+        var source = GetOrCreateSource(sourceName);
+        var version = GetOrCreateVersion(dependency, source, versionValue);
         
         _dependencies.Add(dependency);
+        dependency.TryAddVersion(version);
         return new RegistrationResult(dependency, version, source);
     }
 
-    private RegistrationResult HandleExisting(Dependency dependency, string sourceName, string? versionValue)
+    private RegistrationResult RegisterExisting(Dependency dependency, string sourceName, string? versionValue)
     {
         var source = GetOrCreateSource(sourceName);
-        var version = TryGetVersion(dependency.Id, versionValue);
+        var version = GetOrCreateVersion(dependency, source, versionValue);
         
-        if (version is null)
-        {
-
-            version = DependencyVersion.Create(dependency, source, versionValue);
-        }
-        else
-        {
-            version.AddSource(source);
-        }
-        
-        dependency.AddVersion(version);
         return new RegistrationResult(dependency, version, source);;
     }
 
-    private DependencyVersion? TryGetVersion(Guid dependencyId, string? versionValue) => 
-        _versions.FirstOrDefault(v => v.DependencyId == dependencyId && v.Value == versionValue);
-
-    private DependencySource GetOrCreateSource(string sourceName) =>
-        _sources.FirstOrDefault(s => s.Name == sourceName) ?? 
-        DependencySource.Create(sourceName);
-
-    private void EnsureInitialized()
+    private DependencyVersion GetOrCreateVersion(Dependency dependency, DependencySource source, string? versionValue)
     {
-        if (!_initialised) throw new InvalidOperationException("DependencyManager is not initialised.");
+        var version = _versions.FirstOrDefault(v => 
+            v.DependencyId == dependency.Id && 
+            v.Value == versionValue);
+        
+        if (version is null)
+        {
+            version = DependencyVersion.Create(dependency, source, versionValue);
+            _versions.Add(version);
+        }
+        else
+        {
+            version.TryAddSource(source);
+        }
+
+        dependency.TryAddVersion(version);
+        return version;
+    }
+
+    private DependencySource GetOrCreateSource(string sourceName)
+    {
+        var source = _sources.FirstOrDefault(s => s.Name == sourceName);
+        if (source != null) return source;
+        
+        source = DependencySource.Create(sourceName);
+        _sources.Add(source);
+
+        return source;
     }
 
     public void Dispose()

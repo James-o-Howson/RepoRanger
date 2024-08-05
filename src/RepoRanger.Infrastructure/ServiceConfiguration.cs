@@ -2,6 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using RepoRanger.Application.Abstractions.Interfaces;
+using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.VersionControlSystems.Git;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
@@ -20,6 +21,7 @@ public static class ServiceConfiguration
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddTransient<IDependencyManagerFactory, DependencyManagerFactory>();
         services.AddTransient<IGitRepositoryDetailFactory, GitRepositoryDetailFactory>();
         services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IVulnerabilityService, VulnerabilitiesService>();

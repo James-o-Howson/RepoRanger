@@ -24,6 +24,6 @@ public class DependencySource : Entity
         DomainException.ThrowIfNull(version);
         if (Versions.Any(v => v.Id == version.Id)) return;
         _versions.Add(version);
-        version.AddSource(this);
+        version.TryAddSource(this);
     }
 }

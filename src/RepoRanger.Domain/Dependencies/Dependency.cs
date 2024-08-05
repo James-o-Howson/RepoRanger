@@ -20,7 +20,7 @@ public class Dependency : Entity
         Name = name
     };
     
-    public void AddVersion(DependencyVersion version)
+    public void TryAddVersion(DependencyVersion version)
     {
         DomainException.ThrowIfNull(version);
         if (HasVersion(version.Id)) return;
