@@ -1,7 +1,6 @@
 ﻿using MediatR;
 using RepoRanger.Application.Abstractions.Exceptions;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
-using RepoRanger.Domain.VersionControlSystems;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Application.Commands.Repositories.CreateRepository;

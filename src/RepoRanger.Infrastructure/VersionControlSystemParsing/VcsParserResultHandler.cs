@@ -17,83 +17,56 @@ internal interface IVcsParserResultHandler
 internal sealed class VcsParserResultHandler : IVcsParserResultHandler
 {
     private readonly IApplicationDbContext _dbContext;
+    private readonly IDependencyManagerFactory _dependencyManagerFactory;
     private readonly IVersionControlSystemFactory _factory;
     private readonly IVersionControlSystemUpdater _updater;
-    private readonly IDependencyManagerFactory _dependencyManagerFactory;
 
     public VcsParserResultHandler(IApplicationDbContext dbContext,
-        IVersionControlSystemUpdater updater,
+        IDependencyManagerFactory dependencyManagerFactory, 
         IVersionControlSystemFactory factory,
-        IDependencyManagerFactory dependencyManagerFactory)
+        IVersionControlSystemUpdater updater)
     {
         _dbContext = dbContext;
-        _updater = updater;
-        _factory = factory;
         _dependencyManagerFactory = dependencyManagerFactory;
+        _factory = factory;
+        _updater = updater;
     }
 
     public async Task HandleAsync(IEnumerable<VersionControlSystemParserResult> results, CancellationToken cancellationToken)
     {
         ArgumentNullException.ThrowIfNull(results);
         
-        var versionControlSystems = await GetVersionControlSystemsAsync(cancellationToken);
+        var existing = await GetVersionControlSystemsAsync(cancellationToken);
         var descriptors = results.Select(r => r.VersionControlSystemDescriptor);
+        var dependencyManager = await _dependencyManagerFactory.CreateAsync(cancellationToken);
         
-        await Synchronize(descriptors, versionControlSystems, cancellationToken);
-        await _dbContext.SaveChangesAsync(cancellationToken);
-    }
-    
-    private async Task Synchronize(IEnumerable<VersionControlSystemDescriptor> descriptors,
-        List<VersionControlSystem> versionControlSystems, CancellationToken cancellationToken)
-    {
-        List<VersionControlSystem> newVersionControlSystems = [];
         foreach (var descriptor in descriptors)
         {
-            var vcs = await CreateOrUpdate(descriptor, versionControlSystems, cancellationToken);
-            newVersionControlSystems.Add(vcs);
+            await Synchronize(existing, descriptor, dependencyManager, cancellationToken);
         }
-
-        await _dbContext.VersionControlSystems.AddRangeAsync(newVersionControlSystems, cancellationToken);
+        
+        await _dbContext.SaveChangesAsync(cancellationToken);
     }
 
-    private async Task<VersionControlSystem> CreateOrUpdate(VersionControlSystemDescriptor descriptor, 
-        List<VersionControlSystem> versionControlSystems, CancellationToken cancellationToken)
+    private async Task Synchronize(List<VersionControlSystem> existing, VersionControlSystemDescriptor descriptor,
+        IDependencyManager dependencyManager, CancellationToken cancellationToken)
     {
-        var dependencyManager = await _dependencyManagerFactory.CreateAsync(cancellationToken);
-        var existing = versionControlSystems.SingleOrDefault(v => v.Name == descriptor.Name);
-        if (existing is null)
+        var match = existing.SingleOrDefault(v => v.Name == descriptor.Name);
+        if (match is null)
         {
             var versionControlSystem = _factory.Create(dependencyManager, descriptor);
-            return versionControlSystem;
+            await _dbContext.VersionControlSystems.AddAsync(versionControlSystem, cancellationToken);
+            return;
         }
 
-        _updater.Update(existing, descriptor, dependencyManager);
-        return existing;
+        _updater.Update(match, descriptor, dependencyManager);
+        _dbContext.MarkModified(match);
     }
 
     private async Task<List<VersionControlSystem>> GetVersionControlSystemsAsync(CancellationToken cancellationToken) =>
         await _dbContext.VersionControlSystems
-            // Eager Load Dependency on Project Dependency
             .Include(s => s.Repositories)
             .ThenInclude(r => r.Projects)
             .ThenInclude(p => p.ProjectDependencies)
-            .ThenInclude(pd => pd.Dependency)
-            .ThenInclude(d => d.Versions)
-            .ThenInclude(v => v.Sources)
-            .ThenInclude(s => s.Versions)
-            
-            // Eager Load Version on Project Dependency
-            .Include(s => s.Repositories)
-            .ThenInclude(r => r.Projects)
-            .ThenInclude(p => p.ProjectDependencies)
-            .ThenInclude(pd => pd.Version)
-            .ThenInclude(v => v.Dependency)
-            
-            // Eager Load Source on Project Dependency
-            .Include(s => s.Repositories)
-            .ThenInclude(r => r.Projects)
-            .ThenInclude(p => p.ProjectDependencies)
-            .ThenInclude(pd => pd.Source)
-            .ThenInclude(s => s.Versions)
             .ToListAsync(cancellationToken);
 }

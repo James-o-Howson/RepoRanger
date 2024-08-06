@@ -6,15 +6,15 @@ using RepoRanger.Domain.VersionControlSystems.Parsing;
 namespace RepoRanger.BackgroundJobs.Jobs;
 
 [DisallowConcurrentExecution]
-internal sealed class RepoRangerJob : IJob
+internal sealed class VcsParserJob : IJob
 {
-    internal static readonly JobKey JobKey = new(nameof(RepoRangerJob));
+    internal static readonly JobKey JobKey = new(nameof(VcsParserJob));
     
     private readonly IVersionControlSystemParserService _versionControlSystemParserService;
-    private readonly ILogger<RepoRangerJob> _logger;
+    private readonly ILogger<VcsParserJob> _logger;
     private readonly BackgroundJobOptions _backgroundJobOptions;
 
-    public RepoRangerJob(ILogger<RepoRangerJob> logger,
+    public VcsParserJob(ILogger<VcsParserJob> logger,
         IOptions<BackgroundJobOptions> options, 
         IVersionControlSystemParserService versionControlSystemParserService)
     {
@@ -27,11 +27,11 @@ internal sealed class RepoRangerJob : IJob
     {
         try
         {
-            _logger.LogInformation("Repo Ranger Job Starting");
+            _logger.LogInformation("Version Control System Job Starting");
 
             if (!_backgroundJobOptions.RepoClonerJobEnabled)
             {
-                _logger.LogInformation("Repo Ranger Job Disabled - Skipping");
+                _logger.LogInformation("Version Control System Job Disabled - Skipping");
                 return;
             }
 
@@ -39,7 +39,7 @@ internal sealed class RepoRangerJob : IJob
         }
         catch (Exception e)
         {
-            _logger.LogError(e, "Repo Ranger Job - Error");
+            _logger.LogError(e, "Version Control System Job - Error");
             context.Result = e;
         }
     }
@@ -47,6 +47,6 @@ internal sealed class RepoRangerJob : IJob
     private async Task StartRanging(CancellationToken cancellationToken)
     {
         await _versionControlSystemParserService.ParseAsync(cancellationToken);
-        _logger.LogInformation("Repo Ranger Job Finished");
+        _logger.LogInformation("Version Control System Job Finished");
     }
 }

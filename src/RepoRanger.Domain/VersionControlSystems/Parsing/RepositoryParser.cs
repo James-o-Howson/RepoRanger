@@ -1,11 +1,10 @@
-﻿using RepoRanger.Domain.Common.Exceptions;
-using RepoRanger.Domain.VersionControlSystems.Git;
+﻿using RepoRanger.Domain.VersionControlSystems.Git;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 
 namespace RepoRanger.Domain.VersionControlSystems.Parsing;
 
-public interface IRepositoryParser
+internal interface IRepositoryParser
 {
     Task<RepositoryDescriptor> ParseAsync(DirectoryInfo gitRepository, ParsingContext parsingContext);
 }

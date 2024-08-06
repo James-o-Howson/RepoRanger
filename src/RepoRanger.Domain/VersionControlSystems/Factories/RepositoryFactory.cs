@@ -4,7 +4,7 @@ using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 
 namespace RepoRanger.Domain.VersionControlSystems.Factories;
 
-public interface IRepositoryFactory
+internal interface IRepositoryFactory
 {
     Repository Create(VersionControlSystem vcs, RepositoryDescriptor descriptor, IDependencyManager dependencyManager);
 }

@@ -22,4 +22,5 @@ public interface IApplicationDbContext
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     DbSet<TEntity> Set<TEntity>() where TEntity : class;
+    void MarkModified<TEntity>(TEntity entity) where TEntity : class;
 }

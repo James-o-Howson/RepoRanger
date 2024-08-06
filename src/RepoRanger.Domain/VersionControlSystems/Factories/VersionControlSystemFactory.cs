@@ -9,7 +9,7 @@ public interface IVersionControlSystemFactory
     VersionControlSystem Create(IDependencyManager dependencyManager, VersionControlSystemDescriptor descriptor);
 }
 
-public class VersionControlSystemFactory : IVersionControlSystemFactory
+internal sealed class VersionControlSystemFactory : IVersionControlSystemFactory
 {
     private readonly IRepositoryFactory _repositoryFactory;
 

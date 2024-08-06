@@ -5,7 +5,7 @@ using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 
 namespace RepoRanger.Domain.VersionControlSystems.Updaters;
 
-public interface IProjectUpdater
+internal interface IProjectUpdater
 {
     void Update(Project target, ProjectDescriptor descriptor, IDependencyManager dependencyManager);
 }

@@ -1,5 +1,5 @@
 ﻿using RepoRanger.Domain.Common;
-using RepoRanger.Domain.VersionControlSystems.Exceptions;
+using RepoRanger.Domain.Common.Exceptions;
 
 namespace RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
@@ -20,7 +20,7 @@ public sealed class ProjectType : ValueObject
 
         if (!SupportedSources.Contains(source))
         {
-            throw new UnsupportedProjectTypeException(value);
+            throw new DomainException($"Project Type \"{value}\" is unsupported.");
         }
 
         return source;

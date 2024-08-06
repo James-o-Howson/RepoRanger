@@ -12,10 +12,10 @@ public static class ServiceConfiguration
     {
         services.Configure<BackgroundJobOptions>(configuration.GetSection(BackgroundJobOptions.ConfigurationKey));
 
-        services.AddRepoRangerJob(environment);
+        services.AddVcsParserJob(environment);
     }
 
-    private static void AddRepoRangerJob(this IServiceCollection services, IHostEnvironment environment)
+    private static void AddVcsParserJob(this IServiceCollection services, IHostEnvironment environment)
     {
         if (environment.IsIntegrationTest()) return;
         services.AddQuartz(configurator =>
@@ -23,8 +23,8 @@ public static class ServiceConfiguration
             configurator.UseSimpleTypeLoader();
             configurator.UseInMemoryStore();
 
-            configurator.AddJob<RepoRangerJob>(RepoRangerJob.JobKey)
-                .AddTrigger(trigger => trigger.ForJob(RepoRangerJob.JobKey).StartNow()
+            configurator.AddJob<VcsParserJob>(VcsParserJob.JobKey)
+                .AddTrigger(trigger => trigger.ForJob(VcsParserJob.JobKey).StartNow()
                     .WithSimpleSchedule(schedule => schedule.WithIntervalInMinutes(60).RepeatForever()));
         });
 

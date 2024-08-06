@@ -26,6 +26,11 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
 
     public DbSet<Message> Messages { get; set; }
     // public DbSet<Vulnerability> Vulnerabilities { get; set; }
+
+    public void MarkModified<TEntity>(TEntity entity) where TEntity : class
+    {
+        Entry(entity).State = EntityState.Modified;
+    }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

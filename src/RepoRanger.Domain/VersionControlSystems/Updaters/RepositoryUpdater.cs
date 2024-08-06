@@ -5,7 +5,7 @@ using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
 
 namespace RepoRanger.Domain.VersionControlSystems.Updaters;
 
-public interface IRepositoryUpdater
+internal interface IRepositoryUpdater
 {
     void Update(Repository target, RepositoryDescriptor descriptor,
         IDependencyManager dependencyManager);

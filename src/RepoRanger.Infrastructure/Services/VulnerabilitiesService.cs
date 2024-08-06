@@ -1,5 +1,4 @@
 ﻿using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.Dependencies.Entities;
 using ThirdPartyApiClient;
 

@@ -2,7 +2,6 @@
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 using RepoRanger.Application.Contracts.Projects;
-using RepoRanger.Domain.VersionControlSystems;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Application.Queries.Projects.GetProjectsByRepositoryIds;

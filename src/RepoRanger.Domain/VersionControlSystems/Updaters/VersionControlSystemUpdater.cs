@@ -10,7 +10,7 @@ public interface IVersionControlSystemUpdater
         IDependencyManager dependencyManager);
 }
 
-public class VersionControlSystemUpdater : IVersionControlSystemUpdater
+internal sealed class VersionControlSystemUpdater : IVersionControlSystemUpdater
 {
     private readonly IRepositoryFactory _repositoryFactory;
     private readonly IRepositoryUpdater _repositoryUpdater;

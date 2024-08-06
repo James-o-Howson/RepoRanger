@@ -31,6 +31,7 @@ internal sealed class DependencyManagerFactory : IDependencyManagerFactory
         await _dbContext.Dependencies
             .Include(d => d.Versions)
             .ThenInclude(v => v.Sources)
+            .AsSplitQuery()
             .ToListAsync(cancellationToken);
     
     private async Task<List<DependencyVersion>> GetDependencyVersionsAsync(CancellationToken cancellationToken) =>
@@ -38,10 +39,12 @@ internal sealed class DependencyManagerFactory : IDependencyManagerFactory
             .Include(d => d.Sources)
             .Include(v => v.Dependency)
             .Include(v => v.Sources)
+            .AsSplitQuery()
             .ToListAsync(cancellationToken);
     
     private async Task<List<DependencySource>> GetDependencySourcesAsync(CancellationToken cancellationToken) =>
         await _dbContext.DependencySources
             .Include(s => s.Versions)
+            .AsSplitQuery()
             .ToListAsync(cancellationToken);
 }
