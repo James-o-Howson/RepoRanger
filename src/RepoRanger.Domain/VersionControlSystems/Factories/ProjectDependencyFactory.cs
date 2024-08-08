@@ -1,7 +1,7 @@
 ﻿using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.VersionControlSystems.Entities;
-using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
+using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
 namespace RepoRanger.Domain.VersionControlSystems.Factories;
 

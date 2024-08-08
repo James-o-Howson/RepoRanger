@@ -1,5 +1,5 @@
 ﻿using RepoRanger.Domain.VersionControlSystems.Entities;
-using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
+using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
 namespace RepoRanger.Domain.VersionControlSystems.Factories;
 

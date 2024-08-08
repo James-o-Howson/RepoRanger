@@ -3,7 +3,7 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
-using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
+using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Infrastructure.VersionControlSystemParsing.Angular;

@@ -1,6 +1,6 @@
 ﻿using RepoRanger.Domain.VersionControlSystems.Git;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
-using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
+using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
 namespace RepoRanger.Domain.VersionControlSystems.Parsing;
 

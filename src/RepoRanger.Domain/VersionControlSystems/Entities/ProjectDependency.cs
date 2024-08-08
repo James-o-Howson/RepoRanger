@@ -2,10 +2,11 @@
 using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.Dependencies.Entities;
+using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
-public class ProjectDependency : Entity
+public class ProjectDependency : Entity, IAlternateKeyProvider
 {
     public Guid Id { get; } = Guid.NewGuid();
     public Guid ProjectId { get; private set; }
@@ -44,4 +45,6 @@ public class ProjectDependency : Entity
         Source = source;
         SourceId = source.Id;
     }
+
+    public AlternateKey GetAlternateKey { get; }
 }

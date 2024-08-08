@@ -1,5 +1,5 @@
 ﻿using System.Xml.Linq;
-using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
+using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
 namespace RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.Projects;
 

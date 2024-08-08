@@ -4,8 +4,8 @@ using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.VersionControlSystems;
 using RepoRanger.Domain.VersionControlSystems.Factories;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
-using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
-using RepoRanger.Domain.VersionControlSystems.Updaters;
+using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
+using RepoRanger.Domain.VersionControlSystems.Synchronizers;
 
 namespace RepoRanger.Infrastructure.VersionControlSystemParsing;
 
@@ -19,12 +19,12 @@ internal sealed class VcsParserResultHandler : IVcsParserResultHandler
     private readonly IApplicationDbContext _dbContext;
     private readonly IDependencyManagerFactory _dependencyManagerFactory;
     private readonly IVersionControlSystemFactory _factory;
-    private readonly IVersionControlSystemUpdater _updater;
+    private readonly IVersionControlSystemSynchronizer _updater;
 
     public VcsParserResultHandler(IApplicationDbContext dbContext,
         IDependencyManagerFactory dependencyManagerFactory, 
         IVersionControlSystemFactory factory,
-        IVersionControlSystemUpdater updater)
+        IVersionControlSystemSynchronizer updater)
     {
         _dbContext = dbContext;
         _dependencyManagerFactory = dependencyManagerFactory;
@@ -66,7 +66,11 @@ internal sealed class VcsParserResultHandler : IVcsParserResultHandler
     private async Task<List<VersionControlSystem>> GetVersionControlSystemsAsync(CancellationToken cancellationToken) =>
         await _dbContext.VersionControlSystems
             .Include(s => s.Repositories)
-            .ThenInclude(r => r.Projects)
-            .ThenInclude(p => p.ProjectDependencies)
+                .ThenInclude(r => r.Projects)
+                    .ThenInclude(p => p.ProjectDependencies)
+            .Include(s => s.Repositories)
+                .ThenInclude(r => r.Projects)
+                    .ThenInclude(p => p.Metadata)
+            .AsSplitQuery()
             .ToListAsync(cancellationToken);
 }

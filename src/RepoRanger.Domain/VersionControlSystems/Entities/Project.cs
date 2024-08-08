@@ -1,10 +1,11 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
+using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
-public class Project : Entity
+public class Project : Entity, IAlternateKeyProvider
 {
     private readonly List<ProjectDependency> _projectDependencies = [];
     private readonly List<ProjectMetadata> _metadata = [];
@@ -58,7 +59,7 @@ public class Project : Entity
         return ProjectDependencies.Any(d => d.Id == projectDependencyId);
     }
 
-    public void Update(string version, IEnumerable<ProjectMetadata> metadata, ProjectType type)
+    public void Update(ProjectType type, string version, IEnumerable<ProjectMetadata> metadata)
     {
         Version = version;
         
@@ -90,4 +91,6 @@ public class Project : Entity
             p.Dependency.Name == name &&
             p.Version.Value == versionValue);
     }
+
+    public AlternateKey GetAlternateKey { get; }
 }

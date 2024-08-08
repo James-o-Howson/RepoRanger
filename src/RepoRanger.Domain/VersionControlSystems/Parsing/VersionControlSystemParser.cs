@@ -1,6 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
-using RepoRanger.Domain.VersionControlSystems.Parsing.Contracts;
+using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
 namespace RepoRanger.Domain.VersionControlSystems.Parsing;
 

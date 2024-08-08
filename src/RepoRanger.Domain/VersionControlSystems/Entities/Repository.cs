@@ -1,9 +1,10 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
+using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
-public class Repository : Entity
+public class Repository : Entity, IAlternateKeyProvider
 {
     private readonly List<Project> _projects = [];
 
@@ -83,4 +84,6 @@ public class Repository : Entity
         
         _projects.RemoveAt(index);
     }
+
+    public AlternateKey GetAlternateKey { get; }
 }
