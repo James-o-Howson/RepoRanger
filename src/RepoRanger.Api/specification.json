@@ -325,7 +325,8 @@
             "type": "string"
           },
           "version": {
-            "type": "string"
+            "type": "string",
+            "nullable": true
           },
           "projectName": {
             "type": "string"

@@ -553,7 +553,7 @@ export class ProjectDependencyVm implements IProjectDependencyVm {
     id?: string;
     source?: string;
     name?: string;
-    version?: string;
+    version?: string | undefined;
     projectName?: string;
     repositoryName?: string;
 
@@ -600,7 +600,7 @@ export interface IProjectDependencyVm {
     id?: string;
     source?: string;
     name?: string;
-    version?: string;
+    version?: string | undefined;
     projectName?: string;
     repositoryName?: string;
 }

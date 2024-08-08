@@ -60,10 +60,10 @@ internal static class ProjectDependencyPaginationExtensions
     {
         return filter.MatchMode switch
         {
-            MatchMode.StartsWith => d => d.Version.Value.StartsWith(filter.Value),
-            MatchMode.Contains => d => d.Version.Value.Contains(filter.Value),
-            MatchMode.NotContains => d => !d.Version.Value.Contains(filter.Value),
-            MatchMode.EndsWith => d => d.Version.Value.EndsWith(filter.Value),
+            MatchMode.StartsWith => d => d.Version.Value != null && d.Version.Value.StartsWith(filter.Value),
+            MatchMode.Contains => d =>  d.Version.Value != null && d.Version.Value.Contains(filter.Value),
+            MatchMode.NotContains => d =>  d.Version.Value != null && !d.Version.Value.Contains(filter.Value),
+            MatchMode.EndsWith => d =>  d.Version.Value != null && d.Version.Value.EndsWith(filter.Value),
             MatchMode.Equals => d => d.Version.Value == filter.Value,
             MatchMode.NotEquals => d => d.Version.Value != filter.Value,
             _ => throw new ArgumentException($"Invalid {nameof(MatchMode)}")
