@@ -71,12 +71,12 @@ internal sealed class AngularProjectProjectFileParser : IProjectFileParser
         return dependencies.ToHashSet();
     }
 
-    private static string? FindAngularVersion(PackageJson packageJson)
+    private static string FindAngularVersion(PackageJson packageJson)
     {
         const string angularVersionKey = "@angular/core";
         _ = packageJson.Dependencies.TryGetValue(angularVersionKey, out var version);
 
-        return version;
+        return version ?? string.Empty;
     }
 
     private static ProjectDependencyDescriptor CreateDependencyDescriptor(string dependencyName, string? version)

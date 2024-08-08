@@ -92,5 +92,5 @@ public class Project : Entity, IAlternateKeyProvider
             p.Version.Value == versionValue);
     }
 
-    public AlternateKey GetAlternateKey { get; }
+    public AlternateKey GetAlternateKey => new ProjectAlternateKey(Name, Path);
 }

@@ -1,7 +1,7 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
 
-namespace RepoRanger.Domain.VersionControlSystems.Synchronizers;
+namespace RepoRanger.Domain.VersionControlSystems.Updaters;
 
 internal interface ICollectionSynchronizer<TEntity, TChangeDescriptor> : IDisposable
     where TEntity : Entity, IAlternateKeyProvider

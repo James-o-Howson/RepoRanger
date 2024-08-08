@@ -1,3 +1,8 @@
-﻿namespace RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
+﻿using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
 
-public sealed record ProjectMetadataDescriptor(string Key, string Value);
+namespace RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
+
+public sealed record ProjectMetadataDescriptor(string Key, string Value) : IAlternateKeyProvider
+{
+    public AlternateKey GetAlternateKey => new ProjectMetadataAlternateKey(Key);
+}

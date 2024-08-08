@@ -46,5 +46,5 @@ public class ProjectDependency : Entity, IAlternateKeyProvider
         SourceId = source.Id;
     }
 
-    public AlternateKey GetAlternateKey { get; }
+    public AlternateKey GetAlternateKey => new ProjectDependencyAlternateKey(DependencyId, VersionId);
 }

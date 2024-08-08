@@ -2,7 +2,7 @@
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.VersionControlSystems.Factories;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
-using RepoRanger.Domain.VersionControlSystems.Synchronizers;
+using RepoRanger.Domain.VersionControlSystems.Updaters;
 
 namespace RepoRanger.Domain;
 
@@ -14,16 +14,16 @@ public static class ServiceConfiguration
         
         // VCS
         services.AddTransient<IVersionControlSystemParser, VersionControlSystemParser>();
-        services.AddTransient<IVersionControlSystemSynchronizer, VersionControlSystemSynchronizer>();
+        services.AddTransient<IVersionControlSystemUpdater, VersionControlSystemUpdater>();
         services.AddTransient<IVersionControlSystemFactory, VersionControlSystemFactory>();
         
         // Repository
         services.AddTransient<IRepositoryParser, RepositoryParser>();
-        services.AddTransient<IRepositoryUpdater, RepositorySynchronizer>();
+        services.AddTransient<IRepositoryUpdater, RepositoryUpdater>();
         services.AddTransient<IRepositoryFactory, RepositoryFactory>();
         
         // Project
-        services.AddTransient<IProjectUpdater, ProjectSynchronizer>();
+        services.AddTransient<IProjectUpdater, ProjectUpdater>();
         services.AddTransient<IProjectFactory, ProjectFactory>();
         services.AddTransient<IProjectMetadataFactory, ProjectMetadataFactory>();
         services.AddTransient<IProjectDependencyFactory, ProjectDependencyFactory>();

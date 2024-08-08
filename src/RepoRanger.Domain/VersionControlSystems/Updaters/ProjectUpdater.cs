@@ -3,18 +3,18 @@ using RepoRanger.Domain.Dependencies.Contracts;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
-namespace RepoRanger.Domain.VersionControlSystems.Synchronizers;
+namespace RepoRanger.Domain.VersionControlSystems.Updaters;
 
 internal interface IProjectUpdater
 {
     void Update(Project target, ProjectDescriptor descriptor, IDependencyManager dependencyManager);
 }
 
-internal sealed class ProjectSynchronizer : IProjectUpdater
+internal sealed class ProjectUpdater : IProjectUpdater
 {
     private readonly ICollectionSynchronizer<ProjectDependency, RegistrationResult> _projectDependencySynchronizer;
 
-    public ProjectSynchronizer(ICollectionSynchronizer<ProjectDependency, RegistrationResult> projectDependencySynchronizer)
+    public ProjectUpdater(ICollectionSynchronizer<ProjectDependency, RegistrationResult> projectDependencySynchronizer)
     {
         _projectDependencySynchronizer = projectDependencySynchronizer;
     }
@@ -26,10 +26,10 @@ internal sealed class ProjectSynchronizer : IProjectUpdater
             .ToList();
         
         target.Update(descriptor.Type, descriptor.Version, metaData);
-        UpdateProjectDependencies(target, descriptor.ProjectDependencies, dependencyManager);
+        SynchronizeProjectDependencies(target, descriptor.ProjectDependencies, dependencyManager);
     }
 
-    private void UpdateProjectDependencies(Project project,
+    private void SynchronizeProjectDependencies(Project project,
         IReadOnlyCollection<ProjectDependencyDescriptor> descriptors,
         IDependencyManager dependencyManager)
     {

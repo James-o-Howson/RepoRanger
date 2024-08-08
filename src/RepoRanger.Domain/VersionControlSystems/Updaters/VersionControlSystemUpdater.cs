@@ -3,22 +3,22 @@ using RepoRanger.Domain.VersionControlSystems.Entities;
 using RepoRanger.Domain.VersionControlSystems.Factories;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
-namespace RepoRanger.Domain.VersionControlSystems.Synchronizers;
+namespace RepoRanger.Domain.VersionControlSystems.Updaters;
 
-public interface IVersionControlSystemSynchronizer
+public interface IVersionControlSystemUpdater
 {
     void Update(VersionControlSystem target, VersionControlSystemDescriptor descriptor,
         IDependencyManager dependencyManager);
 }
 
-internal sealed class VersionControlSystemSynchronizer : IVersionControlSystemSynchronizer
+internal sealed class VersionControlSystemUpdater : IVersionControlSystemUpdater
 {
     private readonly IRepositoryFactory _repositoryFactory;
     private readonly IRepositoryUpdater _repositoryUpdater;
 
     private readonly ICollectionSynchronizer<Repository, RepositoryDescriptor> _collectionSynchronizer;
 
-    public VersionControlSystemSynchronizer(IRepositoryFactory repositoryFactory,
+    public VersionControlSystemUpdater(IRepositoryFactory repositoryFactory,
         IRepositoryUpdater repositoryUpdater,
         ICollectionSynchronizer<Repository, RepositoryDescriptor> collectionSynchronizer)
     {
@@ -30,10 +30,10 @@ internal sealed class VersionControlSystemSynchronizer : IVersionControlSystemSy
     public void Update(VersionControlSystem target, VersionControlSystemDescriptor descriptor, IDependencyManager dependencyManager)
     {
         target.Location = descriptor.Location;
-        UpdateRepositories(target, descriptor, dependencyManager);
+        SynchronizeRepositories(target, descriptor, dependencyManager);
     }
 
-    private void UpdateRepositories(VersionControlSystem versionControlSystem,
+    private void SynchronizeRepositories(VersionControlSystem versionControlSystem,
         VersionControlSystemDescriptor changeDescriptor, IDependencyManager dependencyManager)
     {
         _collectionSynchronizer.Init(OnNew, OnUpdate, OnDelete);

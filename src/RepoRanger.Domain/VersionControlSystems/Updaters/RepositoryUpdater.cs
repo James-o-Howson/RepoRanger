@@ -3,7 +3,7 @@ using RepoRanger.Domain.VersionControlSystems.Entities;
 using RepoRanger.Domain.VersionControlSystems.Factories;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
-namespace RepoRanger.Domain.VersionControlSystems.Synchronizers;
+namespace RepoRanger.Domain.VersionControlSystems.Updaters;
 
 internal interface IRepositoryUpdater
 {
@@ -11,13 +11,13 @@ internal interface IRepositoryUpdater
         IDependencyManager dependencyManager);
 }
 
-internal sealed class RepositorySynchronizer : IRepositoryUpdater
+internal sealed class RepositoryUpdater : IRepositoryUpdater
 {
     private readonly IProjectFactory _projectFactory;
     private readonly IProjectUpdater _projectUpdater;
     private readonly ICollectionSynchronizer<Project, ProjectDescriptor> _collectionSynchronizer;
 
-    public RepositorySynchronizer(IProjectFactory projectFactory,
+    public RepositoryUpdater(IProjectFactory projectFactory,
         IProjectUpdater projectUpdater,
         ICollectionSynchronizer<Project, ProjectDescriptor> collectionSynchronizer)
     {
@@ -30,10 +30,10 @@ internal sealed class RepositorySynchronizer : IRepositoryUpdater
         IDependencyManager dependencyManager)
     {
         target.Update(descriptor.DefaultBranch);
-        UpdateProjects(target, descriptor.Projects, dependencyManager);
+        SynchronizeProjects(target, descriptor.Projects, dependencyManager);
     }
     
-    private void UpdateProjects(Repository existingRepository, IReadOnlyCollection<ProjectDescriptor> projectDescriptors, IDependencyManager dependencyManager)
+    private void SynchronizeProjects(Repository existingRepository, IReadOnlyCollection<ProjectDescriptor> projectDescriptors, IDependencyManager dependencyManager)
     {
         _collectionSynchronizer.Init(OnNew, OnUpdate, OnDelete);
         _collectionSynchronizer.Synchronize(existingRepository.Projects, projectDescriptors);

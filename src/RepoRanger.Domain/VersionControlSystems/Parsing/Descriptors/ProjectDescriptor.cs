@@ -7,5 +7,5 @@ public record ProjectDescriptor(ProjectType Type, string Name, string Version, s
     IReadOnlyCollection<ProjectMetadataDescriptor> Metadata, 
     IReadOnlyCollection<ProjectDependencyDescriptor> ProjectDependencies) : IAlternateKeyProvider
 {
-    public AlternateKey GetAlternateKey { get; }
+    public AlternateKey GetAlternateKey => new ProjectAlternateKey(Name, Path);
 }

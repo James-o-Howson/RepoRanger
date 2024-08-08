@@ -85,5 +85,5 @@ public class Repository : Entity, IAlternateKeyProvider
         _projects.RemoveAt(index);
     }
 
-    public AlternateKey GetAlternateKey { get; }
+    public AlternateKey GetAlternateKey => new RepositoryAlternateKey(Name, RemoteUrl);
 }
