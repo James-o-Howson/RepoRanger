@@ -13,10 +13,13 @@ internal interface IProjectUpdater
 internal sealed class ProjectUpdater : IProjectUpdater
 {
     private readonly ICollectionSynchronizer<ProjectDependency, RegistrationResult> _projectDependencySynchronizer;
+    private readonly ICollectionSynchronizer<ProjectMetadata, ProjectMetadataDescriptor> _projectMetadataSynchronizer;
 
-    public ProjectUpdater(ICollectionSynchronizer<ProjectDependency, RegistrationResult> projectDependencySynchronizer)
+    public ProjectUpdater(ICollectionSynchronizer<ProjectDependency, RegistrationResult> projectDependencySynchronizer,
+        ICollectionSynchronizer<ProjectMetadata, ProjectMetadataDescriptor> projectMetadataSynchronizer)
     {
         _projectDependencySynchronizer = projectDependencySynchronizer;
+        _projectMetadataSynchronizer = projectMetadataSynchronizer;
     }
 
     public void Update(Project target, ProjectDescriptor descriptor, IDependencyManager dependencyManager)
@@ -27,6 +30,23 @@ internal sealed class ProjectUpdater : IProjectUpdater
         
         target.Update(descriptor.Type, descriptor.Version, metaData);
         SynchronizeProjectDependencies(target, descriptor.ProjectDependencies, dependencyManager);
+        SynchronizeProjectMetadata(target, descriptor.Metadata);
+    }
+
+    private void SynchronizeProjectMetadata(Project project, IReadOnlyCollection<ProjectMetadataDescriptor> descriptorMetadata)
+    {
+        _projectMetadataSynchronizer.Init(OnNew, OnUpdate, OnDelete);
+        _projectMetadataSynchronizer.Synchronize(project.Metadata, descriptorMetadata);
+        return;
+        
+        void OnNew(ProjectMetadataDescriptor descriptor) => 
+            project.AddMetadata(ProjectMetadata.Create(descriptor.Key, descriptor.Value));
+
+        void OnUpdate(ProjectMetadata metadata, ProjectMetadataDescriptor descriptor) => 
+            metadata.Update(descriptor.Value);
+
+        void OnDelete(ProjectMetadata metadata) => 
+            project.DeleteMetadata(metadata.Id);
     }
 
     private void SynchronizeProjectDependencies(Project project,

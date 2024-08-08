@@ -53,10 +53,11 @@ public class Project : Entity, IAlternateKeyProvider
         _projectDependencies.Add(projectDependency);
     }
 
-    private bool HasProjectDependency(Guid projectDependencyId)
+    public void AddMetadata(ProjectMetadata projectMetadata)
     {
-        DomainException.ThrowIfNull(projectDependencyId);
-        return ProjectDependencies.Any(d => d.Id == projectDependencyId);
+        DomainException.ThrowIfNull(projectMetadata);
+        if (HasProjectMetadata(projectMetadata.Id)) return;
+        _metadata.Add(projectMetadata);
     }
 
     public void Update(ProjectType type, string version, IEnumerable<ProjectMetadata> metadata)
@@ -67,7 +68,7 @@ public class Project : Entity, IAlternateKeyProvider
         _metadata.AddRange(metadata);
         Type = type;
     }
-    
+
     internal void Delete()
     {
         _projectDependencies.Clear();
@@ -81,7 +82,16 @@ public class Project : Entity, IAlternateKeyProvider
 
         _projectDependencies.RemoveAt(index);
     }
-    
+
+    public void DeleteMetadata(Guid metadataId)
+    {
+        DomainException.ThrowIfNull(metadataId);
+        var index = _metadata.FindIndex(d => d.Id == metadataId);
+        if (index < 0) return;
+
+        _metadata.RemoveAt(index);
+    }
+
     public bool HasSpecificDependency(string name, string versionValue)
     {
         DomainException.ThrowIfNullOrEmpty(name);
@@ -93,4 +103,16 @@ public class Project : Entity, IAlternateKeyProvider
     }
 
     public AlternateKey GetAlternateKey => new ProjectAlternateKey(Name, Path);
+
+    private bool HasProjectDependency(Guid projectDependencyId)
+    {
+        DomainException.ThrowIfNull(projectDependencyId);
+        return ProjectDependencies.Any(d => d.Id == projectDependencyId);
+    }
+
+    private bool HasProjectMetadata(Guid metadataId)
+    {
+        DomainException.ThrowIfNull(metadataId);
+        return Metadata.Any(d => d.Id == metadataId);
+    }
 }
