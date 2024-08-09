@@ -1,6 +1,7 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
@@ -14,7 +15,7 @@ public sealed class ProjectMetadata : Entity, IAlternateKeyProvider
         Value = value
     };
 
-    public Guid Id { get; } = Guid.NewGuid();
+    public ProjectMetadataId Id { get; } = ProjectMetadataId.New;
     public string Key { get; private init; } = string.Empty;
     public string Value { get; private set; } = string.Empty;
     public AlternateKey GetAlternateKey => new ProjectMetadataAlternateKey(Key);

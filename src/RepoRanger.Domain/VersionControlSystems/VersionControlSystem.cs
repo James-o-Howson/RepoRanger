@@ -60,7 +60,7 @@ public sealed class VersionControlSystem : Entity
         _repositories.Clear();
     }
 
-    public void DeleteRepository(Guid repositoryId)
+    public void DeleteRepository(RepositoryId repositoryId)
     {
         var index = _repositories.FindIndex(r => r.Id == repositoryId);
         if (index < 0) throw new DomainException($"Deletion failed, cannot find Repository with Id {repositoryId} from VCS {Name}");

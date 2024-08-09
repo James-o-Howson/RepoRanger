@@ -2,20 +2,22 @@
 using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.Dependencies.Entities;
+using RepoRanger.Domain.Dependencies.ValueObjects;
 using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
 public class ProjectDependency : Entity, IAlternateKeyProvider
 {
-    public Guid Id { get; } = Guid.NewGuid();
-    public Guid ProjectId { get; private set; }
+    public ProjectDependencyId Id { get; } = ProjectDependencyId.New;
+    public ProjectId ProjectId { get; private set; }
     public Project Project { get; private set; } = null!;
-    public Guid DependencyId { get; private set; }
+    public DependencyId DependencyId { get; private set; }
     public Dependency Dependency { get; private set; } = null!;
-    public Guid VersionId { get; private set; }
+    public DependencyVersionId VersionId { get; private set; }
     public DependencyVersion Version { get; private set; } = null!;
-    public Guid SourceId { get; private set; }
+    public DependencySourceId SourceId { get; private set; }
     public DependencySource Source { get; private set; } = null!;
     
     private ProjectDependency() { }

@@ -30,14 +30,14 @@ public class Project : Entity, IAlternateKeyProvider
         return project;
     }
 
-    public Guid Id { get; } = Guid.NewGuid();
+    public ProjectId Id { get; } = ProjectId.New;
     public IReadOnlyCollection<ProjectMetadata> Metadata => _metadata;
     public ProjectType Type { get; private set; } = null!;
     public string Name { get; private init; } = string.Empty;
     public string Path { get; private init; } = string.Empty;
     public string Version { get; private set; } = string.Empty;
     public IReadOnlyCollection<ProjectDependency> ProjectDependencies => _projectDependencies;
-    public Guid RepositoryId { get; private init; }
+    public RepositoryId RepositoryId { get; private init; }
     public Repository Repository { get; private set; } = null!;
 
     public void AddProjectDependencies(IEnumerable<ProjectDependency> dependencies)
@@ -74,7 +74,7 @@ public class Project : Entity, IAlternateKeyProvider
         _projectDependencies.Clear();
     }
 
-    public void DeleteProjectDependency(Guid projectDependencyId)
+    public void DeleteProjectDependency(ProjectDependencyId projectDependencyId)
     {
         DomainException.ThrowIfNull(projectDependencyId);
         var index = _projectDependencies.FindIndex(d => d.Id == projectDependencyId);
@@ -83,7 +83,7 @@ public class Project : Entity, IAlternateKeyProvider
         _projectDependencies.RemoveAt(index);
     }
 
-    public void DeleteMetadata(Guid metadataId)
+    public void DeleteMetadata(ProjectMetadataId metadataId)
     {
         DomainException.ThrowIfNull(metadataId);
         var index = _metadata.FindIndex(d => d.Id == metadataId);
@@ -104,13 +104,13 @@ public class Project : Entity, IAlternateKeyProvider
 
     public AlternateKey GetAlternateKey => new ProjectAlternateKey(Name, Path);
 
-    private bool HasProjectDependency(Guid projectDependencyId)
+    private bool HasProjectDependency(ProjectDependencyId projectDependencyId)
     {
         DomainException.ThrowIfNull(projectDependencyId);
         return ProjectDependencies.Any(d => d.Id == projectDependencyId);
     }
 
-    private bool HasProjectMetadata(Guid metadataId)
+    private bool HasProjectMetadata(ProjectMetadataId metadataId)
     {
         DomainException.ThrowIfNull(metadataId);
         return Metadata.Any(d => d.Id == metadataId);

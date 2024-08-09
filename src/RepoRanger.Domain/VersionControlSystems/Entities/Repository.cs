@@ -25,7 +25,7 @@ public class Repository : Entity, IAlternateKeyProvider
         return repository;
     }
 
-    public Guid Id { get; } = Guid.NewGuid();
+    public RepositoryId Id { get; } = RepositoryId.New;
     public string Name { get; set; } = string.Empty;
     public string RemoteUrl { get; set; } = string.Empty;
     public VersionControlSystemId VersionControlSystemId { get; set; }
@@ -78,7 +78,7 @@ public class Repository : Entity, IAlternateKeyProvider
         _projects.Clear();
     }
     
-    public void DeleteProject(Guid projectId)
+    public void DeleteProject(ProjectId projectId)
     {
         var index = _projects.FindIndex(r => r.Id == projectId);
         if (index < 0) throw new DomainException($"Cannot delete Project with Id = {projectId} from Repository {Name}");

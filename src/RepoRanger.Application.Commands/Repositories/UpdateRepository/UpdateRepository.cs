@@ -33,6 +33,6 @@ internal sealed class UpdateRepositoryCommandHandler : IRequestHandler<UpdateRep
             
         await _context.SaveChangesAsync(cancellationToken);
 
-        return repository.Id;
+        return repository.Id.Value;
     }
 }

@@ -28,7 +28,7 @@ internal sealed class GetRepositoriesByVersionControlSystemIdQueryHandler : IReq
             .Where(r => r.VersionControlSystemId.Value == request.VersionControlSystemId)
             .Select(r => new RepositorySummaryVm
             {
-                Id = r.Id,
+                Id = r.Id.Value,
                 Name = r.Name,
                 RemoteUrl = r.RemoteUrl,
                 DefaultBranchName = r.DefaultBranch,

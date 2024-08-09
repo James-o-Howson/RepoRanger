@@ -29,7 +29,7 @@ internal sealed class SearchProjectDependenciesWithPaginationQueryHandler : IReq
             .ApplyFilters(request.Filters)
             .Select(d => new ProjectDependencyVm
             {
-                Id = d.Id,
+                Id = d.Id.Value,
                 Source = d.Source.Name,
                 Name = d.Dependency.Name,
                 Version = d.Version.Value,
@@ -68,14 +68,14 @@ internal sealed class SearchProjectDependenciesWithPaginationQueryHandler : IReq
         _context.Projects
             .Include(p => p.ProjectDependencies)
             .Include(p => p.Repository)
-            .Where(p => ids.Contains(p.Id))
+            .Where(p => ids.Contains(p.Id.Value))
             .SelectMany(p => p.ProjectDependencies);
     
     private IQueryable<ProjectDependency> QueryRepositoryDependencies(IReadOnlyCollection<Guid> ids) =>
         _context.Repositories
             .Include(b => b.Projects)
             .ThenInclude(p => p.ProjectDependencies)
-            .Where(r => ids.Contains(r.Id))
+            .Where(r => ids.Contains(r.Id.Value))
             .SelectMany(r => r.Dependencies);
 
     private IQueryable<ProjectDependency> QueryVersionControlSystemDependencies(IReadOnlyCollection<Guid> ids) =>

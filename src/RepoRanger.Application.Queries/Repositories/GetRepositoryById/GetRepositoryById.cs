@@ -24,7 +24,7 @@ internal sealed class GetRepositoryByIdRequestHandler : IRequestHandler<GetRepos
 
         return new RepositorySummaryVm
         {
-            Id = repository.Id,
+            Id = repository.Id.Value,
             Name = repository.Name,
             RemoteUrl = repository.RemoteUrl,
             DefaultBranchName = repository.DefaultBranch,

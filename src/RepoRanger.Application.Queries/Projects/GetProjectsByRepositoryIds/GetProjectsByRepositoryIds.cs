@@ -27,7 +27,7 @@ internal sealed class GetProjectsByRepositoryIdsQueryHandler : IRequestHandler<G
             .Include(r => r.DefaultBranch)
             .Include(b => b.Projects)
                 .ThenInclude(p => p.ProjectDependencies)
-            .Where(r => request.RepositoryIds.Contains(r.Id))
+            .Where(r => request.RepositoryIds.Contains(r.Id.Value))
             .ToListAsync(cancellationToken);
 
         var projectVms = new List<ProjectVm>();
@@ -46,12 +46,12 @@ internal sealed class GetProjectsByRepositoryIdsQueryHandler : IRequestHandler<G
     {
         return new ProjectVm
         {
-            Id = p.Id,
+            Id = p.Id.Value,
             Name = p.Name,
             Type = p.Type,
             Version = p.Version,
             DependencyCount = p.ProjectDependencies.Count,
-            RepositoryId = repository.Id,
+            RepositoryId = repository.Id.Value,
             RepositoryName = repository.Name
         };
     }

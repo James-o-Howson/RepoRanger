@@ -9,6 +9,10 @@ internal sealed class MessageConfiguration : IEntityTypeConfiguration<Message>
     public void Configure(EntityTypeBuilder<Message> builder)
     {
         builder.HasKey(m => m.Id);
+        builder.Property(v => v.Id)
+            .HasConversion(id => id.Value,
+                value => new MessageId(value))
+            .ValueGeneratedNever();
         
         builder.Property(m => m.Data)
             .IsRequired();

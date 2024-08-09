@@ -37,12 +37,12 @@ internal sealed class GetProjectsByDependencyQueryHandler : IRequestHandler<GetP
 
         var viewModels = projects.Select(p => new ProjectVm
         {
-            Id = p.Id,
+            Id = p.Id.Value,
             Name = p.Name,
             Type = p.Type,
             Version = p.Version,
             DependencyCount = p.ProjectDependencies.Count,
-            RepositoryId = p.RepositoryId,
+            RepositoryId = p.RepositoryId.Value,
             RepositoryName = p.Repository.Name
         }).ToList();
 

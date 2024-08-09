@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RepoRanger.Domain.Dependencies;
+using RepoRanger.Domain.Dependencies.ValueObjects;
 
 namespace RepoRanger.Persistence.Configuration.Dependencies;
 
@@ -9,6 +10,10 @@ internal sealed class DependencyConfiguration : IEntityTypeConfiguration<Depende
     public void Configure(EntityTypeBuilder<Dependency> builder)
     {
         builder.HasKey(d => d.Id);
+        builder.Property(r => r.Id)
+            .HasConversion(id => id.Value,
+                value => new DependencyId(value))
+            .ValueGeneratedNever();
         
         builder.HasIndex(d => d.Name).IsUnique();
 

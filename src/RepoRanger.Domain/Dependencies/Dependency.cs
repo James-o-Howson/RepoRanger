@@ -2,6 +2,7 @@
 using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.Dependencies.Entities;
 using RepoRanger.Domain.Dependencies.Events;
+using RepoRanger.Domain.Dependencies.ValueObjects;
 
 namespace RepoRanger.Domain.Dependencies;
 
@@ -9,7 +10,7 @@ public class Dependency : Entity
 {
     private readonly List<DependencyVersion> _versions = [];
     
-    public Guid Id { get; } = Guid.NewGuid();
+    public DependencyId Id { get; } = DependencyId.New;
     public string Name { get; private set; } = string.Empty;
     public IReadOnlyCollection<DependencyVersion> Versions => _versions;
     
@@ -28,7 +29,7 @@ public class Dependency : Entity
         _versions.Add(version);
     }
 
-    public void AddVulnerability(Guid versionId, Vulnerability vulnerability)
+    public void AddVulnerability(DependencyVersionId versionId, Vulnerability vulnerability)
     {
         var version = Versions.FirstOrDefault(v => v.Id == versionId);
         if (version is null) throw new DomainException($"Cannot find {nameof(DependencyVersion)} for Id = {versionId}");
@@ -37,5 +38,5 @@ public class Dependency : Entity
         RaiseEvent(new DependencyVulnerableEvent(Id));
     }
 
-    private bool HasVersion(Guid versionId) => Versions.Any(v => v.Id == versionId);
+    private bool HasVersion(DependencyVersionId versionId) => Versions.Any(v => v.Id == versionId);
 }

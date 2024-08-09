@@ -13,9 +13,7 @@ public enum MessageStatus
 
 public class Message : Entity
 {
-    private Message()
-    {
-    }
+    private Message() { }
 
     public static Message Create(IEvent @event) => new()
     {
@@ -23,7 +21,7 @@ public class Message : Entity
         Name = @event.GetType().Name
     };
     
-    public Guid Id { get; } = Guid.NewGuid();
+    public MessageId Id { get; } = MessageId.New;
     public string Data { get; init; } = string.Empty;
     public string Name { get; init; } = string.Empty;
     public int RetryCount { get; private set; }

@@ -1,12 +1,13 @@
 using RepoRanger.Domain.Common.Events;
+using RepoRanger.Domain.Dependencies.ValueObjects;
 
 namespace RepoRanger.Domain.Dependencies.Events;
 
 internal sealed class DependencyVulnerableEvent : IEvent
 {
-    public Guid Id { get; }
+    public DependencyId Id { get; }
 
-    public DependencyVulnerableEvent(Guid id)
+    public DependencyVulnerableEvent(DependencyId id)
     {
         Id = id;
         OccuredOn = DateTime.Now;

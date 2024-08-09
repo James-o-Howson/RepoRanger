@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RepoRanger.Domain.VersionControlSystems.Entities;
+using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Persistence.Configuration.VersionControlSystems;
 
@@ -9,6 +10,10 @@ internal sealed class ProjectDependencyConfiguration : IEntityTypeConfiguration<
     public void Configure(EntityTypeBuilder<ProjectDependency> builder)
     {
         builder.HasKey(d => d.Id);
+        builder.Property(r => r.Id)
+            .HasConversion(id => id.Value,
+                value => new ProjectDependencyId(value))
+            .ValueGeneratedNever();
 
         builder.HasOne(d => d.Dependency)
             .WithMany()

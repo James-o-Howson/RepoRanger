@@ -1,5 +1,6 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
+using RepoRanger.Domain.Dependencies.ValueObjects;
 
 namespace RepoRanger.Domain.Dependencies.Entities;
 
@@ -7,7 +8,7 @@ public class DependencySource : Entity
 {
     private readonly List<DependencyVersion> _versions = [];
     
-    public Guid Id { get; } = Guid.NewGuid();
+    public DependencySourceId Id { get; } = DependencySourceId.New;
     public string Name { get; private init; } = null!;
     
     public IReadOnlyCollection<DependencyVersion> Versions => _versions;

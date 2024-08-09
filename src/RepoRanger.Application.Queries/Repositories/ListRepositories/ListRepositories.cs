@@ -24,7 +24,7 @@ internal sealed class ListRepositoriesQueryHandler : IRequestHandler<ListReposit
                 .AsNoTracking()
                 .Select(r => new RepositorySummaryVm
                 {
-                    Id = r.Id,
+                    Id = r.Id.Value,
                     Name = r.Name,
                     RemoteUrl = r.RemoteUrl,
                     DefaultBranchName = r.DefaultBranch,
