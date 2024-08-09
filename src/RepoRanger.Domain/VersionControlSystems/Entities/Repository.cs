@@ -1,6 +1,7 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
@@ -27,7 +28,7 @@ public class Repository : Entity, IAlternateKeyProvider
     public Guid Id { get; } = Guid.NewGuid();
     public string Name { get; set; } = string.Empty;
     public string RemoteUrl { get; set; } = string.Empty;
-    public Guid VersionControlSystemId { get; set; }
+    public VersionControlSystemId VersionControlSystemId { get; set; }
     public VersionControlSystem VersionControlSystem { get; private set; } = null!;
     public string DefaultBranch { get; set; } = string.Empty;
     public IReadOnlyCollection<Project> Projects => _projects;

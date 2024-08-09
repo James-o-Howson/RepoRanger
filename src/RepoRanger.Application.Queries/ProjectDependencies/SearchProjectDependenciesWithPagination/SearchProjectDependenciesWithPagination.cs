@@ -83,6 +83,6 @@ internal sealed class SearchProjectDependenciesWithPaginationQueryHandler : IReq
             .Include(r => r.Repositories)
             .ThenInclude(b => b.Projects)
             .ThenInclude(p => p.ProjectDependencies)
-            .Where(r => ids.Contains(r.Id))
+            .Where(r => ids.Contains(r.Id.Value))
             .SelectMany(r => r.Dependencies);
 }

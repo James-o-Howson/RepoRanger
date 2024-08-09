@@ -1,6 +1,7 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.VersionControlSystems.Entities;
+using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems;
 
@@ -21,7 +22,7 @@ public sealed class VersionControlSystem : Entity
         return source;
     }
 
-    public Guid Id { get; } = Guid.NewGuid();
+    public VersionControlSystemId Id { get; } = VersionControlSystemId.New;
     public string Name { get; private init; } = string.Empty;
     public string Location { get; set; } = string.Empty;
     public IReadOnlyCollection<Repository> Repositories => _repositories;

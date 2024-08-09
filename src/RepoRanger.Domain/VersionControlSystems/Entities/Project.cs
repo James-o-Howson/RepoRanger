@@ -40,13 +40,13 @@ public class Project : Entity, IAlternateKeyProvider
     public Guid RepositoryId { get; private init; }
     public Repository Repository { get; private set; } = null!;
 
-    public void AddDependencies(IEnumerable<ProjectDependency> dependencies)
+    public void AddProjectDependencies(IEnumerable<ProjectDependency> dependencies)
     {
         ArgumentNullException.ThrowIfNull(dependencies);
         _projectDependencies.AddRange(dependencies.ToHashSet());
     }
 
-    public void AddDependency(ProjectDependency projectDependency)
+    public void AddProjectDependency(ProjectDependency projectDependency)
     {
         DomainException.ThrowIfNull(projectDependency);
         if (HasProjectDependency(projectDependency.Id)) return;

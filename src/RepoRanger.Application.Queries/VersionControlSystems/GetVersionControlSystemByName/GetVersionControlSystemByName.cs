@@ -28,7 +28,7 @@ internal sealed class GetVersionControlSystemByNameQueryHandler : IRequestHandle
 
         return new VersionControlSystemPreviewDto
         {
-            Id = versionControlSystem.Id,
+            Id = versionControlSystem.Id.Value,
             Name = versionControlSystem.Name,
             Location = versionControlSystem.Location
         };

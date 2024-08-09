@@ -23,7 +23,7 @@ internal sealed class ListVersionControlSystemsQueryHandler : IRequestHandler<Li
             VersionControlSystems = await _context.VersionControlSystems.AsNoTracking()
                 .Select(s => new VersionControlSystemVm
                 {
-                    Id = s.Id,
+                    Id = s.Id.Value,
                     Name = s.Name
                 })
                 .ToListAsync(cancellationToken)

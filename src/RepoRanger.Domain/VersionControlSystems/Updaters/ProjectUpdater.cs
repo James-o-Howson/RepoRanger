@@ -60,7 +60,7 @@ internal sealed class ProjectUpdater : IProjectUpdater
         return;
         
         void OnNew(RegistrationResult registrationResult) => 
-            project.AddDependency(ProjectDependency.Create(project, 
+            project.AddProjectDependency(ProjectDependency.Create(project, 
                 registrationResult.Dependency,
                 registrationResult.Version,
                 registrationResult.Source));

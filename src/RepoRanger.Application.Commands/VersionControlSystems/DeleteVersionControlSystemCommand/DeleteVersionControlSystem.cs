@@ -39,7 +39,7 @@ internal sealed class DeleteVersionControlSystemCommandHandler : IRequestHandler
             .Include(s => s.Repositories)
                 .ThenInclude(b => b.Projects)
                 .ThenInclude(p => p.ProjectDependencies)
-            .SingleOrDefaultAsync(s => s.Id == request.Id, cancellationToken);
+            .SingleOrDefaultAsync(s => s.Id.Value == request.Id, cancellationToken);
 
         if (source is null) throw new NotFoundException($"Delete Failed - Unable find Source with Id: {request.Id}.");
         
