@@ -5,9 +5,9 @@ using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Persistence.Configuration.VersionControlSystems;
 
-internal sealed class ProjectConfiguration : IEntityTypeConfiguration<Project>
+internal sealed class ProjectConfiguration : AuditableEntityConfiguration<Project>
 {
-    public void Configure(EntityTypeBuilder<Project> builder)
+    public override void Configure(EntityTypeBuilder<Project> builder)
     {
         builder.HasKey(e => e.Id);
         builder.Property(r => r.Id)
@@ -39,5 +39,7 @@ internal sealed class ProjectConfiguration : IEntityTypeConfiguration<Project>
 
         builder.Property(e => e.Created)
             .IsRequired();
+        
+        base.Configure(builder);
     }
 }

@@ -6,5 +6,5 @@ public sealed class RepositorySummaryVm
     public string? Name { get; init; }
     public string? RemoteUrl { get; init; }
     public string? DefaultBranchName { get; init; }
-    public DateTime ParseTime { get; init; }
+    public DateTimeOffset ParseTime { get; init; }
 }

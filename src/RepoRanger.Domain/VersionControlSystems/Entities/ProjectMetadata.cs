@@ -5,7 +5,7 @@ using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
-public sealed class ProjectMetadata : Entity, IAlternateKeyProvider
+public sealed class ProjectMetadata : BaseAuditableEntity, IAlternateKeyProvider
 {
     private ProjectMetadata() { }
 

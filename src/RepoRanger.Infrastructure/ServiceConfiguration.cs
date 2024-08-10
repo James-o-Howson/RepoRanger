@@ -23,7 +23,6 @@ public static class ServiceConfiguration
     {
         services.AddTransient<IDependencyManagerFactory, DependencyManagerFactory>();
         services.AddTransient<IGitRepositoryDetailFactory, GitRepositoryDetailFactory>();
-        services.AddTransient<IDateTime, DateTimeService>();
         services.AddTransient<IVulnerabilityService, VulnerabilitiesService>();
         
         services.AddTransient<IProjectParser, ProjectPackageReferenceAttributeParser>();

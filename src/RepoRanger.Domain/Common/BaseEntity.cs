@@ -2,11 +2,11 @@
 
 namespace RepoRanger.Domain.Common;
 
-public abstract class Entity : Auditable
+public abstract class BaseEntity
 {
     private readonly List<IEvent> _events = [];
     
-    protected Entity()
+    protected BaseEntity()
     {
         // Required by EF Core.
     }

@@ -10,9 +10,9 @@ internal sealed class DependencyVulnerableEvent : IEvent
     public DependencyVulnerableEvent(DependencyId id)
     {
         Id = id;
-        OccuredOn = DateTime.Now;
+        OccuredOn = DateTimeOffset.UtcNow;
     }
 
-    public DateTime OccuredOn { get; }
+    public DateTimeOffset OccuredOn { get; }
     public EventType Type => EventType.Durable;
 }

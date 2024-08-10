@@ -5,7 +5,7 @@ using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems;
 
-public sealed class VersionControlSystem : Entity
+public sealed class VersionControlSystem : BaseAuditableEntity
 {
     private readonly List<Repository> _repositories = [];
     

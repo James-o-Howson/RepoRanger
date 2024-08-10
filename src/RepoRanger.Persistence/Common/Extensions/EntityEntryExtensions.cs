@@ -6,7 +6,7 @@ namespace Microsoft.EntityFrameworkCore.ChangeTracking;
 public static class EntityEntryExtensions
 {
     public static List<TEntity> GetEntitiesWithEvents<TEntity>(
-        this IEnumerable<EntityEntry<TEntity>> entityEntries) where TEntity : Entity =>
+        this IEnumerable<EntityEntry<TEntity>> entityEntries) where TEntity : BaseEntity =>
         entityEntries.Where(e => e.Entity.GetEvents().Count != 0)
             .Select(e => e.Entity)
             .ToList();

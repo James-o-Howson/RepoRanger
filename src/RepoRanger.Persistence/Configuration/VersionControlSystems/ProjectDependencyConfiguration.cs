@@ -5,9 +5,9 @@ using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Persistence.Configuration.VersionControlSystems;
 
-internal sealed class ProjectDependencyConfiguration : IEntityTypeConfiguration<ProjectDependency>
+internal sealed class ProjectDependencyConfiguration : AuditableEntityConfiguration<ProjectDependency>
 {
-    public void Configure(EntityTypeBuilder<ProjectDependency> builder)
+    public override void Configure(EntityTypeBuilder<ProjectDependency> builder)
     {
         builder.HasKey(d => d.Id);
         builder.Property(r => r.Id)
@@ -33,12 +33,6 @@ internal sealed class ProjectDependencyConfiguration : IEntityTypeConfiguration<
             .IsRequired()
             .OnDelete(DeleteBehavior.NoAction);
 
-        builder.Property(d => d.CreatedBy)
-            .IsRequired()
-            .HasMaxLength(150)
-            .IsUnicode();
-
-        builder.Property(d => d.Created)
-            .IsRequired();
+        base.Configure(builder);
     }
 }

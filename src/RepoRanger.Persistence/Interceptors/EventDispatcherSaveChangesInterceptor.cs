@@ -36,7 +36,7 @@ public class EventDispatcherSaveChangesInterceptor : SaveChangesInterceptor
     private async Task DispatchEventsAsync(DbContext context, CancellationToken cancellationToken)
     {
         var events = context.ChangeTracker
-            .Entries<Entity>()
+            .Entries<BaseEntity>()
             .GetEntitiesWithEvents()
             .ExtractEventsForPublishing();
         

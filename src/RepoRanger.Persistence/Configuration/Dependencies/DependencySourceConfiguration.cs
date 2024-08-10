@@ -1,13 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RepoRanger.Domain.Dependencies.Entities;
 using RepoRanger.Domain.Dependencies.ValueObjects;
 
 namespace RepoRanger.Persistence.Configuration.Dependencies;
 
-internal sealed class DependencySourceConfiguration : IEntityTypeConfiguration<DependencySource>
+internal sealed class DependencySourceConfiguration : AuditableEntityConfiguration<DependencySource>
 {
-    public void Configure(EntityTypeBuilder<DependencySource> builder)
+    public override void Configure(EntityTypeBuilder<DependencySource> builder)
     {
         builder.HasKey(s => s.Id);
         builder.Property(r => r.Id)
@@ -16,5 +15,7 @@ internal sealed class DependencySourceConfiguration : IEntityTypeConfiguration<D
             .ValueGeneratedNever();
         
         builder.HasIndex(s => s.Name).IsUnique();
+        
+        base.Configure(builder);
     }
 }

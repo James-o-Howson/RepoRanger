@@ -11,7 +11,7 @@ public enum MessageStatus
     Failed = 2,
 }
 
-public class Message : Entity
+public class Message : BaseAuditableEntity
 {
     private Message() { }
 
@@ -26,14 +26,14 @@ public class Message : Entity
     public string Name { get; init; } = string.Empty;
     public int RetryCount { get; private set; }
     public bool Processed { get; private set; }
-    public DateTime? ProcessStartTime { get; private set; }
-    public DateTime? ProcessFinishedTime { get; private set; }
+    public DateTimeOffset? ProcessStartTime { get; private set; }
+    public DateTimeOffset? ProcessFinishedTime { get; private set; }
     public MessageStatus Status { get; private set; } = MessageStatus.None;
     public string? LastErrorDetails { get; private set; }
     
     public void Start()
     {
-        ProcessStartTime = DateTime.Now;
+        ProcessStartTime = DateTimeOffset.UtcNow;
     }
 
     public void Fail(Exception exception)
@@ -43,7 +43,7 @@ public class Message : Entity
         Status = MessageStatus.Failed;
     }
 
-    public void Succeed(DateTime time)
+    public void Succeed(DateTimeOffset time)
     {
         Processed = true;
         ProcessFinishedTime = time;
@@ -53,7 +53,7 @@ public class Message : Entity
     public void Retry(int retryThreshold)
     {
         RetryCount++;
-        ProcessStartTime = DateTime.Now;
+        ProcessStartTime = DateTimeOffset.UtcNow;
         ProcessFinishedTime = null;
 
         if (RetryCount < retryThreshold)

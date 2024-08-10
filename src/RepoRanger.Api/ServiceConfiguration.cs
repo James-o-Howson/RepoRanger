@@ -27,6 +27,7 @@ internal static class ServiceConfiguration
 
 
         services.AddScoped<IUser, CurrentUser>();
+        services.AddSingleton(TimeProvider.System);
     }
     
     public static void UseSerilog(this IHostBuilder hostBuilder)

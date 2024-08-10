@@ -4,16 +4,16 @@ namespace RepoRanger.Domain.Common.Events;
 
 public interface IEvent : INotification
 {
-    DateTime OccuredOn { get; }
+    DateTimeOffset OccuredOn { get; }
     EventType Type { get; }
 }
 
 public class Event : IEvent
 {
-    public DateTime OccuredOn { get; }
+    public DateTimeOffset OccuredOn { get; }
     public EventType Type { get; }
 
-    protected Event(DateTime occuredOn, EventType type)
+    protected Event(DateTimeOffset occuredOn, EventType type)
     {
         OccuredOn = occuredOn;
         Type = type;

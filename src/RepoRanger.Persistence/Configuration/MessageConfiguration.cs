@@ -1,12 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RepoRanger.Domain.Messages;
 
 namespace RepoRanger.Persistence.Configuration;
 
-internal sealed class MessageConfiguration : IEntityTypeConfiguration<Message>
+internal sealed class MessageConfiguration : AuditableEntityConfiguration<Message>
 {
-    public void Configure(EntityTypeBuilder<Message> builder)
+    public override void Configure(EntityTypeBuilder<Message> builder)
     {
         builder.HasKey(m => m.Id);
         builder.Property(v => v.Id)
@@ -25,5 +24,7 @@ internal sealed class MessageConfiguration : IEntityTypeConfiguration<Message>
 
         builder.Property(m => m.Status)
             .IsRequired();
+        
+        base.Configure(builder);
     }
 }

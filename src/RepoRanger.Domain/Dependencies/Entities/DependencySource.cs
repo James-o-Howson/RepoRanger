@@ -4,7 +4,7 @@ using RepoRanger.Domain.Dependencies.ValueObjects;
 
 namespace RepoRanger.Domain.Dependencies.Entities;
 
-public class DependencySource : Entity
+public class DependencySource : BaseAuditableEntity
 {
     private readonly List<DependencyVersion> _versions = [];
     

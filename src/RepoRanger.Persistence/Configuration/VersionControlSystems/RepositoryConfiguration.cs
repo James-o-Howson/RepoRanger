@@ -5,9 +5,9 @@ using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Persistence.Configuration.VersionControlSystems;
 
-internal sealed class RepositoryConfiguration : IEntityTypeConfiguration<Repository>
+internal sealed class RepositoryConfiguration : AuditableEntityConfiguration<Repository>
 {
-    public void Configure(EntityTypeBuilder<Repository> builder)
+    public override void Configure(EntityTypeBuilder<Repository> builder)
     {
         builder.HasKey(e => e.Id);
         builder.Property(r => r.Id)
@@ -26,12 +26,6 @@ internal sealed class RepositoryConfiguration : IEntityTypeConfiguration<Reposit
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
         
-        builder.Property(e => e.CreatedBy)
-            .IsRequired()
-            .HasMaxLength(150)
-            .IsUnicode();
-
-        builder.Property(e => e.Created)
-            .IsRequired();
+        base.Configure(builder);
     }
 }

@@ -4,7 +4,7 @@ using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
 namespace RepoRanger.Domain.VersionControlSystems.Updaters;
 
 internal interface ICollectionSynchronizer<TEntity, TChangeDescriptor> : IDisposable
-    where TEntity : Entity, IAlternateKeyProvider
+    where TEntity : BaseEntity, IAlternateKeyProvider
     where TChangeDescriptor : IAlternateKeyProvider
 {
     void Init(Action<TChangeDescriptor> onNew, 
@@ -15,7 +15,7 @@ internal interface ICollectionSynchronizer<TEntity, TChangeDescriptor> : IDispos
 }
 
 internal sealed class CollectionSynchronizer<TEntity, TChangeDescriptor>  : ICollectionSynchronizer<TEntity, TChangeDescriptor> 
-    where TEntity : Entity, IAlternateKeyProvider
+    where TEntity : BaseEntity, IAlternateKeyProvider
     where TChangeDescriptor : IAlternateKeyProvider
 {
     private bool _initialized;

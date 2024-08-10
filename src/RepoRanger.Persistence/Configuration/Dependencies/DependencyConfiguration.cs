@@ -5,9 +5,9 @@ using RepoRanger.Domain.Dependencies.ValueObjects;
 
 namespace RepoRanger.Persistence.Configuration.Dependencies;
 
-internal sealed class DependencyConfiguration : IEntityTypeConfiguration<Dependency>
+internal sealed class DependencyConfiguration : AuditableEntityConfiguration<Dependency>
 {
-    public void Configure(EntityTypeBuilder<Dependency> builder)
+    public override void Configure(EntityTypeBuilder<Dependency> builder)
     {
         builder.HasKey(d => d.Id);
         builder.Property(r => r.Id)
@@ -22,5 +22,7 @@ internal sealed class DependencyConfiguration : IEntityTypeConfiguration<Depende
             .HasForeignKey(v => v.DependencyId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
+        
+        base.Configure(builder);
     }
 }

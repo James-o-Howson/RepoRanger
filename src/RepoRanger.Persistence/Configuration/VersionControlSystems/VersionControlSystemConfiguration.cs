@@ -5,9 +5,9 @@ using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Persistence.Configuration.VersionControlSystems;
 
-internal sealed class VersionControlSystemConfiguration : IEntityTypeConfiguration<VersionControlSystem>
+internal sealed class VersionControlSystemConfiguration : AuditableEntityConfiguration<VersionControlSystem>
 {
-    public void Configure(EntityTypeBuilder<VersionControlSystem> builder)
+    public override void Configure(EntityTypeBuilder<VersionControlSystem> builder)
     {
         builder.HasKey(v => v.Id);
         builder.Property(v => v.Id)
@@ -24,12 +24,6 @@ internal sealed class VersionControlSystemConfiguration : IEntityTypeConfigurati
         builder.HasIndex(v => v.Name)
             .IsUnique();
         
-        builder.Property(v => v.CreatedBy)
-            .IsRequired()
-            .HasMaxLength(150)
-            .IsUnicode();
-
-        builder.Property(v => v.Created)
-            .IsRequired();
+        base.Configure(builder);
     }
 }

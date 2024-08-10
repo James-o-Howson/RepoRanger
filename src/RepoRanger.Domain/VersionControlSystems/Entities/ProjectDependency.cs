@@ -8,7 +8,7 @@ using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
-public class ProjectDependency : Entity, IAlternateKeyProvider
+public class ProjectDependency : BaseAuditableEntity, IAlternateKeyProvider
 {
     public ProjectDependencyId Id { get; } = ProjectDependencyId.New;
     public ProjectId ProjectId { get; private set; }
