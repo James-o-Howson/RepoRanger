@@ -6,7 +6,7 @@ using RepoRanger.Application.Abstractions.Behaviours;
 using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Application.Commands;
 using RepoRanger.Application.Queries;
-using RepoRanger.Persistence;
+using RepoRanger.Data;
 using Serilog;
 
 namespace RepoRanger.Api;

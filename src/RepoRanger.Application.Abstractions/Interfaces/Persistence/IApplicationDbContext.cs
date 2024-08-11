@@ -18,9 +18,8 @@ public interface IApplicationDbContext
     DbSet<DependencySource> DependencySources { get; set; }
     DbSet<ProjectMetadata> ProjectMetadata { get; set; }
     DbSet<Message> Messages { get; set; }
-    // DbSet<Vulnerability> Vulnerabilities { get; set; }
+    DbSet<Vulnerability> Vulnerabilities { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     DbSet<TEntity> Set<TEntity>() where TEntity : class;
-    void MarkModified<TEntity>(TEntity entity) where TEntity : class;
 }

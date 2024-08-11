@@ -1,6 +1,6 @@
 ﻿namespace RepoRanger.Domain.VersionControlSystems.AlternateKeys;
 
-internal interface IAlternateKeyProvider
+public interface IAlternateKeyProvider
 {
     AlternateKey GetAlternateKey { get; }
 }

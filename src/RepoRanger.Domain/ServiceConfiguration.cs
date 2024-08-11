@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RepoRanger.Domain.Dependencies;
-using RepoRanger.Domain.VersionControlSystems.Factories;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
-using RepoRanger.Domain.VersionControlSystems.Updaters;
+using RepoRanger.Domain.VersionControlSystems.Synchronizers;
+using RepoRanger.Domain.VersionControlSystems.Synchronizers.Factories;
+using RepoRanger.Domain.VersionControlSystems.Synchronizers.Updaters;
 
 namespace RepoRanger.Domain;
 
@@ -10,9 +11,8 @@ public static class ServiceConfiguration
 {
     public static void AddDomain(this IServiceCollection services)
     {
-        services.AddTransient(typeof(ICollectionSynchronizer<,>), typeof(CollectionSynchronizer<,>));
-        
         // VCS
+        services.AddTransient<IVersionControlSystemSynchronizer, VersionControlSystemSynchronizer>();
         services.AddTransient<IVersionControlSystemParser, VersionControlSystemParser>();
         services.AddTransient<IVersionControlSystemUpdater, VersionControlSystemUpdater>();
         services.AddTransient<IVersionControlSystemFactory, VersionControlSystemFactory>();

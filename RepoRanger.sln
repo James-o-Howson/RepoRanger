@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Application.Abst
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Domain", "src\RepoRanger.Domain\RepoRanger.Domain.csproj", "{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Persistence", "src\RepoRanger.Persistence\RepoRanger.Persistence.csproj", "{7F43B6F7-08A1-45D2-B733-796833F12230}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Data", "src\RepoRanger.Data\RepoRanger.Data.csproj", "{7F43B6F7-08A1-45D2-B733-796833F12230}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{FCD76C69-4602-4A53-ADD2-D0E82D0F345F}"
 EndProject

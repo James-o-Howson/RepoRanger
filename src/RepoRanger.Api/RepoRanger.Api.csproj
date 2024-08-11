@@ -43,7 +43,7 @@
       <ProjectReference Include="..\RepoRanger.Application.Queries\RepoRanger.Application.Queries.csproj" />
       <ProjectReference Include="..\RepoRanger.BackgroundJobs\RepoRanger.BackgroundJobs.csproj" />
       <ProjectReference Include="..\RepoRanger.Infrastructure\RepoRanger.Infrastructure.csproj" />
-      <ProjectReference Include="..\RepoRanger.Persistence\RepoRanger.Persistence.csproj" />
+      <ProjectReference Include="..\RepoRanger.Data\RepoRanger.Data.csproj" />
     </ItemGroup>
 
     <ItemGroup>

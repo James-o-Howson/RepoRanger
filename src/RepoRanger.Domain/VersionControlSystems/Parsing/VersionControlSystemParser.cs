@@ -6,7 +6,8 @@ namespace RepoRanger.Domain.VersionControlSystems.Parsing;
 
 public interface IVersionControlSystemParser
 {
-    Task<VersionControlSystemParserResult> ParseAsync(VersionControlSystemContext versionControlSystemContext, CancellationToken cancellationToken);
+    Task<IReadOnlyCollection<VersionControlSystemDescriptor>> ParseAsync(IEnumerable<VersionControlSystemContext> contexts,
+        CancellationToken cancellationToken);
 }
 
 internal sealed class VersionControlSystemParser : IVersionControlSystemParser
@@ -23,16 +24,16 @@ internal sealed class VersionControlSystemParser : IVersionControlSystemParser
 
         _parseContext = ParsingContext.Create(sourceFileParsers);
     }
-    
-    public async Task<VersionControlSystemParserResult> ParseAsync(VersionControlSystemContext versionControlSystemContext, CancellationToken cancellationToken) 
-        => await ParseSourceAsync(versionControlSystemContext, cancellationToken);
 
-    private async Task<VersionControlSystemParserResult> ParseSourceAsync(VersionControlSystemContext versionControlSystemContext, CancellationToken cancellationToken)
+    public async Task<IReadOnlyCollection<VersionControlSystemDescriptor>> ParseAsync(IEnumerable<VersionControlSystemContext> contexts,
+        CancellationToken cancellationToken) =>
+        await Task.WhenAll(
+            contexts.Select(context => ParseAsync(context, cancellationToken)));
+
+    public async Task<VersionControlSystemDescriptor> ParseAsync(VersionControlSystemContext context, CancellationToken cancellationToken)
     {
-        var repositories = await ParseRepositoriesAsync(versionControlSystemContext);
-        var source = new VersionControlSystemDescriptor(versionControlSystemContext.Name, versionControlSystemContext.Location, repositories);
-        
-        return VersionControlSystemParserResult.CreateInstance(source, _parseContext);
+        var repositoryDescriptors = await ParseRepositoriesAsync(context);
+        return CreateDescriptor(context, repositoryDescriptors);
     }
     
     private async Task<IReadOnlyCollection<RepositoryDescriptor>> ParseRepositoriesAsync(VersionControlSystemContext versionControlSystemContext)
@@ -57,4 +58,8 @@ internal sealed class VersionControlSystemParser : IVersionControlSystemParser
 
         return await _repositoryParser.ParseAsync(gitRepository, _parseContext);
     }
+
+    private static VersionControlSystemDescriptor CreateDescriptor(VersionControlSystemContext context,
+        IReadOnlyCollection<RepositoryDescriptor> repositoryDescriptors) => 
+        new(context.Name, context.Location, repositoryDescriptors);
 }

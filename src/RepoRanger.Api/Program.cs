@@ -1,8 +1,8 @@
 using RepoRanger.Api;
 using RepoRanger.BackgroundJobs;
+using RepoRanger.Data;
 using RepoRanger.Domain;
 using RepoRanger.Infrastructure;
-using RepoRanger.Persistence;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
