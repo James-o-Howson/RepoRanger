@@ -370,8 +370,8 @@ export class RepositoriesClient {
         return _observableOf(null as any);
     }
 
-    repositories_GetBySourceId(versionControlSystemId: string | null | undefined): Observable<RepositorySummariesVm> {
-        let url_ = this.baseUrl + "/api/Repositories/GetBySourceId?";
+    repositories_GetByVersionControlSystemId(versionControlSystemId: string | null | undefined): Observable<RepositorySummariesVm> {
+        let url_ = this.baseUrl + "/api/Repositories/GetByVersionControlSystemId?";
         if (versionControlSystemId !== undefined && versionControlSystemId !== null)
             url_ += "VersionControlSystemId=" + encodeURIComponent("" + versionControlSystemId) + "&";
         url_ = url_.replace(/[?&]$/, "");
@@ -385,11 +385,11 @@ export class RepositoriesClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processRepositories_GetBySourceId(response_);
+            return this.processRepositories_GetByVersionControlSystemId(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processRepositories_GetBySourceId(response_ as any);
+                    return this.processRepositories_GetByVersionControlSystemId(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<RepositorySummariesVm>;
                 }
@@ -398,7 +398,7 @@ export class RepositoriesClient {
         }));
     }
 
-    protected processRepositories_GetBySourceId(response: HttpResponseBase): Observable<RepositorySummariesVm> {
+    protected processRepositories_GetByVersionControlSystemId(response: HttpResponseBase): Observable<RepositorySummariesVm> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :

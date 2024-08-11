@@ -9,7 +9,7 @@ public class VersionControlSystemsControllerTests : TestBase
     public async Task List_ReturnsSources()
     {
         // Act
-        var response = await Client.GetAsync("/api/sources");
+        var response = await Client.GetAsync("/api/VersionControlSystems");
 
         // Assert
         response.EnsureSuccessStatusCode();

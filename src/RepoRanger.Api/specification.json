@@ -215,12 +215,12 @@
         }
       }
     },
-    "/api/Repositories/GetBySourceId": {
+    "/api/Repositories/GetByVersionControlSystemId": {
       "get": {
         "tags": [
           "Repositories"
         ],
-        "operationId": "Repositories_GetBySourceId",
+        "operationId": "Repositories_GetByVersionControlSystemId",
         "parameters": [
           {
             "name": "VersionControlSystemId",

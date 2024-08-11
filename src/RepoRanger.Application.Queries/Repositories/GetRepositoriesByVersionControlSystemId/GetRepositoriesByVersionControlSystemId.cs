@@ -24,7 +24,7 @@ internal sealed class GetRepositoriesByVersionControlSystemIdQueryHandler : IReq
         var repositories = await _context.Repositories
             .AsNoTracking()
             .AsSplitQuery()
-            .Include(r => r.DefaultBranch)
+            .Include(r => r.VersionControlSystem)
             .Where(r => r.VersionControlSystemId.Value == request.VersionControlSystemId)
             .Select(r => new RepositorySummaryVm
             {

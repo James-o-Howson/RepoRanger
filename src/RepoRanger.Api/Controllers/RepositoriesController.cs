@@ -21,6 +21,6 @@ public sealed class RepositoriesController : ApiControllerBase
     
     [HttpGet("[action]")]
     [ProducesResponseType(typeof(RepositorySummariesVm), 200)]
-    public async Task<ActionResult<RepositorySummariesVm>> GetBySourceId([FromQuery] GetRepositoriesByVersionControlSystemIdQuery query) => 
+    public async Task<ActionResult<RepositorySummariesVm>> GetByVersionControlSystemId([FromQuery] GetRepositoriesByVersionControlSystemIdQuery query) => 
         await Mediator.Send(query);
 }
