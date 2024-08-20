@@ -70,6 +70,12 @@
     <ItemGroup>
         <InternalsVisibleTo Include="RepoRanger.Api.IntegrationTests" />
     </ItemGroup>
+
+    <!-- Build Actions-->
+    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+        <!-- Generate Google OSV Api C# Client -->
+        <Exec WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net80) run client-csharp-osv.nswag /variables:Configuration=$(Configuration)" />
+    </Target>
     
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <!-- Generate Angular TypeScript Client -->

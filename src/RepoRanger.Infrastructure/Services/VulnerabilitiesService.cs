@@ -1,10 +1,7 @@
 ﻿using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Domain.Dependencies.Entities;
 using RepoRanger.Domain.Dependencies.ValueObjects;
-using RepoRanger.Infrastructure.ThirdPartyClients.OpenSourceVulnerabilities;
-using RepoRanger.Infrastructure.ThirdPartyClients.OpenSourceVulnerabilities.Request;
-using RepoRanger.Infrastructure.ThirdPartyClients.OpenSourceVulnerabilities.Response;
-using RepoRanger.Infrastructure.ThirdPartyClients.OpenSourceVulnerabilities.Schema;
+using ThirdPartyClients.Generated;
 using Vulnerability = RepoRanger.Domain.Dependencies.Entities.Vulnerability;
 
 namespace RepoRanger.Infrastructure.Services;
@@ -25,9 +22,10 @@ internal sealed class VulnerabilitiesService : IVulnerabilityService
         ArgumentNullException.ThrowIfNull(dependencyVersion.Sources);
 
         var queries = dependencyVersion.Sources
-            .Select(dependencySource => GetVulnerabilityQuery(dependencyVersion, dependencySource));
+            .Select(dependencySource => GetVulnerabilityQuery(dependencyVersion, dependencySource))
+            .ToList();
 
-        var batchVulnerabilityList = await _vulnerabilitiesClient.QueryAffectedBatchAsync(new BatchQuery
+        var batchVulnerabilityList = await _vulnerabilitiesClient.QueryAffectedBatchAsync(new V1BatchQuery
         {
             Queries = queries,
         }, cancellationToken);
@@ -35,28 +33,18 @@ internal sealed class VulnerabilitiesService : IVulnerabilityService
         return GetVulnerabilities(batchVulnerabilityList, dependencyVersion.Id);
     }
 
-    private static IEnumerable<Vulnerability> GetVulnerabilities(BatchVulnerabilityList batchVulnerabilityList, DependencyVersionId id) =>
-        batchVulnerabilityList.Results.SelectMany(r => r.Vulnerabilities)
+    private static IEnumerable<Vulnerability> GetVulnerabilities(V1BatchVulnerabilityList batchVulnerabilityList, DependencyVersionId id) =>
+        batchVulnerabilityList.Results.SelectMany(r => r.Vulns)
             .Select(v => Vulnerability.Create(v.Id, id, v.Published, v.Withdrawn, v.Summary, v.Details));
 
-    private static Query GetVulnerabilityQuery(DependencyVersion dependencyVersion, DependencySource dependencySource) =>
+    private static V1Query GetVulnerabilityQuery(DependencyVersion dependencyVersion, DependencySource dependencySource) =>
         new()
         {
             Version = dependencyVersion.Value,
-            Package = new Package
+            Package = new OsvPackage
             {
                 Name = dependencyVersion.Dependency.Name,
-                Ecosystem = GetVulnerabilityEcosystem(dependencySource)
+                Ecosystem = dependencySource.Name
             }
         };
-
-    private static Ecosystem GetVulnerabilityEcosystem(DependencySource dependencySource)
-    {
-        var ecosystemValue = dependencySource.Name;
-        var successful = Enum.TryParse(ecosystemValue, true, out Ecosystem ecosystem);
-        
-        if(successful) return ecosystem;
-        
-        throw new ApplicationException($"Invalid ecosystem value: {ecosystemValue}");
-    }
 }

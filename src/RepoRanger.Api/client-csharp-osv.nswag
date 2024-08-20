@@ -9,7 +9,7 @@
     }
   },
   "codeGenerators": {
-    "openApiToCSharpClient": {  
+    "openApiToCSharpClient": {
       "clientBaseClass": "",
       "configurationClass": "",
       "generateClientClasses": true,
@@ -44,7 +44,7 @@
       "useRequestAndResponseSerializationSettings": false,
       "serializeTypeInformation": false,
       "queryNullValue": "",
-      "className": "OpenSourceVulnerabilitiesClient",
+      "className": "OsvClient",
       "operationGenerationMode": "MultipleClientsFromOperationId",
       "additionalNamespaceUsages": [],
       "additionalContractNamespaceUsages": [],
@@ -59,7 +59,7 @@
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
-      "namespace": "RepoRanger.Infrastructure.ThirdPartyClients",
+      "namespace": "ThirdPartyClients.Generated",
       "requiredPropertiesMustBeDefined": true,
       "dateType": "System.DateTimeOffset",
       "jsonConverters": null,
@@ -93,7 +93,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../RepoRanger.Infrastructure/ThirdPartyClients/Generated/OpenSourceVulnerabilitiesClient.cs",
+      "output": "../RepoRanger.Infrastructure/ThirdPartyClients/Generated/OsvClient.cs",
       "newLineBehavior": "Auto"
     }
   }
