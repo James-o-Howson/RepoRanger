@@ -7,11 +7,11 @@ using RepoRanger.Domain.VersionControlSystems.Git;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
 using RepoRanger.Infrastructure.Services;
+using RepoRanger.Infrastructure.ThirdPartyClients.OpenSourceVulnerabilities;
 using RepoRanger.Infrastructure.VersionControlSystemParsing;
 using RepoRanger.Infrastructure.VersionControlSystemParsing.Angular;
 using RepoRanger.Infrastructure.VersionControlSystemParsing.Common;
 using RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.Projects;
-using ThirdPartyApiClient;
 using DotNetProjectFileParser = RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.DotNetProjectFileParser;
 using ProjectReferenceAttributeParser = RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.Projects.ProjectReferenceAttributeParser;
 
@@ -33,10 +33,10 @@ public static class ServiceConfiguration
             c.AddFileContentParser<DotNetProjectFileParser>();
             c.AddFileContentParser<AngularProjectProjectFileParser>();
         });
-
-        services.AddHttpClient<IOpenSourceVulnerabilitiesClient, OpenSourceVulnerabilitiesClient>(client =>
+        
+        services.AddHttpClient<IOsvClient, OsvClient>(client =>
         {
-            client.BaseAddress = new Uri("https://api.osv.dev/");
+            client.BaseAddress = new Uri("https://api.osv.dev/v1/");
         }).AddStandardResilienceHandler();
     }
     

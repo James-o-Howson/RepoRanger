@@ -12,14 +12,15 @@
     </ItemGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="RepoRanger.Api.IntegrationTests" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="LibGit2Sharp" Version="0.30.0" />
       <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
       <PackageReference Include="Microsoft.Extensions.Http.Polly" Version="8.0.7" />
       <PackageReference Include="Microsoft.Extensions.Http.Resilience" Version="8.7.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Generated\" />
+      <PackageReference Include="RestSharp" Version="111.4.1" />
     </ItemGroup>
 
 </Project>

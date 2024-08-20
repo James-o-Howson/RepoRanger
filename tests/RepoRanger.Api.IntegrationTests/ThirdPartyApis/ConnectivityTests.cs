@@ -1,32 +1,36 @@
-﻿using ThirdPartyApiClient;
+﻿using RepoRanger.Infrastructure.ThirdPartyClients.OpenSourceVulnerabilities;
+using RepoRanger.Infrastructure.ThirdPartyClients.OpenSourceVulnerabilities.Request;
+using RepoRanger.Infrastructure.ThirdPartyClients.OpenSourceVulnerabilities.Response;
+using RepoRanger.Infrastructure.ThirdPartyClients.OpenSourceVulnerabilities.Schema;
 
 namespace RepoRanger.Api.IntegrationTests.ThirdPartyApis;
 
 public class ConnectivityTests : TestBase
 {
-    private IOpenSourceVulnerabilitiesClient _vulnerabilitiesClient;
+    private IOsvClient _vulnerabilitiesClient;
 
     [SetUp]
     public void SetUp()
     {
-        _vulnerabilitiesClient = GetRequiredService<IOpenSourceVulnerabilitiesClient>();
+        _vulnerabilitiesClient = GetRequiredService<IOsvClient>();
     }
 
     [Test]
     public async Task OsvVulnerabilitiesApi_ShouldBeReachable()
     {
-        var query = new V1Query
+        var query = new Query
         {
-            Package = new OsvPackage
+            Version = "4.1.2",
+            Package = new Package
             {
-                Name = "MediatR",
-                Ecosystem = "NuGet"
+                Name = "IdentityServer4",
+                Ecosystem = Ecosystem.NuGet
             }
         };
-        
+
         var response = await _vulnerabilitiesClient.QueryAffectedAsync(query);
         
         Assert.That(response, Is.Not.Null);
-        Assert.That(response, Is.TypeOf<V1VulnerabilityList>());
+        Assert.That(response, Is.TypeOf<VulnerabilityList>());
     }
 }

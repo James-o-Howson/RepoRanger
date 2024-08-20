@@ -62,23 +62,15 @@
       <None Update="client-angular-app.nswag">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Update="client-csharp-open-source-vulnerabilities.nswag">
+      <None Update="client-csharp-osv.nswag">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </None>
-      <None Remove="client-angular-app.nswag" />
-      <None Remove="client-csharp-open-source-vulnerabilities.nswag" />
     </ItemGroup>
 
     <ItemGroup>
         <InternalsVisibleTo Include="RepoRanger.Api.IntegrationTests" />
     </ItemGroup>
-
-    <!-- Build Actions-->
-    <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-        <!-- Generate Google OSV Api C# Client -->
-        <Exec WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net80) run client-csharp-open-source-vulnerabilities.nswag /variables:Configuration=$(Configuration)" />
-    </Target>
-
+    
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <!-- Generate Angular TypeScript Client -->
         <Exec WorkingDirectory="$(ProjectDir)" Command="$(NSwagExe_Net80) run client-angular-app.nswag /variables:Configuration=$(Configuration)" />

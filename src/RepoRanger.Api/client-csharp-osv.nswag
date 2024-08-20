@@ -9,7 +9,7 @@
     }
   },
   "codeGenerators": {
-    "openApiToCSharpClient": {
+    "openApiToCSharpClient": {  
       "clientBaseClass": "",
       "configurationClass": "",
       "generateClientClasses": true,
@@ -59,7 +59,7 @@
       "wrapResponseMethods": [],
       "generateResponseClasses": true,
       "responseClass": "SwaggerResponse",
-      "namespace": "ThirdPartyApiClient",
+      "namespace": "RepoRanger.Infrastructure.ThirdPartyClients",
       "requiredPropertiesMustBeDefined": true,
       "dateType": "System.DateTimeOffset",
       "jsonConverters": null,
@@ -93,7 +93,7 @@
       "templateDirectory": null,
       "serviceHost": null,
       "serviceSchemes": null,
-      "output": "../RepoRanger.Infrastructure/Generated/OpenSourceVulnerabilitiesClient.cs",
+      "output": "../RepoRanger.Infrastructure/ThirdPartyClients/Generated/OpenSourceVulnerabilitiesClient.cs",
       "newLineBehavior": "Auto"
     }
   }
