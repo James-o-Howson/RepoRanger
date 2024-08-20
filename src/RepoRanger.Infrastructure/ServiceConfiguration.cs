@@ -11,6 +11,7 @@ using RepoRanger.Infrastructure.VersionControlSystemParsing;
 using RepoRanger.Infrastructure.VersionControlSystemParsing.Angular;
 using RepoRanger.Infrastructure.VersionControlSystemParsing.Common;
 using RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.Projects;
+using RepoRanger.Infrastructure.Vulnerabilities;
 using ThirdPartyClients.Generated;
 using DotNetProjectFileParser = RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.DotNetProjectFileParser;
 using ProjectReferenceAttributeParser = RepoRanger.Infrastructure.VersionControlSystemParsing.DotNet.Projects.ProjectReferenceAttributeParser;
