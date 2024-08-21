@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Quartz;
-using RepoRanger.BackgroundJobs.Abstractions;
 using RepoRanger.BackgroundJobs.Abstractions.Options;
 using RepoRanger.BackgroundJobs.Jobs;
 
