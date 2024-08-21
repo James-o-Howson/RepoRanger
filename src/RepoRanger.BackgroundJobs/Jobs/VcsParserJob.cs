@@ -1,52 +1,28 @@
 ﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Quartz;
+using RepoRanger.BackgroundJobs.Abstractions;
+using RepoRanger.BackgroundJobs.Abstractions.Options;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 
 namespace RepoRanger.BackgroundJobs.Jobs;
 
 [DisallowConcurrentExecution]
-internal sealed class VcsParserJob : IJob
+internal sealed class VcsParserJob : BaseJob<VcsParserJob>
 {
     internal static readonly JobKey JobKey = new(nameof(VcsParserJob));
     
     private readonly IVersionControlSystemParserService _versionControlSystemParserService;
-    private readonly ILogger<VcsParserJob> _logger;
-    private readonly BackgroundJobOptions _backgroundJobOptions;
 
     public VcsParserJob(ILogger<VcsParserJob> logger,
         IOptions<BackgroundJobOptions> options, 
-        IVersionControlSystemParserService versionControlSystemParserService)
+        IVersionControlSystemParserService versionControlSystemParserService) : base(logger, options)
     {
-        _logger = logger;
         _versionControlSystemParserService = versionControlSystemParserService;
-        _backgroundJobOptions = options.Value;
     }
 
-    public async Task Execute(IJobExecutionContext context)
+    protected override async Task ExecuteJobLogicAsync(IJobExecutionContext context)
     {
-        try
-        {
-            _logger.LogInformation("Version Control System Job Starting");
-
-            if (!_backgroundJobOptions.RepoClonerJobEnabled)
-            {
-                _logger.LogInformation("Version Control System Job Disabled - Skipping");
-                return;
-            }
-
-            await StartRanging(context.CancellationToken);
-        }
-        catch (Exception e)
-        {
-            _logger.LogError(e, "Version Control System Job - Error");
-            context.Result = e;
-        }
-    }
-
-    private async Task StartRanging(CancellationToken cancellationToken)
-    {
-        await _versionControlSystemParserService.ParseAsync(cancellationToken);
-        _logger.LogInformation("Version Control System Job Finished");
+        await _versionControlSystemParserService.ParseAsync(context.CancellationToken);
     }
 }
