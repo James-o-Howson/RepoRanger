@@ -27,13 +27,14 @@ internal abstract class BaseJob<TJob> : IJob
             if (!_options.IsEnabled(jobKey))
             {
                 _logger.LogInformation("{JobName} - Skipping", jobKey.Name);
-                return;
             }
-
-            _logger.LogInformation("{CurrentJobName} Job Starting", jobKey.Name);
-            await ExecuteJobLogicAsync(context);
-            _logger.LogInformation("{CurrentJobName} Job Finished", jobKey.Name);
-
+            else
+            {
+                _logger.LogInformation("{CurrentJobName} Job Starting", jobKey.Name);
+                await ExecuteJobLogicAsync(context);
+                _logger.LogInformation("{CurrentJobName} Job Finished", jobKey.Name);
+            }
+            
             await TriggerNextJob(context);
         }
         catch (Exception e)

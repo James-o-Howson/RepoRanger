@@ -16,11 +16,8 @@ internal sealed class VulnerabilitiesService : IVulnerabilityService
 
     public async Task<IEnumerable<Vulnerability>> QueryVulnerabilitiesAsync(DependencyVersion dependencyVersion, CancellationToken cancellationToken = default)
     {
-        ArgumentNullException.ThrowIfNull(dependencyVersion);
-        ArgumentNullException.ThrowIfNull(dependencyVersion.Dependency);
-        ArgumentNullException.ThrowIfNull(dependencyVersion.Sources);
-
         var queries = dependencyVersion.Sources
+            .Where(s => s.Name != "Assembly")
             .Select(dependencySource => CreateVulnerabilityQuery(dependencyVersion, dependencySource))
             .ToList();
 
