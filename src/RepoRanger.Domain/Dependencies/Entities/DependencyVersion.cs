@@ -32,6 +32,12 @@ public class DependencyVersion : BaseAuditableEntity
         
         return version;
     }
+    
+    public void AddVulnerabilities(IReadOnlyCollection<Vulnerability> vulnerabilities)
+    {
+        DomainException.ThrowIfNullOrEmpty(vulnerabilities);
+        _vulnerabilities.AddRange(vulnerabilities);
+    }
 
     public void AddVulnerability(Vulnerability vulnerability)
     {

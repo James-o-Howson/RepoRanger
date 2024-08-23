@@ -14,7 +14,7 @@ internal sealed class VulnerabilitiesService : IVulnerabilityService
         _vulnerabilitiesClient = vulnerabilitiesClient;
     }
 
-    public async Task<IEnumerable<Vulnerability>> QueryVulnerabilitiesAsync(DependencyVersion dependencyVersion, CancellationToken cancellationToken = default)
+    public async Task<IReadOnlyCollection<Vulnerability>> QueryVulnerabilitiesAsync(DependencyVersion dependencyVersion, CancellationToken cancellationToken = default)
     {
         var queries = dependencyVersion.Sources
             .Where(s => s.Name != "Assembly")
@@ -26,7 +26,7 @@ internal sealed class VulnerabilitiesService : IVulnerabilityService
             Queries = queries,
         }, cancellationToken);
 
-        return batchVulnerabilityList.ToVulnerabilities(dependencyVersion.Id);
+        return batchVulnerabilityList.ToVulnerabilities(dependencyVersion.Id).ToList();
     }
     
     private static V1Query CreateVulnerabilityQuery(DependencyVersion dependencyVersion, DependencySource dependencySource) =>
