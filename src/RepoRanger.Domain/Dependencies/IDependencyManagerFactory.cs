@@ -1,4 +1,4 @@
-﻿namespace RepoRanger.Domain.Dependencies;
+namespace RepoRanger.Domain.Dependencies;
 
 public interface IDependencyManagerFactory
 {

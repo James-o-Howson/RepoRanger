@@ -17,7 +17,7 @@ public class DependencyVersion : BaseAuditableEntity
 
     private DependencyVersion() { }
     
-    public static DependencyVersion Create(Dependency dependency, DependencySource source, string? versionValue)
+    internal static DependencyVersion Create(Dependency dependency, DependencySource source, string? versionValue)
     {
         var version = new DependencyVersion
         {

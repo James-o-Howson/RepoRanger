@@ -15,7 +15,7 @@ public class DependencySource : BaseAuditableEntity
     
     private DependencySource() {}
 
-    public static DependencySource Create(string sourceName) => new()
+    internal static DependencySource Create(string sourceName) => new()
     {
         Name = sourceName,
     };

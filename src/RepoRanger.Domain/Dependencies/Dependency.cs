@@ -16,7 +16,7 @@ public class Dependency : BaseAuditableEntity
     
     private Dependency() {}
 
-    public static Dependency Create(string name) => new()
+    internal static Dependency Create(string name) => new()
     {
         Name = name
     };
