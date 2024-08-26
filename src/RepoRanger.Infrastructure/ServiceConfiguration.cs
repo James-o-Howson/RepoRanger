@@ -1,11 +1,9 @@
-﻿using System.Threading.RateLimiting;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Http.Resilience;
-using Polly;
 using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Domain.Dependencies;
+using RepoRanger.Domain.PersistedEvents;
 using RepoRanger.Domain.VersionControlSystems.Git;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
@@ -27,7 +25,8 @@ public static class ServiceConfiguration
     {
         services.AddTransient<IDependencyManagerFactory, DependencyManagerFactory>();
         services.AddTransient<IGitRepositoryDetailFactory, GitRepositoryDetailFactory>();
-        services.AddTransient<IVulnerabilityService, VulnerabilitiesService>();
+        services.AddTransient<IExternalVulnerabilityService, ExternalVulnerabilitiesService>();
+        services.AddTransient<IPersistedEventDispatcher, PersistedEventDispatcher>();
         
         services.AddTransient<IProjectParser, ProjectPackageReferenceAttributeParser>();
         services.AddTransient<IProjectParser, ProjectReferenceAttributeParser>();
@@ -38,7 +37,6 @@ public static class ServiceConfiguration
             c.AddFileContentParser<AngularProjectProjectFileParser>();
         });
         
-        var rateLimitPolicy = Policy.RateLimitAsync<HttpResponseMessage>(100, TimeSpan.FromMinutes(1));
         services.AddHttpClient<IOsvClient, OsvClient>(client =>
         {
             client.BaseAddress = new Uri("https://api.osv.dev/");

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RepoRanger.Application.Abstractions.Interfaces.Persistence;
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.Dependencies.Entities;
-using RepoRanger.Domain.Messages;
+using RepoRanger.Domain.PersistedEvents;
 using RepoRanger.Domain.VersionControlSystems;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 
@@ -24,7 +24,7 @@ public sealed class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<DependencySource> DependencySources { get; set; }
     public DbSet<DependencyVersion> DependencyVersions { get; set; }
 
-    public DbSet<Message> Messages { get; set; }
+    public DbSet<PersistedEvent> PersistedEvents { get; set; }
     public DbSet<Vulnerability> Vulnerabilities { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)

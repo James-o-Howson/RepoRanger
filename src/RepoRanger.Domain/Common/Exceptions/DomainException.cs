@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
-using RepoRanger.Domain.Dependencies.Entities;
 
 namespace RepoRanger.Domain.Common.Exceptions;
 

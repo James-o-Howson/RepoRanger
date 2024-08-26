@@ -19,8 +19,6 @@ internal abstract class BaseJob<TJob> : IJob
 
     public async Task Execute(IJobExecutionContext context)
     {
-        ArgumentNullException.ThrowIfNull(context);
-        
         try
         {
             var jobKey = context.JobDetail.Key;

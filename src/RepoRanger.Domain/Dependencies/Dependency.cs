@@ -29,14 +29,17 @@ public class Dependency : BaseAuditableEntity
         _versions.Add(version);
     }
 
-    public void AddVulnerability(DependencyVersionId versionId, Vulnerability vulnerability)
+    private bool HasVersion(DependencyVersionId versionId) => Versions.Any(v => v.Id == versionId);
+
+    public void AddVulnerability(string osvId, string dependencyVersionValue, string dependencySourceValue)
     {
-        var version = Versions.FirstOrDefault(v => v.Id == versionId);
-        if (version is null) throw new DomainException($"Cannot find {nameof(DependencyVersion)} for Id = {versionId}");
+        var version = _versions.Single(v => v.Value == dependencyVersionValue);
+        var source = _versions.SelectMany(v => v.Sources).First(s => s.Name == dependencySourceValue);
+        if (version.HasVulnerability(osvId, source.Id)) return;
+        
+        var vulnerability = Vulnerability.Create(osvId, version.Id, source.Id);
         version.AddVulnerability(vulnerability);
         
-        RaiseEvent(new DependencyVulnerableEvent(Id));
+        RaiseEvent(new DependencyVulnerableEvent(vulnerability.Id, version.Id, source.Id));
     }
-
-    private bool HasVersion(DependencyVersionId versionId) => Versions.Any(v => v.Id == versionId);
 }

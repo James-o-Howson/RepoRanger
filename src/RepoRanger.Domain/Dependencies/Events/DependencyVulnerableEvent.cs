@@ -3,16 +3,17 @@ using RepoRanger.Domain.Dependencies.ValueObjects;
 
 namespace RepoRanger.Domain.Dependencies.Events;
 
-internal sealed class DependencyVulnerableEvent : IEvent
+public sealed class DependencyVulnerableEvent : Event
 {
-    public DependencyId Id { get; }
-
-    public DependencyVulnerableEvent(DependencyId id)
+    public DependencyVulnerableEvent(VulnerabilityId vulnerabilityId, DependencyVersionId versionId, DependencySourceId dependencySourceId) : 
+        base(DateTimeOffset.UtcNow, EventType.Durable)
     {
-        Id = id;
-        OccuredOn = DateTimeOffset.UtcNow;
+        VulnerabilityId = vulnerabilityId;
+        VersionId = versionId;
+        DependencySourceId = dependencySourceId;
     }
-
-    public DateTimeOffset OccuredOn { get; }
-    public EventType Type => EventType.Durable;
+    
+    public VulnerabilityId VulnerabilityId { get; }
+    public DependencyVersionId VersionId { get; }
+    public DependencySourceId DependencySourceId { get; }
 }

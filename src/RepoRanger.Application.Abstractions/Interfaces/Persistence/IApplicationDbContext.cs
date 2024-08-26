@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.Dependencies.Entities;
-using RepoRanger.Domain.Messages;
+using RepoRanger.Domain.PersistedEvents;
 using RepoRanger.Domain.VersionControlSystems;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 
@@ -17,7 +17,7 @@ public interface IApplicationDbContext
     DbSet<DependencyVersion> DependencyVersions { get; set; }
     DbSet<DependencySource> DependencySources { get; set; }
     DbSet<ProjectMetadata> ProjectMetadata { get; set; }
-    DbSet<Message> Messages { get; set; }
+    DbSet<PersistedEvent> PersistedEvents { get; set; }
     DbSet<Vulnerability> Vulnerabilities { get; set; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken);

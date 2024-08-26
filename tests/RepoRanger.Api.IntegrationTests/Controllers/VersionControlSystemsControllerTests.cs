@@ -1,7 +1,4 @@
-﻿using System.Text.Json;
-using RepoRanger.Application.Contracts.VersionControlSystems;
-
-namespace RepoRanger.Api.IntegrationTests.Controllers;
+﻿namespace RepoRanger.Api.IntegrationTests.Controllers;
 
 public class VersionControlSystemsControllerTests : TestBase
 {

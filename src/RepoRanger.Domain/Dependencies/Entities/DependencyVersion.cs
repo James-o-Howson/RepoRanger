@@ -1,5 +1,4 @@
 ﻿using RepoRanger.Domain.Common;
-using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.Dependencies.ValueObjects;
 
 namespace RepoRanger.Domain.Dependencies.Entities;
@@ -32,26 +31,18 @@ public class DependencyVersion : BaseAuditableEntity
         
         return version;
     }
-    
-    public void AddVulnerabilities(IReadOnlyCollection<Vulnerability> vulnerabilities)
-    {
-        DomainException.ThrowIfNullOrEmpty(vulnerabilities);
-        _vulnerabilities.AddRange(vulnerabilities);
-    }
-
-    public void AddVulnerability(Vulnerability vulnerability)
-    {
-        DomainException.ThrowIfNull(vulnerability);
-        _vulnerabilities.Add(vulnerability);
-    }
 
     public void TryAddSource(DependencySource source)
     {
-        DomainException.ThrowIfNull(source);
         if (HasSource(source.Name)) return;
         _sources.Add(source);
         source.AddVersion(this);
     }
+
+    internal bool HasVulnerability(string osvId, DependencySourceId sourceId) =>
+        _vulnerabilities.SingleOrDefault(v => v.OsvId == osvId && v.DependencySourceId == sourceId) != null;
+
+    internal void AddVulnerability(Vulnerability vulnerability) => _vulnerabilities.Add(vulnerability);
 
     private bool HasSource(string sourceName) => Sources.Any(s => s.Name == sourceName);
 }

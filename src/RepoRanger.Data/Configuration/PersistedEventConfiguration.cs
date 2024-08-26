@@ -1,16 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RepoRanger.Domain.Messages;
+using RepoRanger.Domain.PersistedEvents;
+using RepoRanger.Domain.PersistedEvents.ValueObjects;
 
 namespace RepoRanger.Data.Configuration;
 
-internal sealed class MessageConfiguration : AuditableEntityConfiguration<Message>
+internal sealed class PersistedEventConfiguration : AuditableEntityConfiguration<PersistedEvent>
 {
-    public override void Configure(EntityTypeBuilder<Message> builder)
+    public override void Configure(EntityTypeBuilder<PersistedEvent> builder)
     {
         builder.HasKey(m => m.Id);
         builder.Property(v => v.Id)
             .HasConversion(id => id.Value,
-                value => new MessageId(value))
+                value => new PersistedEventId(value))
             .ValueGeneratedNever();
         
         builder.Property(m => m.Data)

@@ -1,59 +1,47 @@
 ﻿using System.Text.Json;
 using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Events;
+using RepoRanger.Domain.PersistedEvents.ValueObjects;
 
-namespace RepoRanger.Domain.Messages;
+namespace RepoRanger.Domain.PersistedEvents;
 
-public enum MessageStatus
+public class PersistedEvent : BaseAuditableEntity
 {
-    None = 0,
-    Succeeded = 1,
-    Failed = 2,
-}
+    private PersistedEvent() { }
 
-public class Message : BaseAuditableEntity
-{
-    private Message() { }
-
-    public static Message Create(IEvent @event) => new()
+    public static PersistedEvent Create(IEvent @event) => new()
     {
         Data = JsonSerializer.Serialize(@event),
         Name = @event.GetType().Name
     };
     
-    public MessageId Id { get; } = MessageId.New;
+    public PersistedEventId Id { get; } = PersistedEventId.New;
     public string Data { get; init; } = string.Empty;
     public string Name { get; init; } = string.Empty;
     public int RetryCount { get; private set; }
     public bool Processed { get; private set; }
     public DateTimeOffset? ProcessStartTime { get; private set; }
     public DateTimeOffset? ProcessFinishedTime { get; private set; }
-    public MessageStatus Status { get; private set; } = MessageStatus.None;
+    public PersistedEventStatus Status { get; private set; } = PersistedEventStatus.Unprocessed;
     public string? LastErrorDetails { get; private set; }
-    
-    public void Start()
-    {
-        ProcessStartTime = DateTimeOffset.UtcNow;
-    }
 
-    public void Fail(Exception exception)
+    public void StartProcessing(DateTimeOffset time)
     {
-        Processed = false;
-        LastErrorDetails = exception.ToString();
-        Status = MessageStatus.Failed;
+        if (RetryCount > 0 && ProcessStartTime is not null) return;
+        
+        ProcessStartTime = time;
     }
 
     public void Succeed(DateTimeOffset time)
     {
         Processed = true;
         ProcessFinishedTime = time;
-        Status = MessageStatus.Succeeded;
+        Status = PersistedEventStatus.Succeeded;
     }
 
-    public void Retry(int retryThreshold)
+    public void Retry(int retryThreshold, Exception exception)
     {
         RetryCount++;
-        ProcessStartTime = DateTimeOffset.UtcNow;
         ProcessFinishedTime = null;
 
         if (RetryCount < retryThreshold)
@@ -61,6 +49,13 @@ public class Message : BaseAuditableEntity
             return;
         }
 
-        Fail(new MessageRetryThresholdExceededException(RetryCount, retryThreshold));
+        Fail(exception);
+    }
+
+    private void Fail(Exception exception)
+    {
+        Processed = false;
+        LastErrorDetails = exception.ToString();
+        Status = PersistedEventStatus.Failed;
     }
 }

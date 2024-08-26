@@ -1,20 +1,13 @@
-﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using RepoRanger.Domain.Common;
+using RepoRanger.Domain.PersistedEvents;
 
 namespace RepoRanger.Data.Interceptors;
 
-public class EventDispatcherSaveChangesInterceptor : SaveChangesInterceptor
+public class PersistEventsSaveChangesInterceptor : SaveChangesInterceptor
 {
-    private readonly IMediator _mediator;
-
-    public EventDispatcherSaveChangesInterceptor(IMediator mediator)
-    {
-        _mediator = mediator;
-    }
-
     public override int SavedChanges(SaveChangesCompletedEventData eventData, int result)
     {
         if (eventData.Context is null) return base.SavedChanges(eventData, result);
@@ -33,7 +26,7 @@ public class EventDispatcherSaveChangesInterceptor : SaveChangesInterceptor
         return await base.SavedChangesAsync(eventData, result, cancellationToken);
     }
     
-    private async Task DispatchEventsAsync(DbContext context, CancellationToken cancellationToken)
+    private static async Task DispatchEventsAsync(DbContext context, CancellationToken cancellationToken)
     {
         var events = context.ChangeTracker
             .Entries<BaseEntity>()
@@ -42,9 +35,8 @@ public class EventDispatcherSaveChangesInterceptor : SaveChangesInterceptor
         
         if (events.Count == 0) return;
 
-        foreach (var @event in events)
-        {
-            await _mediator.Publish(@event, cancellationToken);
-        }
+        var persistedEvents = events.Select(PersistedEvent.Create);
+
+        await context.AddRangeAsync(persistedEvents, cancellationToken);
     }
 }

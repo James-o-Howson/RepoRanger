@@ -24,15 +24,19 @@ public static class ServiceConfiguration
             configurator.UseSimpleTypeLoader();
             configurator.UseInMemoryStore();
             
-            configurator.AddSequentialJobs<VcsParserJob>(VcsParserJob.JobKey, TriggerConfiguration)
+            configurator.AddJob<PersistedEventDispatcherJob>(PersistedEventDispatcherJob.JobKey);
+            configurator.AddTrigger(trigger => trigger.SimpleTrigger(PersistedEventDispatcherJob.JobKey));
+            
+            configurator.AddSequentialJobs<VcsParserJob>(VcsParserJob.JobKey,
+                    trigger => SimpleTrigger(trigger, VcsParserJob.JobKey))
                 .ThenExecute<VulnerabilityDiscoveryJob>(VulnerabilityDiscoveryJob.JobKey);
         });
 
         services.AddQuartzHostedService(options => options.WaitForJobsToComplete = true);
     }
 
-    private static void TriggerConfiguration(ITriggerConfigurator trigger) =>
-        trigger.ForJob(VcsParserJob.JobKey)
+    private static void SimpleTrigger(this ITriggerConfigurator trigger, JobKey jobKey) =>
+        trigger.ForJob(jobKey)
             .StartNow()
             .WithSimpleSchedule(schedule => schedule.WithIntervalInMinutes(60).RepeatForever());
 }
