@@ -5,15 +5,15 @@ namespace RepoRanger.Domain.Dependencies.Events;
 
 public sealed class DependencyVulnerableEvent : Event
 {
-    public DependencyVulnerableEvent(VulnerabilityId vulnerabilityId, DependencyVersionId versionId, DependencySourceId dependencySourceId) : 
+    // ReSharper disable once UnusedMember.Global
+    public DependencyVulnerableEvent() { }
+    
+    public DependencyVulnerableEvent(VulnerabilityId vulnerabilityId) : 
         base(DateTimeOffset.UtcNow, EventType.Durable)
     {
         VulnerabilityId = vulnerabilityId;
-        VersionId = versionId;
-        DependencySourceId = dependencySourceId;
     }
     
-    public VulnerabilityId VulnerabilityId { get; }
-    public DependencyVersionId VersionId { get; }
-    public DependencySourceId DependencySourceId { get; }
+    public VulnerabilityId VulnerabilityId { get; set; }
+    public override Type GetImplementationType() => typeof(DependencyVulnerableEvent);
 }

@@ -25,7 +25,9 @@ public static class ServiceConfiguration
             configurator.UseInMemoryStore();
             
             configurator.AddJob<PersistedEventDispatcherJob>(PersistedEventDispatcherJob.JobKey);
-            configurator.AddTrigger(trigger => trigger.SimpleTrigger(PersistedEventDispatcherJob.JobKey));
+            configurator.AddTrigger(trigger => trigger.ForJob(PersistedEventDispatcherJob.JobKey)
+                .StartNow()
+                .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(30).RepeatForever()));
             
             configurator.AddSequentialJobs<VcsParserJob>(VcsParserJob.JobKey,
                     trigger => SimpleTrigger(trigger, VcsParserJob.JobKey))

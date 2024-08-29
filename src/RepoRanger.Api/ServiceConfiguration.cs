@@ -5,6 +5,7 @@ using RepoRanger.Api.Services;
 using RepoRanger.Application.Abstractions.Behaviours;
 using RepoRanger.Application.Abstractions.Interfaces;
 using RepoRanger.Application.Commands;
+using RepoRanger.Application.EventHandlers;
 using RepoRanger.Application.Queries;
 using RepoRanger.Data;
 using Serilog;
@@ -30,7 +31,6 @@ internal static class ServiceConfiguration
         services.AddMediatr();
         services.AddValidatorsFromAssemblies([CommandsAssembly.Assembly, QueriesAssembly.Assembly]);
 
-
         services.AddScoped<IUser, CurrentUser>();
         services.AddSingleton(TimeProvider.System);
     }
@@ -55,7 +55,9 @@ internal static class ServiceConfiguration
     {
         services.AddMediatR(cfg =>
         {
-            cfg.RegisterServicesFromAssemblies(CommandsAssembly.Assembly, QueriesAssembly.Assembly);
+            cfg.RegisterServicesFromAssemblies(CommandsAssembly.Assembly,
+                QueriesAssembly.Assembly, EventHandlersAssembly.Assembly);
+            
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
             cfg.AddBehavior(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));

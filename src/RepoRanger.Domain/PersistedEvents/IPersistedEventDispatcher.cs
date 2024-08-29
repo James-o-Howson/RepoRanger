@@ -2,5 +2,5 @@
 
 public interface IPersistedEventDispatcher
 {
-    Task DispatchAsync(PersistedEvent @event, CancellationToken cancellationToken = default);
+    Task DispatchAsync(PersistedEvent persistedEvent, CancellationToken cancellationToken = default);
 }

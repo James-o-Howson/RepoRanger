@@ -1,12 +1,13 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using RepoRanger.Domain.PersistedEvents;
 using RepoRanger.Domain.PersistedEvents.ValueObjects;
 
-namespace RepoRanger.Data.Configuration;
+namespace RepoRanger.Data.Configuration.PersistedEvents;
 
-internal sealed class PersistedEventConfiguration : AuditableEntityConfiguration<PersistedEvent>
+internal sealed class PersistedEventConfiguration : IEntityTypeConfiguration<PersistedEvent>
 {
-    public override void Configure(EntityTypeBuilder<PersistedEvent> builder)
+    public void Configure(EntityTypeBuilder<PersistedEvent> builder)
     {
         builder.HasKey(m => m.Id);
         builder.Property(v => v.Id)
@@ -15,9 +16,10 @@ internal sealed class PersistedEventConfiguration : AuditableEntityConfiguration
             .ValueGeneratedNever();
         
         builder.Property(m => m.Data)
+            
             .IsRequired();
         
-        builder.Property(m => m.Processed)
+        builder.Property(m => m.EventType)
             .IsRequired();
         
         builder.Property(m => m.RetryCount)
@@ -26,6 +28,9 @@ internal sealed class PersistedEventConfiguration : AuditableEntityConfiguration
         builder.Property(m => m.Status)
             .IsRequired();
         
-        base.Configure(builder);
+        builder.Property(v => v.Created)
+            .IsRequired()
+            .HasMaxLength(150)
+            .IsUnicode();
     }
 }

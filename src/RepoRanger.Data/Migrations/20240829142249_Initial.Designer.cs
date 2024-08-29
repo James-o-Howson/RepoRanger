@@ -11,7 +11,7 @@ using RepoRanger.Data;
 namespace RepoRanger.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240822071550_Initial")]
+    [Migration("20240829142249_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -152,11 +152,13 @@ namespace RepoRanger.Data.Migrations
                         .IsUnicode(true)
                         .HasColumnType("TEXT");
 
+                    b.Property<Guid>("DependencySourceId")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("DependencyVersionId")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Details")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("LastModified")
@@ -175,8 +177,11 @@ namespace RepoRanger.Data.Migrations
                     b.Property<DateTimeOffset?>("Published")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("State")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Summary")
-                        .IsRequired()
+                        .HasMaxLength(120)
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset?>("Withdrawn")
@@ -184,21 +189,19 @@ namespace RepoRanger.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DependencySourceId");
+
                     b.HasIndex("DependencyVersionId");
 
                     b.ToTable("Vulnerabilities");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.Messages.Message", b =>
+            modelBuilder.Entity("RepoRanger.Domain.PersistedEvents.PersistedEvent", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset>("Created")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
                         .HasMaxLength(150)
                         .IsUnicode(true)
                         .HasColumnType("TEXT");
@@ -207,19 +210,11 @@ namespace RepoRanger.Data.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("LastErrorDetails")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset>("LastModified")
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("LastModifiedBy")
-                        .HasMaxLength(150)
-                        .IsUnicode(true)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Name")
+                    b.Property<string>("EventType")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("LastErrorDetails")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset?>("ProcessFinishedTime")
@@ -227,9 +222,6 @@ namespace RepoRanger.Data.Migrations
 
                     b.Property<DateTimeOffset?>("ProcessStartTime")
                         .HasColumnType("TEXT");
-
-                    b.Property<bool>("Processed")
-                        .HasColumnType("INTEGER");
 
                     b.Property<int>("RetryCount")
                         .HasColumnType("INTEGER");
@@ -239,7 +231,7 @@ namespace RepoRanger.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Messages");
+                    b.ToTable("PersistedEvents");
                 });
 
             modelBuilder.Entity("RepoRanger.Domain.VersionControlSystems.Entities.Project", b =>
@@ -493,11 +485,19 @@ namespace RepoRanger.Data.Migrations
 
             modelBuilder.Entity("RepoRanger.Domain.Dependencies.Entities.Vulnerability", b =>
                 {
+                    b.HasOne("RepoRanger.Domain.Dependencies.Entities.DependencySource", "DependencySource")
+                        .WithMany()
+                        .HasForeignKey("DependencySourceId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.HasOne("RepoRanger.Domain.Dependencies.Entities.DependencyVersion", "DependencyVersion")
                         .WithMany("Vulnerabilities")
                         .HasForeignKey("DependencyVersionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("DependencySource");
 
                     b.Navigation("DependencyVersion");
                 });

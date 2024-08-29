@@ -32,14 +32,13 @@ internal sealed class PersistedEventDispatcherJob : BaseJob<PersistedEventDispat
     private async Task ProcessPersistedEventsAsync(IJobExecutionContext context)
     {
         var unprocessedEvents = _dbContext.PersistedEvents
-            .Where(e => !e.Processed && e.Status == PersistedEventStatus.Unprocessed)
+            .Where(e => e.Status == PersistedEventStatus.Unprocessed)
             .AsAsyncEnumerable();
         
         await foreach (var @event in unprocessedEvents)
         {
             await _persistedEventDispatcher.DispatchAsync(@event, context.CancellationToken);
             await _dbContext.SaveChangesAsync(context.CancellationToken);
-
         }
         
     }

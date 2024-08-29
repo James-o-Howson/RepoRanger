@@ -31,15 +31,20 @@ public class Dependency : BaseAuditableEntity
 
     private bool HasVersion(DependencyVersionId versionId) => Versions.Any(v => v.Id == versionId);
 
-    public void AddVulnerability(string osvId, string dependencyVersionValue, string dependencySourceValue)
+    public void AddVulnerabilities(List<string> osvIds, string dependencyVersionValue, string dependencySourceValue)
     {
-        var version = _versions.Single(v => v.Value == dependencyVersionValue);
-        var source = _versions.SelectMany(v => v.Sources).First(s => s.Name == dependencySourceValue);
-        if (version.HasVulnerability(osvId, source.Id)) return;
+        if(osvIds.Count == 0) return;
         
-        var vulnerability = Vulnerability.Create(osvId, version.Id, source.Id);
-        version.AddVulnerability(vulnerability);
+        foreach (var osvId in osvIds)
+        {
+            var version = _versions.Single(v => v.Value == dependencyVersionValue);
+            var source = _versions.SelectMany(v => v.Sources).First(s => s.Name == dependencySourceValue);
+            if (version.HasVulnerability(osvId, source.Id)) return;
         
-        RaiseEvent(new DependencyVulnerableEvent(vulnerability.Id, version.Id, source.Id));
+            var vulnerability = Vulnerability.Create(osvId, version.Id, source.Id);
+            version.AddVulnerability(vulnerability);
+        
+            RaiseEvent(new DependencyVulnerableEvent(vulnerability.Id));
+        }
     }
 }

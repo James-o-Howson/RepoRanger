@@ -19,22 +19,22 @@ internal sealed class PersistedEventDispatcher : IPersistedEventDispatcher
         _timeProvider = timeProvider;
     }
 
-    public async Task DispatchAsync(PersistedEvent @event, CancellationToken cancellationToken = default)
+    public async Task DispatchAsync(PersistedEvent persistedEvent, CancellationToken cancellationToken = default)
     {
         try
         {
-            @event.StartProcessing(_timeProvider.GetUtcNow());
-            _logger.LogInformation("Processing Persisted Event: {PersistedEventId}", @event.Id);
+            persistedEvent.StartProcessing(_timeProvider.GetUtcNow());
+            _logger.LogInformation("Processing Persisted Event: {PersistedEventId}", persistedEvent.Id);
 
-            await _mediator.Publish(@event, cancellationToken);
+            await _mediator.Publish(persistedEvent.Event(), cancellationToken);
                 
-            @event.Succeed(_timeProvider.GetUtcNow());
-            _logger.LogInformation("Finished Processing Persisted Event: {PersistedEventId}", @event.Id);
+            persistedEvent.Succeed(_timeProvider.GetUtcNow());
+            _logger.LogInformation("Finished Processing Persisted Event: {PersistedEventId}", persistedEvent.Id);
         }
         catch (Exception exception)
         {
-            @event.Retry(RetryThreshold, exception);
-            _logger.LogError(exception, "Failed to Process Persisted Event: {PersistedJobName}", @event.Id);
+            persistedEvent.Retry(RetryThreshold, exception);
+            _logger.LogError(exception, "Failed to Process Persisted Event: {PersistedJobName}", persistedEvent.Id);
         }
     }
 }

@@ -40,6 +40,7 @@
     <ItemGroup>
       <ProjectReference Include="..\RepoRanger.Application.Abstractions\RepoRanger.Application.Abstractions.csproj" />
       <ProjectReference Include="..\RepoRanger.Application.Commands\RepoRanger.Application.Commands.csproj" />
+      <ProjectReference Include="..\RepoRanger.Application.EventHandlers\RepoRanger.Application.EventHandlers.csproj" />
       <ProjectReference Include="..\RepoRanger.Application.Queries\RepoRanger.Application.Queries.csproj" />
       <ProjectReference Include="..\RepoRanger.BackgroundJobs\RepoRanger.BackgroundJobs.csproj" />
       <ProjectReference Include="..\RepoRanger.Infrastructure\RepoRanger.Infrastructure.csproj" />

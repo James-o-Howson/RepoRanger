@@ -34,10 +34,26 @@ internal sealed class ExternalVulnerabilitiesService : IExternalVulnerabilitySer
         return new ExternalVulnerabilitiesBatchResponse
         {
             OsvIds = batchVulnerabilities.Results
-                .Where(r => r.Vulns != null)
-                .SelectMany(l => l.Vulns)
-                .Select(v => v.Id)
+                .Select(GetOsvIds)
                 .ToList()
         };
     }
+
+    public async Task<ExternalVulnerability> QueryAsync(string osvId, CancellationToken cancellationToken = default)
+    {
+        var vulnerability = await _vulnerabilitiesClient.GetVulnByIdAsync(osvId, cancellationToken);
+        
+        return new ExternalVulnerability
+        {
+            Summary = vulnerability.Summary,
+            Details = vulnerability.Details,
+            Published = vulnerability.Published,
+            Withdrawn = vulnerability.Withdrawn
+        };
+    }
+
+    private static List<string> GetOsvIds(V1VulnerabilityList r) => 
+        r.Vulns is null ? 
+            [] : 
+            r.Vulns.Select(v => v.Id).ToList();
 }

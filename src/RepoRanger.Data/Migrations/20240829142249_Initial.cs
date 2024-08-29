@@ -44,26 +44,22 @@ namespace RepoRanger.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Messages",
+                name: "PersistedEvents",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Data = table.Column<string>(type: "TEXT", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    EventType = table.Column<string>(type: "TEXT", nullable: false),
                     RetryCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    Processed = table.Column<bool>(type: "INTEGER", nullable: false),
                     ProcessStartTime = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     ProcessFinishedTime = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    Created = table.Column<DateTimeOffset>(type: "TEXT", maxLength: 150, nullable: false),
                     Status = table.Column<int>(type: "INTEGER", nullable: false),
-                    LastErrorDetails = table.Column<string>(type: "TEXT", nullable: true),
-                    Created = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
-                    LastModified = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
-                    LastModifiedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: true)
+                    LastErrorDetails = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Messages", x => x.Id);
+                    table.PrimaryKey("PK_PersistedEvents", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -163,10 +159,12 @@ namespace RepoRanger.Data.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     OsvId = table.Column<string>(type: "TEXT", maxLength: 50, nullable: false),
                     DependencyVersionId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DependencySourceId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    State = table.Column<int>(type: "INTEGER", nullable: false),
                     Published = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     Withdrawn = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    Summary = table.Column<string>(type: "TEXT", nullable: false),
-                    Details = table.Column<string>(type: "TEXT", nullable: false),
+                    Summary = table.Column<string>(type: "TEXT", maxLength: 120, nullable: true),
+                    Details = table.Column<string>(type: "TEXT", nullable: true),
                     Created = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
                     CreatedBy = table.Column<string>(type: "TEXT", maxLength: 150, nullable: false),
                     LastModified = table.Column<DateTimeOffset>(type: "TEXT", nullable: false),
@@ -175,6 +173,11 @@ namespace RepoRanger.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Vulnerabilities", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Vulnerabilities_DependencySources_DependencySourceId",
+                        column: x => x.DependencySourceId,
+                        principalTable: "DependencySources",
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Vulnerabilities_DependencyVersions_DependencyVersionId",
                         column: x => x.DependencyVersionId,
@@ -350,6 +353,11 @@ namespace RepoRanger.Data.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Vulnerabilities_DependencySourceId",
+                table: "Vulnerabilities",
+                column: "DependencySourceId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Vulnerabilities_DependencyVersionId",
                 table: "Vulnerabilities",
                 column: "DependencyVersionId");
@@ -362,7 +370,7 @@ namespace RepoRanger.Data.Migrations
                 name: "DependencySourceDependencyVersion");
 
             migrationBuilder.DropTable(
-                name: "Messages");
+                name: "PersistedEvents");
 
             migrationBuilder.DropTable(
                 name: "ProjectDependencies");
@@ -374,10 +382,10 @@ namespace RepoRanger.Data.Migrations
                 name: "Vulnerabilities");
 
             migrationBuilder.DropTable(
-                name: "DependencySources");
+                name: "Projects");
 
             migrationBuilder.DropTable(
-                name: "Projects");
+                name: "DependencySources");
 
             migrationBuilder.DropTable(
                 name: "DependencyVersions");

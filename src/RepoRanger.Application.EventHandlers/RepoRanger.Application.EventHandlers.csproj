@@ -4,16 +4,16 @@
         <TargetFramework>net8.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <WarningsAsErrors>Nullable</WarningsAsErrors>
     </PropertyGroup>
-    
+
     <ItemGroup>
-      <Folder Include="Repositories\" />
-      <Folder Include="VersionControlSystems\" />
+      <PackageReference Include="MediatR" Version="12.4.0" />
+      <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\RepoRanger.Application.Abstractions\RepoRanger.Application.Abstractions.csproj" />
+      <ProjectReference Include="..\RepoRanger.Domain\RepoRanger.Domain.csproj" />
     </ItemGroup>
 
 </Project>
