@@ -49,7 +49,8 @@ namespace RepoRanger.Data.Migrations
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Data = table.Column<string>(type: "TEXT", nullable: false),
-                    EventType = table.Column<string>(type: "TEXT", nullable: false),
+                    EventType_Value = table.Column<string>(type: "TEXT", nullable: false),
+                    Category = table.Column<int>(type: "INTEGER", nullable: false),
                     RetryCount = table.Column<int>(type: "INTEGER", nullable: false),
                     ProcessStartTime = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     ProcessFinishedTime = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),

@@ -16,10 +16,11 @@ internal sealed class PersistedEventConfiguration : IEntityTypeConfiguration<Per
             .ValueGeneratedNever();
         
         builder.Property(m => m.Data)
-            
             .IsRequired();
+
+        builder.OwnsOne(m => m.EventType);
         
-        builder.Property(m => m.EventType)
+        builder.Property(m => m.Category)
             .IsRequired();
         
         builder.Property(m => m.RetryCount)

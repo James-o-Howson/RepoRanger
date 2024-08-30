@@ -198,16 +198,15 @@ namespace RepoRanger.Data.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("Category")
+                        .HasColumnType("INTEGER");
+
                     b.Property<DateTimeOffset>("Created")
                         .HasMaxLength(150)
                         .IsUnicode(true)
                         .HasColumnType("TEXT");
 
                     b.Property<string>("Data")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("EventType")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
@@ -497,6 +496,29 @@ namespace RepoRanger.Data.Migrations
                     b.Navigation("DependencySource");
 
                     b.Navigation("DependencyVersion");
+                });
+
+            modelBuilder.Entity("RepoRanger.Domain.PersistedEvents.PersistedEvent", b =>
+                {
+                    b.OwnsOne("RepoRanger.Domain.PersistedEvents.ValueObjects.EventType", "EventType", b1 =>
+                        {
+                            b1.Property<Guid>("PersistedEventId")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("TEXT");
+
+                            b1.HasKey("PersistedEventId");
+
+                            b1.ToTable("PersistedEvents");
+
+                            b1.WithOwner()
+                                .HasForeignKey("PersistedEventId");
+                        });
+
+                    b.Navigation("EventType")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("RepoRanger.Domain.VersionControlSystems.Entities.Project", b =>

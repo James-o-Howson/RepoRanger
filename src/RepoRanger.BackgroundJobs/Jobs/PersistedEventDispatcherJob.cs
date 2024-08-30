@@ -40,8 +40,5 @@ internal sealed class PersistedEventDispatcherJob : BaseJob<PersistedEventDispat
             await _persistedEventDispatcher.DispatchAsync(@event, context.CancellationToken);
             await _dbContext.SaveChangesAsync(context.CancellationToken);
         }
-        
     }
-    
-    
 }

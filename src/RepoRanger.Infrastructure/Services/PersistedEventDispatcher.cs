@@ -33,7 +33,7 @@ internal sealed class PersistedEventDispatcher : IPersistedEventDispatcher
         }
         catch (Exception exception)
         {
-            persistedEvent.Retry(RetryThreshold, exception);
+            persistedEvent.Fail(RetryThreshold, exception);
             _logger.LogError(exception, "Failed to Process Persisted Event: {PersistedJobName}", persistedEvent.Id);
         }
     }

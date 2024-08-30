@@ -2,7 +2,7 @@
 
 public abstract class ValueObject
 {
-    protected static bool EqualOperator(ValueObject left, ValueObject right)
+    protected static bool EqualOperator(ValueObject? left, ValueObject? right)
     {
         if (left is null ^ right is null)
         {
@@ -14,10 +14,10 @@ public abstract class ValueObject
 
     protected static bool NotEqualOperator(ValueObject left, ValueObject right)
     {
-        return !(EqualOperator(left, right));
+        return !EqualOperator(left, right);
     }
 
-    protected abstract IEnumerable<object> GetEqualityComponents();
+    protected abstract IEnumerable<object?> GetEqualityComponents();
 
     public override bool Equals(object? obj)
     {
