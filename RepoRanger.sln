@@ -5,7 +5,7 @@ VisualStudioVersion = 17.8.34525.116
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Infrastructure", "src\RepoRanger.Infrastructure\RepoRanger.Infrastructure.csproj", "{7DEB0DD2-C88A-44F4-B250-362D3DDDC628}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Application.Abstractions", "src\RepoRanger.Application.Abstractions\RepoRanger.Application.Abstractions.csproj", "{F04CFCDD-2B43-4A0B-9B6D-ED518B2181BF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Abstractions", "src\RepoRanger.Abstractions\RepoRanger.Abstractions.csproj", "{F04CFCDD-2B43-4A0B-9B6D-ED518B2181BF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Domain", "src\RepoRanger.Domain\RepoRanger.Domain.csproj", "{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08}"
 EndProject
@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepoRanger.Data", "src\Repo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{FCD76C69-4602-4A53-ADD2-D0E82D0F345F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Api", "src\RepoRanger.Api\RepoRanger.Api.csproj", "{26415894-B262-4DF7-B269-09C064FFC6FF}"
 EndProject
@@ -37,15 +37,22 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Api.IntegrationT
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{A5B1D6AA-B055-4654-95F2-B1FB84254CD5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Application.Contracts", "src\RepoRanger.Application.Contracts\RepoRanger.Application.Contracts.csproj", "{F3076EC4-2AFA-4BF4-ADF7-F021052FD7EF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Contracts", "src\RepoRanger.Contracts\RepoRanger.Contracts.csproj", "{F3076EC4-2AFA-4BF4-ADF7-F021052FD7EF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Application.Queries", "src\RepoRanger.Application.Queries\RepoRanger.Application.Queries.csproj", "{7F8BF851-B239-4259-A4F9-D4F15A432755}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Queries", "src\RepoRanger.Queries\RepoRanger.Queries.csproj", "{7F8BF851-B239-4259-A4F9-D4F15A432755}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Application.Commands", "src\RepoRanger.Application.Commands\RepoRanger.Application.Commands.csproj", "{9B90EDF1-F746-4381-A70B-966EB78A4AF5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Commands", "src\RepoRanger.Commands\RepoRanger.Commands.csproj", "{9B90EDF1-F746-4381-A70B-966EB78A4AF5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.BackgroundJobs", "src\RepoRanger.BackgroundJobs\RepoRanger.BackgroundJobs.csproj", "{FA6F2A41-3736-44B3-B290-6E7800241B3E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Application.EventHandlers", "src\RepoRanger.Application.EventHandlers\RepoRanger.Application.EventHandlers.csproj", "{3C31F856-5BF8-424E-8732-288FC980094F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.EventHandlers", "src\RepoRanger.EventHandlers\RepoRanger.EventHandlers.csproj", "{3C31F856-5BF8-424E-8732-288FC980094F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".local", ".local", "{11524768-3625-4CCC-838D-CD8801A73F25}"
+	ProjectSection(SolutionItems) = preProject
+		.local\rebaseline-and-reset-db.sh = .local\rebaseline-and-reset-db.sh
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{45FA6016-9E84-4D68-90A9-2D2A53B978BC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -104,7 +111,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{7DEB0DD2-C88A-44F4-B250-362D3DDDC628} = {FCD76C69-4602-4A53-ADD2-D0E82D0F345F}
 		{F04CFCDD-2B43-4A0B-9B6D-ED518B2181BF} = {B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}
-		{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08} = {B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}
 		{7F43B6F7-08A1-45D2-B733-796833F12230} = {FCD76C69-4602-4A53-ADD2-D0E82D0F345F}
 		{26415894-B262-4DF7-B269-09C064FFC6FF} = {55E4975D-BFEE-48DC-AFD1-0BCF6202BE28}
 		{FCD76C69-4602-4A53-ADD2-D0E82D0F345F} = {55E4975D-BFEE-48DC-AFD1-0BCF6202BE28}
@@ -117,6 +123,9 @@ Global
 		{9B90EDF1-F746-4381-A70B-966EB78A4AF5} = {B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}
 		{FA6F2A41-3736-44B3-B290-6E7800241B3E} = {FCD76C69-4602-4A53-ADD2-D0E82D0F345F}
 		{3C31F856-5BF8-424E-8732-288FC980094F} = {B275B8E9-FB6D-4CA9-8DB5-E00509C04DA1}
+		{11524768-3625-4CCC-838D-CD8801A73F25} = {3E3F722A-B706-4C9E-B1A8-FD58B29BB7F9}
+		{45FA6016-9E84-4D68-90A9-2D2A53B978BC} = {55E4975D-BFEE-48DC-AFD1-0BCF6202BE28}
+		{9EDD502D-F59E-4A7D-8ECB-FCF1B4BC2B08} = {45FA6016-9E84-4D68-90A9-2D2A53B978BC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F829DB12-3606-4221-8194-EE18B9DCBC43}

@@ -41,6 +41,9 @@ internal abstract class BaseJob<TJob> : IJob
         }
     }
 
+    protected JobOptions GetOptions(IJobExecutionContext context) =>
+        _options.GetOptions(context.JobDetail.Key);
+
     protected abstract Task ExecuteJobLogicAsync(IJobExecutionContext context);
 
     protected virtual void HandleException(Exception e, IJobExecutionContext context)

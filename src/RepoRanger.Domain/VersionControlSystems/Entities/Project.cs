@@ -1,6 +1,7 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+using RepoRanger.Domain.VersionControlSystems.Events;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
@@ -48,14 +49,12 @@ public class Project : BaseAuditableEntity, IAlternateKeyProvider
 
     public void AddProjectDependency(ProjectDependency projectDependency)
     {
-        DomainException.ThrowIfNull(projectDependency);
         if (HasProjectDependency(projectDependency.Id)) return;
         _projectDependencies.Add(projectDependency);
     }
 
     public void AddMetadata(ProjectMetadata projectMetadata)
     {
-        DomainException.ThrowIfNull(projectMetadata);
         if (HasProjectMetadata(projectMetadata.Id)) return;
         _metadata.Add(projectMetadata);
     }
@@ -76,7 +75,6 @@ public class Project : BaseAuditableEntity, IAlternateKeyProvider
 
     public void DeleteProjectDependency(ProjectDependencyId projectDependencyId)
     {
-        DomainException.ThrowIfNull(projectDependencyId);
         var index = _projectDependencies.FindIndex(d => d.Id == projectDependencyId);
         if (index < 0) return;
 
@@ -85,7 +83,6 @@ public class Project : BaseAuditableEntity, IAlternateKeyProvider
 
     public void DeleteMetadata(ProjectMetadataId metadataId)
     {
-        DomainException.ThrowIfNull(metadataId);
         var index = _metadata.FindIndex(d => d.Id == metadataId);
         if (index < 0) return;
 
@@ -106,13 +103,11 @@ public class Project : BaseAuditableEntity, IAlternateKeyProvider
 
     private bool HasProjectDependency(ProjectDependencyId projectDependencyId)
     {
-        DomainException.ThrowIfNull(projectDependencyId);
         return ProjectDependencies.Any(d => d.Id == projectDependencyId);
     }
 
     private bool HasProjectMetadata(ProjectMetadataId metadataId)
     {
-        DomainException.ThrowIfNull(metadataId);
         return Metadata.Any(d => d.Id == metadataId);
     }
 }

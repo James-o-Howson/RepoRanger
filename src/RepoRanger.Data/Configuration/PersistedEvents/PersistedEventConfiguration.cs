@@ -18,7 +18,7 @@ internal sealed class PersistedEventConfiguration : IEntityTypeConfiguration<Per
         builder.Property(m => m.Data)
             .IsRequired();
 
-        builder.OwnsOne(m => m.EventType);
+        builder.ComplexProperty(m => m.EventTypeDescriptor);
         
         builder.Property(m => m.Category)
             .IsRequired();

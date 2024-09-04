@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Application.Abstractions.Interfaces.Persistence;
+using RepoRanger.Abstractions.Interfaces.Persistence;
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.Dependencies.Entities;
 using RepoRanger.Domain.PersistedEvents;

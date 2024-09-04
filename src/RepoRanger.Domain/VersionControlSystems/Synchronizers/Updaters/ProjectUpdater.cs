@@ -1,5 +1,6 @@
 ﻿using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.Dependencies.Contracts;
+using RepoRanger.Domain.Dependencies.ValueObjects;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
@@ -71,6 +72,6 @@ internal sealed class ProjectUpdater : IProjectUpdater
 
     private static RegistrationResult RegisterDependency(IDependencyManager dependencyManager, ProjectDependencyDescriptor descriptor) =>
         dependencyManager.Register(
-            descriptor.Name, descriptor.Source, 
+            descriptor.Name, DependencySourceName.From(descriptor.Source), 
             descriptor.Version ?? string.Empty);
 }

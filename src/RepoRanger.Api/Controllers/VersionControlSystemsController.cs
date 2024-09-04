@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RepoRanger.Application.Contracts.VersionControlSystems;
-using RepoRanger.Application.Queries.VersionControlSystems.ListVersionControlSystems;
+using RepoRanger.Contracts.VersionControlSystems;
+using RepoRanger.Queries.VersionControlSystems.ListVersionControlSystems;
 
 namespace RepoRanger.Api.Controllers;
 

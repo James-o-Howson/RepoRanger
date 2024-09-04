@@ -3,7 +3,6 @@ using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Events;
 using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.PersistedEvents.ValueObjects;
-using EventType = RepoRanger.Domain.PersistedEvents.ValueObjects.EventType;
 
 namespace RepoRanger.Domain.PersistedEvents;
 
@@ -14,14 +13,14 @@ public class PersistedEvent : BaseEntity
     public static PersistedEvent Create(IEvent @event, DateTimeOffset created) => new()
     {
         Data = @event.Serialize(),
-        EventType = EventType.From(@event.GetType()),
+        EventTypeDescriptor = EventTypeDescriptor.From(@event.GetType()),
         Created = created,
         Category = EventCategory.Domain
     };
     
     public PersistedEventId Id { get; } = PersistedEventId.New;
     public string Data { get; init; } = string.Empty;
-    public EventType EventType { get; init; } = null!;
+    public EventTypeDescriptor EventTypeDescriptor { get; init; } = null!;
     public EventCategory Category { get; init; }
     public int RetryCount { get; private set; }
     public DateTimeOffset? ProcessStartTime { get; private set; }
@@ -31,7 +30,7 @@ public class PersistedEvent : BaseEntity
     public string? LastErrorDetails { get; private set; }
     
     public IEvent Event() =>
-        JsonSerializer.Deserialize(Data, EventType) as IEvent ??
+        JsonSerializer.Deserialize(Data, EventTypeDescriptor) as IEvent ??
         throw new DomainException($"Event could not be deserialized for PersistedEvent with Id {Id}");
 
     public void StartProcessing(DateTimeOffset time)
@@ -41,9 +40,9 @@ public class PersistedEvent : BaseEntity
         ProcessStartTime = time;
     }
 
-    public void Succeed(DateTimeOffset time)
+    public void Succeed(DateTimeOffset timeFinished)
     {
-        ProcessFinishedTime = time;
+        ProcessFinishedTime = timeFinished;
         Status = PersistedEventStatus.Succeeded;
     }
 

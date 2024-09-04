@@ -22,7 +22,7 @@ internal sealed class ProjectDependencyConfiguration : AuditableEntityConfigurat
             .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(d => d.Version)
-            .WithMany()
+            .WithMany(v => v.ProjectDependencies)
             .HasForeignKey(d => d.VersionId)
             .IsRequired()
             .OnDelete(DeleteBehavior.NoAction);

@@ -36,10 +36,6 @@ public class ProjectDependency : BaseAuditableEntity, IAlternateKeyProvider
 
     public void Update(Dependency dependency, DependencyVersion version, DependencySource source)
     {
-        DomainException.ThrowIfNull(dependency);
-        DomainException.ThrowIfNull(version);
-        DomainException.ThrowIfNull(source);
-
         Dependency = dependency;
         DependencyId = dependency.Id;
         Version = version;

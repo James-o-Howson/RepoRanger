@@ -1,6 +1,6 @@
-﻿using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Application.Contracts.Vulnerabilities.External.Request;
-using RepoRanger.Application.Contracts.Vulnerabilities.External.Response;
+﻿using RepoRanger.Abstractions.Interfaces;
+using RepoRanger.Contracts.Vulnerabilities.External.Request;
+using RepoRanger.Contracts.Vulnerabilities.External.Response;
 using ThirdPartyClients.Generated;
 
 namespace RepoRanger.Infrastructure.Vulnerabilities;

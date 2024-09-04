@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using RepoRanger.Application.Abstractions.Interfaces;
+using RepoRanger.Abstractions.Interfaces;
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.PersistedEvents;
 using RepoRanger.Domain.VersionControlSystems.Git;

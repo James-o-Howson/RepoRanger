@@ -1,0 +1,10 @@
+namespace RepoRanger.Contracts.Repositories;
+
+public sealed class RepositorySummaryVm
+{
+    public Guid Id { get; init; }
+    public string? Name { get; init; }
+    public string? RemoteUrl { get; init; }
+    public string? DefaultBranchName { get; init; }
+    public DateTimeOffset ParseTime { get; init; }
+}

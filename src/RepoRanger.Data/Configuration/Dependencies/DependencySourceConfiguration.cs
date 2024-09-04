@@ -13,8 +13,8 @@ internal sealed class DependencySourceConfiguration : AuditableEntityConfigurati
             .HasConversion(id => id.Value,
                 value => new DependencySourceId(value))
             .ValueGeneratedNever();
-        
-        builder.HasIndex(s => s.Name).IsUnique();
+
+        builder.OwnsOne(s => s.Name);
         
         base.Configure(builder);
     }

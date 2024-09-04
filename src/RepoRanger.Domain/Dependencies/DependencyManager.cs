@@ -1,13 +1,14 @@
 ﻿using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.Dependencies.Contracts;
 using RepoRanger.Domain.Dependencies.Entities;
+using RepoRanger.Domain.Dependencies.ValueObjects;
 
 namespace RepoRanger.Domain.Dependencies;
 
 public interface IDependencyManager : IDisposable
 {
     void Manage(List<Dependency> dependencies, List<DependencyVersion> versions, List<DependencySource> sources);
-    RegistrationResult Register(string dependencyName, string sourceName, string? versionValue);
+    RegistrationResult Register(string dependencyName, DependencySourceName sourceName, string? versionValue);
 }
 
 internal sealed class DependencyManager : IDependencyManager
@@ -20,9 +21,6 @@ internal sealed class DependencyManager : IDependencyManager
     public void Manage(List<Dependency> dependencies, List<DependencyVersion> versions, List<DependencySource> sources)
     {
         if (_initialised) throw new InvalidOperationException($"{nameof(DependencyManager)} is already initialised.");
-        DomainException.ThrowIfNull(dependencies);
-        DomainException.ThrowIfNull(versions);
-        DomainException.ThrowIfNull(sources);
         
         _initialised = true;
         _dependencies = dependencies;
@@ -30,11 +28,9 @@ internal sealed class DependencyManager : IDependencyManager
         _sources = sources;
     }
     
-    public RegistrationResult Register(string dependencyName, string sourceName, string? versionValue)
+    public RegistrationResult Register(string dependencyName, DependencySourceName sourceName, string? versionValue)
     {
         if (!_initialised) throw new InvalidOperationException($"{nameof(DependencyManager)} is not initialised.");
-        DomainException.ThrowIfNullOrEmpty(dependencyName);
-        DomainException.ThrowIfNullOrEmpty(sourceName);
         
         var existing = _dependencies.FirstOrDefault(d => d.Name == dependencyName);
         return existing is null ?
@@ -42,7 +38,7 @@ internal sealed class DependencyManager : IDependencyManager
             RegisterExisting(existing, sourceName, versionValue);
     }
 
-    private RegistrationResult RegisterNewDependency(string dependencyName, string sourceName, string? versionValue)
+    private RegistrationResult RegisterNewDependency(string dependencyName, DependencySourceName sourceName, string? versionValue)
     {
         var dependency = Dependency.Create(dependencyName);
         var source = GetOrCreateSource(sourceName);
@@ -53,7 +49,7 @@ internal sealed class DependencyManager : IDependencyManager
         return new RegistrationResult(dependency, version, source);
     }
 
-    private RegistrationResult RegisterExisting(Dependency dependency, string sourceName, string? versionValue)
+    private RegistrationResult RegisterExisting(Dependency dependency, DependencySourceName sourceName, string? versionValue)
     {
         var source = GetOrCreateSource(sourceName);
         var version = GetOrCreateVersion(dependency, source, versionValue);
@@ -81,7 +77,7 @@ internal sealed class DependencyManager : IDependencyManager
         return version;
     }
 
-    private DependencySource GetOrCreateSource(string sourceName)
+    private DependencySource GetOrCreateSource(DependencySourceName sourceName)
     {
         var source = _sources.FirstOrDefault(s => s.Name == sourceName);
         if (source != null) return source;

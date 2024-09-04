@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RepoRanger.Application.Abstractions.Interfaces.Persistence;
+using RepoRanger.Abstractions.Interfaces.Persistence;
 using RepoRanger.Domain.VersionControlSystems;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;

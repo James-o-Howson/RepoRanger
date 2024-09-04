@@ -1,5 +1,6 @@
 ﻿using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.Dependencies;
+using RepoRanger.Domain.Dependencies.ValueObjects;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
@@ -16,7 +17,6 @@ internal sealed class ProjectDependencyFactory : IProjectDependencyFactory
     public IEnumerable<ProjectDependency> Create(Project project, IEnumerable<ProjectDependencyDescriptor> descriptors,
         IDependencyManager dependencyManager)
     {
-        DomainException.ThrowIfNull(dependencyManager);
         return descriptors.Select(d => Create(project, d, dependencyManager));
     }
     
@@ -24,7 +24,7 @@ internal sealed class ProjectDependencyFactory : IProjectDependencyFactory
         IDependencyManager dependencyManager)
     {
         var (dependency, version, source) = dependencyManager.Register(
-            descriptor.Name, descriptor.Source, 
+            descriptor.Name, DependencySourceName.From(descriptor.Source), 
             descriptor.Version);
 
         return ProjectDependency.Create(project, dependency, version, source);

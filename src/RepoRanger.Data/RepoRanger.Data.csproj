@@ -12,17 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\RepoRanger.Application.Abstractions\RepoRanger.Application.Abstractions.csproj" />
+      <ProjectReference Include="..\RepoRanger.Abstractions\RepoRanger.Abstractions.csproj" />
       <ProjectReference Include="..\RepoRanger.Domain\RepoRanger.Domain.csproj" />
     </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Sql\GetOrphanedDependencies.sql" />
-      <EmbeddedResource Include="Sql\GetOrphanedDependencies.sql">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </EmbeddedResource>
-      <None Remove="Sql\GetOrphanedProjects.sql" />
-      <None Remove="Sql\V_SourceDetails.sql" />
-    </ItemGroup>
-
 </Project>

@@ -1,6 +1,7 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+using RepoRanger.Domain.VersionControlSystems.Events;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
@@ -39,13 +40,11 @@ public class Repository : BaseAuditableEntity, IAlternateKeyProvider
 
     public bool HasProject(Project project)
     {
-        DomainException.ThrowIfNull(project);
         return _projects.FindIndex(p => p.Id == project.Id) >= 0;
     }
     
     public void AddProject(Project project)
     {
-        DomainException.ThrowIfNull(project);
         if (HasProject(project))
             throw new DomainException($"Repository: Id={Id} Name={Name} already contains Project: Id={project.Id} Name={project.Name} Path={project.Path}");
         
@@ -68,14 +67,9 @@ public class Repository : BaseAuditableEntity, IAlternateKeyProvider
         DefaultBranch = defaultBranch;
     }
     
-    internal void Delete()
+    public void Delete()
     {
-        foreach (var branch in Projects)
-        {
-            branch.Delete();
-        }
-
-        _projects.Clear();
+        RaiseEvent(new RepositoryDeletedEvent(Id));
     }
     
     public void DeleteProject(ProjectId projectId)

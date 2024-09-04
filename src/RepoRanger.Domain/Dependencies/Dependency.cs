@@ -3,6 +3,7 @@ using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.Dependencies.Entities;
 using RepoRanger.Domain.Dependencies.Events;
 using RepoRanger.Domain.Dependencies.ValueObjects;
+using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Domain.Dependencies;
 
@@ -13,7 +14,7 @@ public class Dependency : BaseAuditableEntity
     public DependencyId Id { get; } = DependencyId.New;
     public string Name { get; private set; } = string.Empty;
     public IReadOnlyCollection<DependencyVersion> Versions => _versions;
-    
+
     private Dependency() {}
 
     internal static Dependency Create(string name) => new()
@@ -23,7 +24,6 @@ public class Dependency : BaseAuditableEntity
     
     public void TryAddVersion(DependencyVersion version)
     {
-        DomainException.ThrowIfNull(version);
         if (HasVersion(version.Id)) return;
         
         _versions.Add(version);
@@ -46,5 +46,13 @@ public class Dependency : BaseAuditableEntity
         
             RaiseEvent(new DependencyVulnerableEvent(vulnerability.Id));
         }
+    }
+    
+    public void DeleteVersion(DependencyVersionId versionId)
+    {
+        var index = _versions.FindIndex(v => v.Id == versionId);
+        if (index < 0) throw new DomainException($"Cannot delete dependency version {versionId}");
+        
+        _versions.RemoveAt(index);
     }
 }

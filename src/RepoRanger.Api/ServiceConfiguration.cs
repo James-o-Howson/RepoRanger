@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
 using MediatR;
+using RepoRanger.Abstractions.Behaviours;
+using RepoRanger.Abstractions.Interfaces;
 using RepoRanger.Api.Infrastructure;
 using RepoRanger.Api.Services;
-using RepoRanger.Application.Abstractions.Behaviours;
-using RepoRanger.Application.Abstractions.Interfaces;
-using RepoRanger.Application.Commands;
-using RepoRanger.Application.EventHandlers;
-using RepoRanger.Application.Queries;
+using RepoRanger.Commands;
 using RepoRanger.Data;
+using RepoRanger.EventHandlers;
+using RepoRanger.Queries;
 using Serilog;
 
 namespace RepoRanger.Api;

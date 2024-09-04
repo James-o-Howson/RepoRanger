@@ -34,9 +34,6 @@ internal sealed class VersionControlSystemSynchronizer : IVersionControlSystemSy
         IEnumerable<VersionControlSystemDescriptor> descriptors,
         CancellationToken cancellationToken)
     {
-        DomainException.ThrowIfNull(versionControlSystems);
-        DomainException.ThrowIfNull(descriptors);
-        
         var dependencyManager = await _dependencyManagerFactory.CreateAsync(cancellationToken);
         
         var synchronizer = GetSynchronizer(dependencyManager);

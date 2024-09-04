@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using RepoRanger.Application.Abstractions.Pagination;
-using RepoRanger.Application.Contracts.ProjectDependencies;
-using RepoRanger.Application.Queries.ProjectDependencies.SearchProjectDependenciesWithPagination;
+using RepoRanger.Abstractions.Pagination;
+using RepoRanger.Contracts.ProjectDependencies;
+using RepoRanger.Queries.ProjectDependencies.SearchProjectDependenciesWithPagination;
 
 namespace RepoRanger.Api.Controllers;
 

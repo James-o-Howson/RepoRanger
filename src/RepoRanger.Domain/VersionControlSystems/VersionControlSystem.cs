@@ -28,16 +28,15 @@ public sealed class VersionControlSystem : BaseAuditableEntity, IAlternateKeyPro
     public string Location { get; set; } = string.Empty;
     public IReadOnlyCollection<Repository> Repositories => _repositories;
     
-    public IEnumerable<ProjectDependency> Dependencies => Repositories
+    public IEnumerable<ProjectDependency> ProjectDependencies => Repositories
         .SelectMany(r => r.Dependencies)
         .ToList();
     
     public IEnumerable<string> DependencyNames => 
-        Dependencies.Select(d => d.Dependency.Name);
+        ProjectDependencies.Select(d => d.Dependency.Name);
     
     public void AddRepository(Repository repository)
     {
-        DomainException.ThrowIfNull(repository);
         _repositories.Add(repository);
     }
     
@@ -49,16 +48,6 @@ public sealed class VersionControlSystem : BaseAuditableEntity, IAlternateKeyPro
         {
             AddRepository(repository);
         }
-    }
-    
-    public void Delete()
-    {
-        foreach (var repository in Repositories)
-        {
-            repository.Delete();
-        }
-
-        _repositories.Clear();
     }
 
     public void DeleteRepository(RepositoryId repositoryId)

@@ -248,6 +248,30 @@
         }
       }
     },
+    "/api/Repositories/Delete": {
+      "delete": {
+        "tags": [
+          "Repositories"
+        ],
+        "operationId": "Repositories_Delete",
+        "parameters": [
+          {
+            "name": "RepositoryId",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "format": "guid"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/VersionControlSystems": {
       "get": {
         "tags": [
