@@ -187,21 +187,14 @@ namespace RepoRanger.Data.Migrations
                     b.ToTable("Vulnerabilities");
                 });
 
-            modelBuilder.Entity("RepoRanger.Domain.PersistedEvents.PersistedEvent", b =>
+            modelBuilder.Entity("RepoRanger.Domain.OutboxMessages.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("Category")
-                        .HasColumnType("INTEGER");
-
                     b.Property<DateTimeOffset>("Created")
                         .HasMaxLength(150)
                         .IsUnicode(true)
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Data")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<string>("LastErrorDetails")
@@ -213,13 +206,22 @@ namespace RepoRanger.Data.Migrations
                     b.Property<DateTimeOffset?>("ProcessStartTime")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("ProcessingStatus")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int>("RetryCount")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("INTEGER");
+                    b.ComplexProperty<Dictionary<string, object>>("Data", "RepoRanger.Domain.OutboxMessages.OutboxMessage.Data#OutboxMessageData", b1 =>
+                        {
+                            b1.IsRequired();
 
-                    b.ComplexProperty<Dictionary<string, object>>("EventTypeDescriptor", "RepoRanger.Domain.PersistedEvents.PersistedEvent.EventTypeDescriptor#EventTypeDescriptor", b1 =>
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("TEXT");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("EventType", "RepoRanger.Domain.OutboxMessages.OutboxMessage.EventType#EventType", b1 =>
                         {
                             b1.IsRequired();
 
@@ -230,7 +232,7 @@ namespace RepoRanger.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PersistedEvents");
+                    b.ToTable("OutboxMessages");
                 });
 
             modelBuilder.Entity("RepoRanger.Domain.VersionControlSystems.Entities.Project", b =>

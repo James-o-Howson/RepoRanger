@@ -69,7 +69,7 @@ public class Repository : BaseAuditableEntity, IAlternateKeyProvider
     
     public void Delete()
     {
-        RaiseEvent(new RepositoryDeletedEvent(Id));
+        RaiseEvent(new RepositoryDeletedDomainEvent(Id));
     }
     
     public void DeleteProject(ProjectId projectId)

@@ -1,5 +1,4 @@
-﻿using RepoRanger.Domain.Common.Exceptions;
-using RepoRanger.Domain.Dependencies.Contracts;
+﻿using RepoRanger.Domain.Dependencies.Contracts;
 using RepoRanger.Domain.Dependencies.Entities;
 using RepoRanger.Domain.Dependencies.ValueObjects;
 

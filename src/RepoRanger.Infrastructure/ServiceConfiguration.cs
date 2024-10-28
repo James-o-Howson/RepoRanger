@@ -3,7 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using RepoRanger.Abstractions.Interfaces;
 using RepoRanger.Domain.Dependencies;
-using RepoRanger.Domain.PersistedEvents;
+using RepoRanger.Domain.OutboxMessages;
 using RepoRanger.Domain.VersionControlSystems.Git;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
@@ -23,10 +23,11 @@ public static class ServiceConfiguration
 {
     public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
+        services.AddTransient<IIntegrationEventPublisher, IntegrationEventPublisher>();
         services.AddTransient<IDependencyManagerFactory, DependencyManagerFactory>();
         services.AddTransient<IGitRepositoryDetailFactory, GitRepositoryDetailFactory>();
         services.AddTransient<IExternalVulnerabilityService, ExternalVulnerabilitiesService>();
-        services.AddTransient<IPersistedEventDispatcher, PersistedEventDispatcher>();
+        services.AddTransient<IOutboxMessageDispatcher, OutboxMessageDispatcher>();
         
         services.AddTransient<IProjectParser, ProjectPackageReferenceAttributeParser>();
         services.AddTransient<IProjectParser, ProjectReferenceAttributeParser>();
@@ -39,6 +40,7 @@ public static class ServiceConfiguration
         
         services.AddHttpClient<IOsvClient, OsvClient>(client =>
         {
+            //todo: inject this via appsettings.
             client.BaseAddress = new Uri("https://api.osv.dev/");
         }).AddStandardResilienceHandler();
     }

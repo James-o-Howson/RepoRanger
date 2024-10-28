@@ -1,6 +1,8 @@
-﻿namespace RepoRanger.Domain.VersionControlSystems.ValueObjects;
+﻿using RepoRanger.Domain.Common.Interfaces;
 
-public readonly record struct VersionControlSystemId(Guid Value)
+namespace RepoRanger.Domain.VersionControlSystems.ValueObjects;
+
+public readonly record struct VersionControlSystemId(Guid Value) : IId
 {
     internal static VersionControlSystemId Empty => new(Guid.Empty);
     internal static VersionControlSystemId New => new(Guid.NewGuid());

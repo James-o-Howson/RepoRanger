@@ -17,4 +17,8 @@
       <ProjectReference Include="..\RepoRanger.Domain\RepoRanger.Domain.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+        <InternalsVisibleTo Include="RepoRanger.Api.IntegrationTests" />
+    </ItemGroup>
+
 </Project>

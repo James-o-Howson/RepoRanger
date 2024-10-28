@@ -10,6 +10,11 @@
     <ItemGroup>
         <PackageReference Include="MediatR.Contracts" Version="2.0.1" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <InternalsVisibleTo Include="RepoRanger.Api.IntegrationTests" />
     </ItemGroup>
 
 </Project>

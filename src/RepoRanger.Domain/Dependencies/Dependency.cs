@@ -3,7 +3,6 @@ using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.Dependencies.Entities;
 using RepoRanger.Domain.Dependencies.Events;
 using RepoRanger.Domain.Dependencies.ValueObjects;
-using RepoRanger.Domain.VersionControlSystems.Entities;
 
 namespace RepoRanger.Domain.Dependencies;
 
@@ -44,7 +43,7 @@ public class Dependency : BaseAuditableEntity
             var vulnerability = Vulnerability.Create(osvId, version.Id, source.Id);
             version.AddVulnerability(vulnerability);
         
-            RaiseEvent(new DependencyVulnerableEvent(vulnerability.Id));
+            RaiseEvent(new DependencyVulnerableDomainEvent(vulnerability.Id));
         }
     }
     

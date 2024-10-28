@@ -3,9 +3,9 @@ using Microsoft.EntityFrameworkCore;
 using RepoRanger.Abstractions.Interfaces.Persistence;
 using RepoRanger.Domain.VersionControlSystems.Events;
 
-namespace RepoRanger.EventHandlers.Implementations;
+namespace RepoRanger.EventHandlers.Domain;
 
-internal sealed class RepositoryDeletedEventHandler : INotificationHandler<RepositoryDeletedEvent>
+internal sealed class RepositoryDeletedEventHandler : INotificationHandler<RepositoryDeletedDomainEvent>
 {
     private readonly IApplicationDbContext _dbContext;
 
@@ -14,7 +14,7 @@ internal sealed class RepositoryDeletedEventHandler : INotificationHandler<Repos
         _dbContext = dbContext;
     }
 
-    public async Task Handle(RepositoryDeletedEvent notification, CancellationToken cancellationToken)
+    public async Task Handle(RepositoryDeletedDomainEvent notification, CancellationToken cancellationToken)
     {
         await DeleteOrphanedVersionsAsync(cancellationToken);
         

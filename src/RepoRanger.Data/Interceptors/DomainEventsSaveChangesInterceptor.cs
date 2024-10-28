@@ -1,18 +1,18 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using RepoRanger.Domain.Common;
-using RepoRanger.Domain.PersistedEvents;
 
 namespace RepoRanger.Data.Interceptors;
 
-public class PersistEventsSaveChangesInterceptor : SaveChangesInterceptor
+public class DomainEventsSaveChangesInterceptor : SaveChangesInterceptor
 {
-    private readonly TimeProvider _timeProvider;
+    private readonly IMediator _mediator;
 
-    public PersistEventsSaveChangesInterceptor(TimeProvider timeProvider)
+    public DomainEventsSaveChangesInterceptor(IMediator mediator)
     {
-        _timeProvider = timeProvider;
+        _mediator = mediator;
     }
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
@@ -43,9 +43,9 @@ public class PersistEventsSaveChangesInterceptor : SaveChangesInterceptor
         
         if (events.Count == 0) return;
 
-        var persistedEvents = events.Select(e => 
-            PersistedEvent.Create(e, _timeProvider.GetUtcNow()));
-
-        await context.AddRangeAsync(persistedEvents, cancellationToken);
+        foreach (var domainEvent in events)
+        {
+            await _mediator.Publish(domainEvent, cancellationToken);
+        }
     }
 }

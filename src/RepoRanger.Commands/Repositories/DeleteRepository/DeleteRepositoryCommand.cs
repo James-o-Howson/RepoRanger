@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using Microsoft.EntityFrameworkCore;
 using RepoRanger.Abstractions.Exceptions;
 using RepoRanger.Abstractions.Interfaces.Persistence;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;

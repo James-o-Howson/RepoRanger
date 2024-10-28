@@ -1,0 +1,9 @@
+﻿using RepoRanger.Domain.Common.Interfaces;
+
+namespace RepoRanger.Domain.OutboxMessages.ValueObjects;
+
+public readonly record struct OutboxMessageId(Guid Value) : IId
+{
+    internal static OutboxMessageId Empty => new(Guid.Empty);
+    internal static OutboxMessageId New => new(Guid.NewGuid());
+};

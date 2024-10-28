@@ -28,10 +28,10 @@ app.UseHttpsRedirection();
 app.UseHealthChecks("/_health");
 app.MapControllers();
 
-app.Run();
+await app.RunAsync();
 
 // ReSharper disable once ClassNeverInstantiated.Global
 namespace RepoRanger.Api
 {
-    public class Program {}
+    public class Program;
 }

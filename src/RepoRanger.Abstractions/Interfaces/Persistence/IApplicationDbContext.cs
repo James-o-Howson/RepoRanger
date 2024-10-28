@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.Dependencies.Entities;
-using RepoRanger.Domain.PersistedEvents;
+using RepoRanger.Domain.OutboxMessages;
 using RepoRanger.Domain.VersionControlSystems;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 
@@ -18,10 +18,10 @@ public interface IApplicationDbContext
     DbSet<DependencyVersion> DependencyVersions { get; set; }
     DbSet<DependencySource> DependencySources { get; set; }
     DbSet<ProjectMetadata> ProjectMetadata { get; set; }
-    DbSet<PersistedEvent> PersistedEvents { get; set; }
+    DbSet<OutboxMessage> OutboxMessages { get; set; }
     DbSet<Vulnerability> Vulnerabilities { get; set; }
-
-    Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+    
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
     DbSet<TEntity> Set<TEntity>() where TEntity : class;
     EntityEntry<TEntity> Entry<TEntity>(TEntity entity)
         where TEntity : class;

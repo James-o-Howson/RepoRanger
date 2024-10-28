@@ -44,23 +44,22 @@ namespace RepoRanger.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "PersistedEvents",
+                name: "OutboxMessages",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Data = table.Column<string>(type: "TEXT", nullable: false),
-                    Category = table.Column<int>(type: "INTEGER", nullable: false),
                     RetryCount = table.Column<int>(type: "INTEGER", nullable: false),
                     ProcessStartTime = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     ProcessFinishedTime = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
                     Created = table.Column<DateTimeOffset>(type: "TEXT", maxLength: 150, nullable: false),
-                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    ProcessingStatus = table.Column<int>(type: "INTEGER", nullable: false),
                     LastErrorDetails = table.Column<string>(type: "TEXT", nullable: true),
-                    EventTypeDescriptor_Value = table.Column<string>(type: "TEXT", nullable: false)
+                    Data_Value = table.Column<string>(type: "TEXT", nullable: false),
+                    EventType_Value = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_PersistedEvents", x => x.Id);
+                    table.PrimaryKey("PK_OutboxMessages", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -365,7 +364,7 @@ namespace RepoRanger.Data.Migrations
                 name: "DependencySourceDependencyVersion");
 
             migrationBuilder.DropTable(
-                name: "PersistedEvents");
+                name: "OutboxMessages");
 
             migrationBuilder.DropTable(
                 name: "ProjectDependencies");

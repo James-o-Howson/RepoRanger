@@ -1,5 +1,4 @@
-﻿using RepoRanger.Domain.Common.Exceptions;
-using RepoRanger.Domain.Dependencies;
+﻿using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 using RepoRanger.Domain.VersionControlSystems.Synchronizers.Factories;
 using RepoRanger.Domain.VersionControlSystems.Synchronizers.Updaters;

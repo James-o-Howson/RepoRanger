@@ -1,7 +1,6 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
-using RepoRanger.Domain.VersionControlSystems.Events;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;

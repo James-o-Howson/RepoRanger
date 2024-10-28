@@ -24,8 +24,8 @@ public static class ServiceConfiguration
             configurator.UseSimpleTypeLoader();
             configurator.UseInMemoryStore();
             
-            configurator.AddJob<PersistedEventDispatcherJob>(PersistedEventDispatcherJob.JobKey);
-            configurator.AddTrigger(trigger => trigger.ForJob(PersistedEventDispatcherJob.JobKey)
+            configurator.AddJob<OutboxMessageDispatcherJob>(OutboxMessageDispatcherJob.JobKey);
+            configurator.AddTrigger(trigger => trigger.ForJob(OutboxMessageDispatcherJob.JobKey)
                 .StartNow()
                 .WithSimpleSchedule(schedule => schedule.WithIntervalInSeconds(30).RepeatForever()));
             

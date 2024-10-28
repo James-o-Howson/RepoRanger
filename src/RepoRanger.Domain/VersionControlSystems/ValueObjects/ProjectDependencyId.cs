@@ -1,6 +1,8 @@
-﻿namespace RepoRanger.Domain.VersionControlSystems.ValueObjects;
+﻿using RepoRanger.Domain.Common.Interfaces;
 
-public readonly record struct ProjectDependencyId(Guid Value)
+namespace RepoRanger.Domain.VersionControlSystems.ValueObjects;
+
+public readonly record struct ProjectDependencyId(Guid Value) : IId
 {
     internal static ProjectDependencyId Empty => new(Guid.Empty);
     internal static ProjectDependencyId New => new(Guid.NewGuid());

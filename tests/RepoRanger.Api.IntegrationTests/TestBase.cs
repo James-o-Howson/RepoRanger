@@ -11,7 +11,7 @@ public class TestBase : IDisposable
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
-        Factory = new RepoRangerWebApplicationFactory();
+        Factory = new RepoRangerWebApplicationFactory(ConfigureServices);
     }
 
     [SetUp]
@@ -28,4 +28,6 @@ public class TestBase : IDisposable
         Client.Dispose();
         Factory.Dispose();
     }
+
+    public virtual void ConfigureServices(IServiceCollection services) { }
 }

@@ -17,7 +17,7 @@ public static class ServiceConfiguration
         services.Configure<ConnectionStringOptions>(configuration.GetSection("ConnectionStrings"));
         
         services.AddScoped<ISaveChangesInterceptor, AuditableEntitySaveChangesInterceptor>();
-        services.AddScoped<ISaveChangesInterceptor, PersistEventsSaveChangesInterceptor>();
+        services.AddScoped<ISaveChangesInterceptor, DomainEventsSaveChangesInterceptor>();
         services.AddDbContext<ApplicationDbContext>((sp, options) =>
         {
             var connectionStringOptions = sp.GetRequiredService<IOptions<ConnectionStringOptions>>().Value;
