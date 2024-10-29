@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using RepoRanger.Abstractions.Interfaces;
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.OutboxMessages;
@@ -38,10 +39,11 @@ public static class ServiceConfiguration
             c.AddFileContentParser<AngularProjectProjectFileParser>();
         });
         
-        services.AddHttpClient<IOsvClient, OsvClient>(client =>
+        services.Configure<OsvClientOptions>(configuration.GetSection(OsvClientOptions.SectionKey));
+        services.AddHttpClient<IOsvClient, OsvClient>((serviceProvider, client) =>
         {
-            //todo: inject this via appsettings.
-            client.BaseAddress = new Uri("https://api.osv.dev/");
+            var options = serviceProvider.GetRequiredService<IOptions<OsvClientOptions>>().Value;
+            client.BaseAddress = options.BaseUrlUri;
         }).AddStandardResilienceHandler();
     }
     
@@ -49,7 +51,7 @@ public static class ServiceConfiguration
         IConfiguration configuration,
         Action<ISourceParserConfigurator> configure)
     {
-        services.Configure<VersionControlSystemContexts>(configuration.GetSection("VersionControlSystemParserOptions"));
+        services.Configure<VersionControlSystemContexts>(configuration.GetSection(VersionControlSystemContexts.SectionKey));
         services.TryAddTransient<IVersionControlSystemParserService, VcsParserService>();
         
         var configurator = new VcsParserConfigurator(services, configuration);

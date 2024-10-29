@@ -4,9 +4,9 @@ namespace RepoRanger.BackgroundJobs.Abstractions.Options;
 
 internal sealed class JobOptions
 {
-    public bool Enabled { get; set; }
-    public string JobName { get; set; } = string.Empty;
-    public string? NextJobName { get; set; }
+    public required bool Enabled { get; init; }
+    public required string JobName { get; init; }
+    public string? NextJobName { get; init; }
     
     internal JobKey JobKey => new(JobName);
 }

@@ -2,15 +2,16 @@
 
 public sealed class VersionControlSystemContexts
 {
-    public List<VersionControlSystemContext> Values { get; set; } = [];
+    public const string SectionKey = "VersionControlSystemParserOptions";
+    public required List<VersionControlSystemContext> Values { get; init; } = [];
 }
 
 public class VersionControlSystemContext
 {
-    public string Name { get; set; } = string.Empty;
-    public string Location { get; set; }  = string.Empty;
-    public bool Enabled { get; set; }
-    public IEnumerable<string> ExcludedRepositories { get; set; } = new List<string>();
+    public required string Name { get; init; }
+    public required string Location { get; init; }
+    public required bool Enabled { get; init; }
+    public required IEnumerable<string> ExcludedRepositories { get; init; } = [];
 
     public DirectoryInfo LocationInfo => new(Location);
 

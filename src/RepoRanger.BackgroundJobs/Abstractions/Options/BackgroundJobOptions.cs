@@ -5,7 +5,7 @@ namespace RepoRanger.BackgroundJobs.Abstractions.Options;
 internal sealed class BackgroundJobOptions
 {
     internal const string ConfigurationKey = "BackgroundJobOptions";
-    public List<JobOptions> Jobs { get; set; } = [];
+    public required List<JobOptions> Jobs { get; init; } = [];
 
     public bool IsEnabled(JobKey jobKey) =>
         Jobs.SingleOrDefault(job => job.JobName == jobKey.Name)?.Enabled ?? false;

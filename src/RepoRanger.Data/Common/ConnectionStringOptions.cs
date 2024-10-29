@@ -2,5 +2,5 @@
 
 internal sealed class ConnectionStringOptions
 {
-    public string RepoRangerDatabase { get; set; } = string.Empty;
+    public required string RepoRangerDatabase { get; init; }
 }
