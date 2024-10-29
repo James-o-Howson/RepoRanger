@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using RepoRanger.Abstractions.Interfaces;
+using RepoRanger.Contracts.Vulnerabilities.IntegrationEvents;
 using RepoRanger.Domain.Dependencies.Events;
-using RepoRanger.EventHandlers.IntegrationEvents;
 
 namespace RepoRanger.EventHandlers.Domain;
 
@@ -20,6 +20,7 @@ internal sealed class DependencyVulnerableEventHandler : INotificationHandler<De
         {
             VulnerabilityId = notification.VulnerabilityId
         };
+        
         await _integrationEventPublisher.PublishAsync(integrationEvent, cancellationToken);
     }
 }

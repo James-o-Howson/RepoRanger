@@ -11,4 +11,8 @@
       <Compile Remove="Class1.cs" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\RepoRanger.Domain\RepoRanger.Domain.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -2,9 +2,9 @@
 using NSubstitute;
 using RepoRanger.Abstractions.Interfaces;
 using RepoRanger.Contracts.Vulnerabilities.External.Response;
+using RepoRanger.Contracts.Vulnerabilities.IntegrationEvents;
 using RepoRanger.Domain.Dependencies.ValueObjects;
 using RepoRanger.Domain.OutboxMessages;
-using RepoRanger.EventHandlers.IntegrationEvents;
 
 namespace RepoRanger.Api.IntegrationTests.Infrastructure;
 
