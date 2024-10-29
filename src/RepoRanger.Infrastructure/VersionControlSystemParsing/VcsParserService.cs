@@ -37,7 +37,7 @@ internal sealed class VcsParserService : IVersionControlSystemParserService
 
     public async Task ParseAsync(CancellationToken cancellationToken)
     {
-        var descriptors = await _versionControlSystemParser.ParseAsync(EnabledVcsOptions, cancellationToken);
+        var descriptors = await _versionControlSystemParser.ParseAllAsync(EnabledVcsOptions, cancellationToken);
 
         await HandleResults(descriptors, cancellationToken);
     }

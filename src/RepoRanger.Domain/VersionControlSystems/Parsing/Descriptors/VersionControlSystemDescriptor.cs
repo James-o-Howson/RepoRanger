@@ -1,9 +1,9 @@
-﻿using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+﻿using RepoRanger.Domain.VersionControlSystems.AlternateIds;
 
 namespace RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
 public sealed record VersionControlSystemDescriptor(string Name, string Location, 
-    IReadOnlyCollection<RepositoryDescriptor> Repositories) : IAlternateKeyProvider
+    IReadOnlyCollection<RepositoryDescriptor> Repositories) : IAlternateIdProvider
 {
-    public AlternateKey GetAlternateKey => new VersionControlSystemAlternateKey(Name, Location);
+    public AlternateId GetAlternateId => new VersionControlSystemAlternateId(Name, Location);
 }

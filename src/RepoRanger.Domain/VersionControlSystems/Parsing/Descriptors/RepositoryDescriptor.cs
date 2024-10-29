@@ -1,9 +1,9 @@
-﻿using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+﻿using RepoRanger.Domain.VersionControlSystems.AlternateIds;
 
 namespace RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 
 public sealed record RepositoryDescriptor(string Name, string RemoteUrl, string DefaultBranch, 
-    IReadOnlyCollection<ProjectDescriptor> Projects) : IAlternateKeyProvider
+    IReadOnlyCollection<ProjectDescriptor> Projects) : IAlternateIdProvider
 {
-    public AlternateKey GetAlternateKey => new RepositoryAlternateKey(Name, RemoteUrl);
+    public AlternateId GetAlternateId => new RepositoryAlternateId(Name, RemoteUrl);
 }

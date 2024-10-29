@@ -1,12 +1,12 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
-using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+using RepoRanger.Domain.VersionControlSystems.AlternateIds;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems;
 
-public sealed class VersionControlSystem : BaseAuditableEntity, IAlternateKeyProvider
+public sealed class VersionControlSystem : BaseAuditableEntity, IAlternateIdProvider
 {
     private readonly List<Repository> _repositories = [];
     
@@ -59,5 +59,5 @@ public sealed class VersionControlSystem : BaseAuditableEntity, IAlternateKeyPro
         _repositories.RemoveAt(index);
     }
 
-    public AlternateKey GetAlternateKey => new VersionControlSystemAlternateKey(Name, Location);
+    public AlternateId GetAlternateId => new VersionControlSystemAlternateId(Name, Location);
 }

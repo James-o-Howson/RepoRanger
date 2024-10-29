@@ -6,7 +6,7 @@ namespace RepoRanger.Domain.VersionControlSystems.Parsing;
 
 public interface IVersionControlSystemParser
 {
-    Task<IReadOnlyCollection<VersionControlSystemDescriptor>> ParseAsync(IEnumerable<VersionControlSystemContext> contexts,
+    Task<IReadOnlyCollection<VersionControlSystemDescriptor>> ParseAllAsync(IEnumerable<VersionControlSystemContext> contexts,
         CancellationToken cancellationToken);
 }
 
@@ -25,12 +25,12 @@ internal sealed class VersionControlSystemParser : IVersionControlSystemParser
         _parseContext = ParsingContext.Create(sourceFileParsers);
     }
 
-    public async Task<IReadOnlyCollection<VersionControlSystemDescriptor>> ParseAsync(IEnumerable<VersionControlSystemContext> contexts,
+    public async Task<IReadOnlyCollection<VersionControlSystemDescriptor>> ParseAllAsync(IEnumerable<VersionControlSystemContext> contexts,
         CancellationToken cancellationToken) =>
         await Task.WhenAll(
             contexts.Select(context => ParseAsync(context, cancellationToken)));
 
-    public async Task<VersionControlSystemDescriptor> ParseAsync(VersionControlSystemContext context, CancellationToken cancellationToken)
+    private async Task<VersionControlSystemDescriptor> ParseAsync(VersionControlSystemContext context, CancellationToken cancellationToken)
     {
         var repositoryDescriptors = await ParseRepositoriesAsync(context);
         return CreateDescriptor(context, repositoryDescriptors);

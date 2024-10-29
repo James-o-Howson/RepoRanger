@@ -1,11 +1,11 @@
 ﻿using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
-using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+using RepoRanger.Domain.VersionControlSystems.AlternateIds;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
-public sealed class ProjectMetadata : BaseAuditableEntity, IAlternateKeyProvider
+public sealed class ProjectMetadata : BaseAuditableEntity, IAlternateIdProvider
 {
     private ProjectMetadata() { }
 
@@ -18,7 +18,7 @@ public sealed class ProjectMetadata : BaseAuditableEntity, IAlternateKeyProvider
     public ProjectMetadataId Id { get; } = ProjectMetadataId.New;
     public string Key { get; private init; } = string.Empty;
     public string Value { get; private set; } = string.Empty;
-    public AlternateKey GetAlternateKey => new ProjectMetadataAlternateKey(Key);
+    public AlternateId GetAlternateId => new ProjectMetadataAlternateId(Key);
 
     public void Update(string value)
     {

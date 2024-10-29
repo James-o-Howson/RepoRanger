@@ -53,7 +53,7 @@ internal sealed class DependencyManager : IDependencyManager
         var source = GetOrCreateSource(sourceName);
         var version = GetOrCreateVersion(dependency, source, versionValue);
         
-        return new RegistrationResult(dependency, version, source);;
+        return new RegistrationResult(dependency, version, source);
     }
 
     private DependencyVersion GetOrCreateVersion(Dependency dependency, DependencySource source, string? versionValue)

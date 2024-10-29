@@ -2,12 +2,12 @@
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.Dependencies.Entities;
 using RepoRanger.Domain.Dependencies.ValueObjects;
-using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+using RepoRanger.Domain.VersionControlSystems.AlternateIds;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 
-public class ProjectDependency : BaseAuditableEntity, IAlternateKeyProvider
+public class ProjectDependency : BaseAuditableEntity, IAlternateIdProvider
 {
     public ProjectDependencyId Id { get; } = ProjectDependencyId.New;
     public ProjectId ProjectId { get; private set; }
@@ -43,5 +43,5 @@ public class ProjectDependency : BaseAuditableEntity, IAlternateKeyProvider
         SourceId = source.Id;
     }
 
-    public AlternateKey GetAlternateKey => new ProjectDependencyAlternateKey(DependencyId, VersionId);
+    public AlternateId GetAlternateId => new ProjectDependencyAlternateId(DependencyId, VersionId);
 }

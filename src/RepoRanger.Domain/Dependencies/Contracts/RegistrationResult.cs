@@ -1,9 +1,9 @@
 ﻿using RepoRanger.Domain.Dependencies.Entities;
-using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+using RepoRanger.Domain.VersionControlSystems.AlternateIds;
 
 namespace RepoRanger.Domain.Dependencies.Contracts;
 
-public sealed record RegistrationResult(Dependency Dependency, DependencyVersion Version, DependencySource Source) : IAlternateKeyProvider
+public sealed record RegistrationResult(Dependency Dependency, DependencyVersion Version, DependencySource Source) : IAlternateIdProvider
 {
-    public AlternateKey GetAlternateKey => new ProjectDependencyAlternateKey(Dependency.Id, Version.Id);
+    public AlternateId GetAlternateId => new ProjectDependencyAlternateId(Dependency.Id, Version.Id);
 }

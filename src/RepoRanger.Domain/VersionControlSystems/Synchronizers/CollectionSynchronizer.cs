@@ -1,11 +1,11 @@
 ﻿using RepoRanger.Domain.Common;
-using RepoRanger.Domain.VersionControlSystems.AlternateKeys;
+using RepoRanger.Domain.VersionControlSystems.AlternateIds;
 
 namespace RepoRanger.Domain.VersionControlSystems.Synchronizers;
 
-internal sealed class CollectionSynchronizer<TEntity, TChangeDescriptor>
-    where TEntity : BaseEntity, IAlternateKeyProvider
-    where TChangeDescriptor : IAlternateKeyProvider
+internal sealed class CollectionSynchronizer<TEntity, TChangeDescriptor> : IDisposable
+    where TEntity : BaseEntity, IAlternateIdProvider
+    where TChangeDescriptor : IAlternateIdProvider 
 {
     private Action<TChangeDescriptor>? _onNew;
     private Action<TEntity, TChangeDescriptor>?  _onUpdate;
@@ -24,12 +24,12 @@ internal sealed class CollectionSynchronizer<TEntity, TChangeDescriptor>
     {
         var descriptors = descriptorCollection.ToList();
 
-        var persistedMap = persistedCollection.ToDictionary(p => p.GetAlternateKey);
-        var descriptorMap = descriptors.ToDictionary(c => c.GetAlternateKey);
+        var persistedMap = persistedCollection.ToDictionary(p => p.GetAlternateId);
+        var descriptorMap = descriptors.ToDictionary(c => c.GetAlternateId);
         
         foreach (var descriptor in descriptors)
         {
-            var descriptorKey = descriptor.GetAlternateKey;
+            var descriptorKey = descriptor.GetAlternateId;
             if (persistedMap.TryGetValue(descriptorKey, out var persisted))
             {
                 _onUpdate?.Invoke(persisted, descriptor);
@@ -43,10 +43,10 @@ internal sealed class CollectionSynchronizer<TEntity, TChangeDescriptor>
         HandleDelete(persistedMap, descriptorMap);
     }
 
-    private void HandleDelete(Dictionary<AlternateKey, TEntity> persistedMap, Dictionary<AlternateKey, TChangeDescriptor> descriptorMap)
+    private void HandleDelete(Dictionary<AlternateId, TEntity> persistedMap, Dictionary<AlternateId, TChangeDescriptor> descriptorMap)
     {
         var entitiesToDelete = persistedMap.Values
-            .Where(persisted => !descriptorMap.ContainsKey(persisted.GetAlternateKey))
+            .Where(persisted => !descriptorMap.ContainsKey(persisted.GetAlternateId))
             .ToList();
 
         foreach (var toDelete in entitiesToDelete)      
