@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Quartz;
-using RepoRanger.Abstractions.Interfaces.Persistence;
+using RepoRanger.Abstractions.Interfaces;
 using RepoRanger.BackgroundJobs.Abstractions;
 using RepoRanger.BackgroundJobs.Abstractions.Options;
 using RepoRanger.Domain.OutboxMessages;

@@ -6,7 +6,7 @@ using RepoRanger.Domain.OutboxMessages;
 using RepoRanger.Domain.VersionControlSystems;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 
-namespace RepoRanger.Abstractions.Interfaces.Persistence;
+namespace RepoRanger.Abstractions.Interfaces;
 
 public interface IApplicationDbContext
 {

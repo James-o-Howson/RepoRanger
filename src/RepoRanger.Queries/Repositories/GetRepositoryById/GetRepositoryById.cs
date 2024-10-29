@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using RepoRanger.Abstractions.Exceptions;
-using RepoRanger.Abstractions.Interfaces.Persistence;
+using RepoRanger.Abstractions.Interfaces;
 using RepoRanger.Contracts.Repositories;
 
 namespace RepoRanger.Queries.Repositories.GetRepositoryById;

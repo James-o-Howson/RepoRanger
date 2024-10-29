@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Abstractions.Interfaces.Persistence;
+using RepoRanger.Abstractions.Interfaces;
 using RepoRanger.Abstractions.Pagination;
 using RepoRanger.Contracts.ProjectDependencies;
 using RepoRanger.Domain.VersionControlSystems.Entities;

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using RepoRanger.Abstractions.Exceptions;
-using RepoRanger.Abstractions.Interfaces.Persistence;
+using RepoRanger.Abstractions.Interfaces;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 
 namespace RepoRanger.Commands.Repositories.DeleteRepository;

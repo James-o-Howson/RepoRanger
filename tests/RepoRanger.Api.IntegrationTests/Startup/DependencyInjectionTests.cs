@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
-using RepoRanger.Abstractions.Interfaces.Persistence;
+using RepoRanger.Abstractions.Interfaces;
 
 namespace RepoRanger.Api.IntegrationTests.Startup;
 

@@ -1,5 +1,4 @@
 ﻿using RepoRanger.Abstractions.Interfaces;
-using RepoRanger.Abstractions.Interfaces.Persistence;
 using RepoRanger.Domain.Events;
 using RepoRanger.Domain.OutboxMessages;
 
