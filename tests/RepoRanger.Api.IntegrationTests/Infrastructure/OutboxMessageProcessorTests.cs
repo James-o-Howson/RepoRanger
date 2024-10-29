@@ -8,16 +8,16 @@ using RepoRanger.Domain.OutboxMessages;
 
 namespace RepoRanger.Api.IntegrationTests.Infrastructure;
 
-public class OutboxMessageDispatcherTests : TestBase
+public class OutboxMessageProcessorTests : TestBase
 {
-    private IOutboxMessageDispatcher _dispatcher;
+    private IOutboxMessageProcessor _processor;
     private TimeProvider _timeProvider;
     private IExternalVulnerabilityService _externalVulnerabilityService;
 
     [SetUp]
     public void SetUp()
     {
-        _dispatcher = GetRequiredService<IOutboxMessageDispatcher>();
+        _processor = GetRequiredService<IOutboxMessageProcessor>();
         _timeProvider = GetRequiredService<TimeProvider>();
         _externalVulnerabilityService = Substitute.For<IExternalVulnerabilityService>();
         _externalVulnerabilityService.QueryAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
@@ -34,7 +34,7 @@ public class OutboxMessageDispatcherTests : TestBase
         
         var outboxMessage = OutboxMessage.Create(@event, _timeProvider.GetUtcNow());
     
-        await _dispatcher.DispatchAsync(outboxMessage);
+        await _processor.DispatchAsync(outboxMessage);
     }
 
     public override void ConfigureServices(IServiceCollection services)

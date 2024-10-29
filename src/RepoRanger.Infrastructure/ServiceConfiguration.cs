@@ -8,7 +8,8 @@ using RepoRanger.Domain.OutboxMessages;
 using RepoRanger.Domain.VersionControlSystems.Git;
 using RepoRanger.Domain.VersionControlSystems.Parsing;
 using RepoRanger.Domain.VersionControlSystems.Parsing.Contexts;
-using RepoRanger.Infrastructure.Services;
+using RepoRanger.Infrastructure.Events;
+using RepoRanger.Infrastructure.OutboxMessages;
 using RepoRanger.Infrastructure.VersionControlSystemParsing;
 using RepoRanger.Infrastructure.VersionControlSystemParsing.Angular;
 using RepoRanger.Infrastructure.VersionControlSystemParsing.Common;
@@ -28,7 +29,7 @@ public static class ServiceConfiguration
         services.AddTransient<IDependencyManagerFactory, DependencyManagerFactory>();
         services.AddTransient<IGitRepositoryDetailFactory, GitRepositoryDetailFactory>();
         services.AddTransient<IExternalVulnerabilityService, ExternalVulnerabilitiesService>();
-        services.AddTransient<IOutboxMessageDispatcher, OutboxMessageDispatcher>();
+        services.AddTransient<IOutboxMessageProcessor, OutboxMessageProcessor>();
         
         services.AddTransient<IProjectParser, ProjectPackageReferenceAttributeParser>();
         services.AddTransient<IProjectParser, ProjectReferenceAttributeParser>();

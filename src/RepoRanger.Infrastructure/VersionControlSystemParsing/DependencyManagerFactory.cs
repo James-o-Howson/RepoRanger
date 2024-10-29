@@ -3,7 +3,7 @@ using RepoRanger.Abstractions.Interfaces.Persistence;
 using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.Dependencies.Entities;
 
-namespace RepoRanger.Infrastructure.Services;
+namespace RepoRanger.Infrastructure.VersionControlSystemParsing;
 
 internal sealed class DependencyManagerFactory : IDependencyManagerFactory
 {

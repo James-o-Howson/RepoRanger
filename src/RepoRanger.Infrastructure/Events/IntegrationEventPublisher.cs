@@ -3,7 +3,7 @@ using RepoRanger.Abstractions.Interfaces.Persistence;
 using RepoRanger.Domain.Events;
 using RepoRanger.Domain.OutboxMessages;
 
-namespace RepoRanger.Infrastructure.Services;
+namespace RepoRanger.Infrastructure.Events;
 
 internal sealed class IntegrationEventPublisher : IIntegrationEventPublisher
 {

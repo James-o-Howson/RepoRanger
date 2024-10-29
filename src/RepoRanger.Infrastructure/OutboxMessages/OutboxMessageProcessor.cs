@@ -2,17 +2,17 @@
 using Microsoft.Extensions.Logging;
 using RepoRanger.Domain.OutboxMessages;
 
-namespace RepoRanger.Infrastructure.Services;
+namespace RepoRanger.Infrastructure.OutboxMessages;
 
-internal sealed class OutboxMessageDispatcher : IOutboxMessageDispatcher
+internal sealed class OutboxMessageProcessor : IOutboxMessageProcessor
 {
     private const int RetryThreshold = 10;
     
-    private readonly ILogger<OutboxMessageDispatcher> _logger;
+    private readonly ILogger<OutboxMessageProcessor> _logger;
     private readonly IMediator _mediator;
     private readonly TimeProvider _timeProvider;
 
-    public OutboxMessageDispatcher(ILogger<OutboxMessageDispatcher> logger,
+    public OutboxMessageProcessor(ILogger<OutboxMessageProcessor> logger,
         IMediator mediator,
         TimeProvider timeProvider)
     {

@@ -10,20 +10,20 @@ using RepoRanger.Domain.OutboxMessages.ValueObjects;
 
 namespace RepoRanger.BackgroundJobs.Jobs;
 
-internal sealed class OutboxMessageDispatcherJob : BaseJob<OutboxMessageDispatcherJob>
+internal sealed class OutboxMessageProcessorJob : BaseJob<OutboxMessageProcessorJob>
 {
-    internal static readonly JobKey JobKey = new(nameof(OutboxMessageDispatcherJob));
+    internal static readonly JobKey JobKey = new(nameof(OutboxMessageProcessorJob));
 
     private readonly IApplicationDbContext _dbContext;
-    private readonly IOutboxMessageDispatcher _outboxMessageDispatcher;
+    private readonly IOutboxMessageProcessor _outboxMessageProcessor;
 
-    public OutboxMessageDispatcherJob(ILogger<OutboxMessageDispatcherJob> logger,
+    public OutboxMessageProcessorJob(ILogger<OutboxMessageProcessorJob> logger,
         IOptions<BackgroundJobOptions> options,
-        IApplicationDbContext dbContext, IOutboxMessageDispatcher outboxMessageDispatcher) : base(logger,
+        IApplicationDbContext dbContext, IOutboxMessageProcessor outboxMessageProcessor) : base(logger,
         options)
     {
         _dbContext = dbContext;
-        _outboxMessageDispatcher = outboxMessageDispatcher;
+        _outboxMessageProcessor = outboxMessageProcessor;
     }
 
     protected override async Task ExecuteJobLogicAsync(IJobExecutionContext context) => 
@@ -37,7 +37,7 @@ internal sealed class OutboxMessageDispatcherJob : BaseJob<OutboxMessageDispatch
         
         await foreach (var @event in unprocessedEvents)
         {
-            await _outboxMessageDispatcher.DispatchAsync(@event, context.CancellationToken);
+            await _outboxMessageProcessor.DispatchAsync(@event, context.CancellationToken);
             await _dbContext.SaveChangesAsync(context.CancellationToken);
         }
     }

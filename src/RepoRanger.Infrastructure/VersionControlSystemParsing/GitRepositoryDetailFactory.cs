@@ -1,6 +1,6 @@
 ﻿using RepoRanger.Domain.VersionControlSystems.Git;
 
-namespace RepoRanger.Infrastructure.Services;
+namespace RepoRanger.Infrastructure.VersionControlSystemParsing;
 
 internal sealed class GitRepositoryDetailFactory : IGitRepositoryDetailFactory
 {
