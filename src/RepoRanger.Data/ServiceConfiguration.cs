@@ -14,7 +14,7 @@ public static class ServiceConfiguration
 {
     public static void AddPersistence(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<ConnectionStringOptions>(configuration.GetSection("ConnectionStrings"));
+        services.Configure<ConnectionStringOptions>(configuration.GetSection(ConnectionStringOptions.SectionKey));
         
         services.AddScoped<ISaveChangesInterceptor, AuditableEntitySaveChangesInterceptor>();
         services.AddScoped<ISaveChangesInterceptor, DomainEventsSaveChangesInterceptor>();
