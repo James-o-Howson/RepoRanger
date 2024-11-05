@@ -4,9 +4,11 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RepoRanger.Abstractions.Interfaces;
-using RepoRanger.Data.Common;
+using RepoRanger.Abstractions.Interfaces.Data;
+using RepoRanger.Data.Abstractions;
 using RepoRanger.Data.Interceptors;
+using RepoRanger.Data.Repositories;
+using RepoRanger.Domain.OutboxMessages;
 
 namespace RepoRanger.Data;
 
@@ -26,6 +28,11 @@ public static class ServiceConfiguration
             options.AddInterceptors(sp.GetServices<ISaveChangesInterceptor>());
         });
         
-        services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
+        services.AddScoped<IApplicationDbContext>(GetDbContext);
+        services.AddScoped<IUnitOfWork>(GetDbContext);
+
+        services.AddScoped<IOutboxMessageRepository, OutboxMessageRepository>();
     }
+
+    private static ApplicationDbContext GetDbContext(IServiceProvider provider) => provider.GetRequiredService<ApplicationDbContext>();
 }

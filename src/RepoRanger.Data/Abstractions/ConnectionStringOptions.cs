@@ -1,4 +1,4 @@
-﻿namespace RepoRanger.Data.Common;
+﻿namespace RepoRanger.Data.Abstractions;
 
 internal sealed class ConnectionStringOptions
 {

@@ -2,5 +2,6 @@
 
 public interface IOutboxMessageProcessor
 {
-    Task DispatchAsync(OutboxMessage outboxMessage, CancellationToken cancellationToken = default);
+    Task ProcessAsync(OutboxMessage outboxMessage, CancellationToken cancellationToken = default);
+    Task ProcessAsync(CancellationToken cancellationToken = default);
 }

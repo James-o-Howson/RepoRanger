@@ -48,14 +48,17 @@ namespace RepoRanger.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    RetryCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    ProcessStartTime = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    ProcessFinishedTime = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
-                    Created = table.Column<DateTimeOffset>(type: "TEXT", maxLength: 150, nullable: false),
-                    ProcessingStatus = table.Column<int>(type: "INTEGER", nullable: false),
-                    LastErrorDetails = table.Column<string>(type: "TEXT", nullable: true),
+                    Status = table.Column<int>(type: "INTEGER", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "TEXT", maxLength: 150, nullable: false),
                     Data_Value = table.Column<string>(type: "TEXT", nullable: false),
-                    EventType_Value = table.Column<string>(type: "TEXT", nullable: false)
+                    EventType_Value = table.Column<string>(type: "TEXT", nullable: false),
+                    Metadata_LastProcessedAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    Metadata_NextRetryAt = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    Metadata_RetryCount = table.Column<int>(type: "INTEGER", nullable: false),
+                    RetryPolicy_BackoffMultiplier = table.Column<double>(type: "REAL", nullable: false),
+                    RetryPolicy_InitialDelay = table.Column<TimeSpan>(type: "TEXT", nullable: false),
+                    RetryPolicy_MaxDelay = table.Column<TimeSpan>(type: "TEXT", nullable: false),
+                    RetryPolicy_MaxRetries = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -98,6 +101,27 @@ namespace RepoRanger.Data.Migrations
                         name: "FK_DependencyVersions_Dependencies_DependencyId",
                         column: x => x.DependencyId,
                         principalTable: "Dependencies",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ProcessingFailures",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OccuredAt = table.Column<DateTimeOffset>(type: "TEXT", maxLength: 150, nullable: false),
+                    OutboxMessageId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Error_Message = table.Column<string>(type: "TEXT", nullable: false),
+                    Error_Severity = table.Column<int>(type: "INTEGER", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProcessingFailures", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_ProcessingFailures_OutboxMessages_OutboxMessageId",
+                        column: x => x.OutboxMessageId,
+                        principalTable: "OutboxMessages",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -182,6 +206,32 @@ namespace RepoRanger.Data.Migrations
                         name: "FK_Vulnerabilities_DependencyVersions_DependencyVersionId",
                         column: x => x.DependencyVersionId,
                         principalTable: "DependencyVersions",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DeadLetterEntries",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    FinalProcessingFailureId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    FailedMessageId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OccuredAt = table.Column<DateTimeOffset>(type: "TEXT", maxLength: 150, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DeadLetterEntries", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_DeadLetterEntries_OutboxMessages_FailedMessageId",
+                        column: x => x.FailedMessageId,
+                        principalTable: "OutboxMessages",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_DeadLetterEntries_ProcessingFailures_FinalProcessingFailureId",
+                        column: x => x.FinalProcessingFailureId,
+                        principalTable: "ProcessingFailures",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -290,6 +340,18 @@ namespace RepoRanger.Data.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_DeadLetterEntries_FailedMessageId",
+                table: "DeadLetterEntries",
+                column: "FailedMessageId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DeadLetterEntries_FinalProcessingFailureId",
+                table: "DeadLetterEntries",
+                column: "FinalProcessingFailureId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Dependencies_Name",
                 table: "Dependencies",
                 column: "Name",
@@ -304,6 +366,11 @@ namespace RepoRanger.Data.Migrations
                 name: "IX_DependencyVersions_DependencyId",
                 table: "DependencyVersions",
                 column: "DependencyId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ProcessingFailures_OutboxMessageId",
+                table: "ProcessingFailures",
+                column: "OutboxMessageId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProjectDependencies_DependencyId",
@@ -361,10 +428,10 @@ namespace RepoRanger.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DependencySourceDependencyVersion");
+                name: "DeadLetterEntries");
 
             migrationBuilder.DropTable(
-                name: "OutboxMessages");
+                name: "DependencySourceDependencyVersion");
 
             migrationBuilder.DropTable(
                 name: "ProjectDependencies");
@@ -376,6 +443,9 @@ namespace RepoRanger.Data.Migrations
                 name: "Vulnerabilities");
 
             migrationBuilder.DropTable(
+                name: "ProcessingFailures");
+
+            migrationBuilder.DropTable(
                 name: "Projects");
 
             migrationBuilder.DropTable(
@@ -383,6 +453,9 @@ namespace RepoRanger.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "DependencyVersions");
+
+            migrationBuilder.DropTable(
+                name: "OutboxMessages");
 
             migrationBuilder.DropTable(
                 name: "Repositories");

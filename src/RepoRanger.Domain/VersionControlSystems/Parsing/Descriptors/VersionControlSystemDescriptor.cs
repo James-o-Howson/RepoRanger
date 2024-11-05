@@ -1,4 +1,4 @@
-﻿using RepoRanger.Domain.VersionControlSystems.AlternateIds;
+﻿using RepoRanger.Domain.VersionControlSystems.ValueObjects.AlternateIds;
 
 namespace RepoRanger.Domain.VersionControlSystems.Parsing.Descriptors;
 

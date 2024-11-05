@@ -187,29 +187,76 @@ namespace RepoRanger.Data.Migrations
                     b.ToTable("Vulnerabilities");
                 });
 
+            modelBuilder.Entity("RepoRanger.Domain.OutboxMessages.Entities.DeadLetterEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("FailedMessageId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("FinalProcessingFailureId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("OccuredAt")
+                        .HasMaxLength(150)
+                        .IsUnicode(true)
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FailedMessageId")
+                        .IsUnique();
+
+                    b.HasIndex("FinalProcessingFailureId")
+                        .IsUnique();
+
+                    b.ToTable("DeadLetterEntries");
+                });
+
+            modelBuilder.Entity("RepoRanger.Domain.OutboxMessages.Entities.ProcessingFailure", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTimeOffset>("OccuredAt")
+                        .HasMaxLength(150)
+                        .IsUnicode(true)
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("OutboxMessageId")
+                        .HasColumnType("TEXT");
+
+                    b.ComplexProperty<Dictionary<string, object>>("Error", "RepoRanger.Domain.OutboxMessages.Entities.ProcessingFailure.Error#Error", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<string>("Message")
+                                .IsRequired()
+                                .HasColumnType("TEXT");
+
+                            b1.Property<int>("Severity")
+                                .HasColumnType("INTEGER");
+                        });
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OutboxMessageId");
+
+                    b.ToTable("ProcessingFailures");
+                });
+
             modelBuilder.Entity("RepoRanger.Domain.OutboxMessages.OutboxMessage", b =>
                 {
                     b.Property<Guid>("Id")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTimeOffset>("Created")
+                    b.Property<DateTime>("CreatedAt")
                         .HasMaxLength(150)
                         .IsUnicode(true)
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("LastErrorDetails")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset?>("ProcessFinishedTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTimeOffset?>("ProcessStartTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("ProcessingStatus")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("RetryCount")
+                    b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
                     b.ComplexProperty<Dictionary<string, object>>("Data", "RepoRanger.Domain.OutboxMessages.OutboxMessage.Data#OutboxMessageData", b1 =>
@@ -228,6 +275,37 @@ namespace RepoRanger.Data.Migrations
                             b1.Property<string>("Value")
                                 .IsRequired()
                                 .HasColumnType("TEXT");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("Metadata", "RepoRanger.Domain.OutboxMessages.OutboxMessage.Metadata#ProcessingMetadata", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<DateTimeOffset?>("LastProcessedAt")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<DateTimeOffset?>("NextRetryAt")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<int>("RetryCount")
+                                .HasColumnType("INTEGER");
+                        });
+
+                    b.ComplexProperty<Dictionary<string, object>>("RetryPolicy", "RepoRanger.Domain.OutboxMessages.OutboxMessage.RetryPolicy#RetryPolicy", b1 =>
+                        {
+                            b1.IsRequired();
+
+                            b1.Property<double>("BackoffMultiplier")
+                                .HasColumnType("REAL");
+
+                            b1.Property<TimeSpan>("InitialDelay")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<TimeSpan>("MaxDelay")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<int>("MaxRetries")
+                                .HasColumnType("INTEGER");
                         });
 
                     b.HasKey("Id");
@@ -526,6 +604,35 @@ namespace RepoRanger.Data.Migrations
                     b.Navigation("DependencyVersion");
                 });
 
+            modelBuilder.Entity("RepoRanger.Domain.OutboxMessages.Entities.DeadLetterEntry", b =>
+                {
+                    b.HasOne("RepoRanger.Domain.OutboxMessages.OutboxMessage", "FailedMessage")
+                        .WithOne("DeadLetterEntry")
+                        .HasForeignKey("RepoRanger.Domain.OutboxMessages.Entities.DeadLetterEntry", "FailedMessageId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("RepoRanger.Domain.OutboxMessages.Entities.ProcessingFailure", "FinalProcessingFailure")
+                        .WithOne()
+                        .HasForeignKey("RepoRanger.Domain.OutboxMessages.Entities.DeadLetterEntry", "FinalProcessingFailureId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("FailedMessage");
+
+                    b.Navigation("FinalProcessingFailure");
+                });
+
+            modelBuilder.Entity("RepoRanger.Domain.OutboxMessages.Entities.ProcessingFailure", b =>
+                {
+                    b.HasOne("RepoRanger.Domain.OutboxMessages.OutboxMessage", "OutboxMessage")
+                        .WithMany("Failures")
+                        .HasForeignKey("OutboxMessageId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OutboxMessage");
+                });
+
             modelBuilder.Entity("RepoRanger.Domain.VersionControlSystems.Entities.Project", b =>
                 {
                     b.HasOne("RepoRanger.Domain.VersionControlSystems.Entities.Repository", "Repository")
@@ -629,6 +736,13 @@ namespace RepoRanger.Data.Migrations
                     b.Navigation("ProjectDependencies");
 
                     b.Navigation("Vulnerabilities");
+                });
+
+            modelBuilder.Entity("RepoRanger.Domain.OutboxMessages.OutboxMessage", b =>
+                {
+                    b.Navigation("DeadLetterEntry");
+
+                    b.Navigation("Failures");
                 });
 
             modelBuilder.Entity("RepoRanger.Domain.VersionControlSystems.Entities.Project", b =>

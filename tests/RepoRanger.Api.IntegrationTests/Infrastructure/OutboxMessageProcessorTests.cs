@@ -34,7 +34,7 @@ public class OutboxMessageProcessorTests : TestBase
         
         var outboxMessage = OutboxMessage.Create(@event, _timeProvider.GetUtcNow());
     
-        await _processor.DispatchAsync(outboxMessage);
+        await _processor.ProcessAsync(outboxMessage);
     }
 
     public override void ConfigureServices(IServiceCollection services)

@@ -43,7 +43,7 @@ public class Dependency : BaseAuditableEntity
             var vulnerability = Vulnerability.Create(osvId, version.Id, source.Id);
             version.AddVulnerability(vulnerability);
         
-            RaiseEvent(new DependencyVulnerableDomainEvent(vulnerability.Id));
+            RaiseEvent(new DependencyVulnerabilityDiscovered(vulnerability.Id));
         }
     }
     

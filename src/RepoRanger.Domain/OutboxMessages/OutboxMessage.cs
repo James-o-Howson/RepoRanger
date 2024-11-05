@@ -1,56 +1,103 @@
 ﻿using RepoRanger.Domain.Common;
+using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.Events;
+using RepoRanger.Domain.OutboxMessages.Entities;
+using RepoRanger.Domain.OutboxMessages.Events;
 using RepoRanger.Domain.OutboxMessages.ValueObjects;
+using RepoRanger.Domain.OutboxMessages.ValueObjects.Enums;
+using RepoRanger.Domain.OutboxMessages.ValueObjects.Ids;
 
 namespace RepoRanger.Domain.OutboxMessages;
 
 public class OutboxMessage : BaseEntity
 {
+    private readonly List<ProcessingFailure> _failures = [];
+
     private OutboxMessage() { }
     
-    public static OutboxMessage Create(IntegrationEvent integrationEvent, DateTimeOffset created) => new()
+    public static OutboxMessage Create(IntegrationEvent integrationEvent, DateTimeOffset createdAt) => new()
     {
         Data = OutboxMessageData.From(integrationEvent),
         EventType = EventType.From(integrationEvent),
-        Created = created,
+        Status = ProcessingStatus.Pending,
+        RetryPolicy = RetryPolicy.Default,
+        Metadata = ProcessingMetadata.Initial,
+        CreatedAt = createdAt.DateTime,
     };
     
     public OutboxMessageId Id { get; } = OutboxMessageId.New;
     public required OutboxMessageData Data { get; init; }
     public required EventType EventType { get; init; }
-    public int RetryCount { get; private set; }
-    public DateTimeOffset? ProcessStartTime { get; private set; }
-    public DateTimeOffset? ProcessFinishedTime { get; private set; }
-    public required DateTimeOffset Created { get; init; }
-    public ProcessingStatus ProcessingStatus { get; private set; } = ProcessingStatus.Unprocessed;
-    public string? LastErrorDetails { get; private set; }
+    public required RetryPolicy RetryPolicy { get; init; }
+    public ProcessingStatus Status { get; private set; } = ProcessingStatus.Pending;
+    public ProcessingMetadata Metadata { get; private set; } = ProcessingMetadata.Initial;
+    public IReadOnlyCollection<ProcessingFailure> Failures => _failures.AsReadOnly();
+    public DeadLetterEntry? DeadLetterEntry { get; private set; }
+    
+    // Unfortunately Sqlite cannot sort by DateTimeOffset via Entity Framework
+    public required DateTime CreatedAt { get; init; } 
 
     public IntegrationEvent Event => Data.ToIntegrationEvent(EventType);
-
-    public void StartProcessing(DateTimeOffset time)
+    
+    public void StartProcessing(DateTimeOffset startedAt)
     {
-        if (RetryCount > 0 && ProcessStartTime is not null) return;
-        
-        ProcessStartTime = time;
+        if (Status != ProcessingStatus.Pending && Status != ProcessingStatus.RetryPending)
+            throw new DomainException($"Cannot process message in {Status} status");
+
+        Status = ProcessingStatus.Processing;
+        SetLastProcessedAt(startedAt);
     }
-
-    public void Succeed(DateTimeOffset timeFinished)
+    
+    public void Complete(DateTimeOffset completedAt)
     {
-        ProcessFinishedTime = timeFinished;
-        ProcessingStatus = ProcessingStatus.Succeeded;
+        if (Status != ProcessingStatus.Processing)
+            throw new DomainException($"Cannot complete message in {Status} status");
+
+        Status = ProcessingStatus.Completed;
+        SetLastProcessedAt(completedAt);
     }
-
-    public void Fail(int retryThreshold, Exception exception)
+    
+    public void RecordFailure(Error error, DateTimeOffset occuredAt)
     {
-        RetryCount++;
-        ProcessFinishedTime = null;
-        LastErrorDetails = exception.ToString();
+        if (Status is ProcessingStatus.Completed or ProcessingStatus.DeadLettered)
+            throw new DomainException($"Cannot record failure for message in {Status} status");
 
-        if (RetryCount < retryThreshold)
+        var failure = ProcessingFailure.Create(error, occuredAt, Id);
+        _failures.Add(failure);
+        IncrementRetry();
+
+        if (ShouldDeadLetter())
         {
-            return;
+            DeadLetter(failure, occuredAt);
         }
+        else
+        {
+            ScheduleRetry();
+        }
+    }
+    
+    private void ScheduleRetry()
+    {
+        Status = ProcessingStatus.RetryPending;
+        CalculateNextRetry();
+        RaiseEvent(new MessageRetryScheduled(Id, Metadata.NextRetryAt));
+    }
 
-        ProcessingStatus = ProcessingStatus.Failed;
+    private bool ShouldDeadLetter() => RetryPolicy.ShouldDeadLetter(Metadata.RetryCount);
+    
+    private void DeadLetter(ProcessingFailure finalProcessingFailure, DateTimeOffset occuredAt)
+    {
+        Status = ProcessingStatus.DeadLettered;
+        DeadLetterEntry = DeadLetterEntry.Create(Id, finalProcessingFailure, occuredAt);
+        
+        RaiseEvent(new MessageDeadLettered(Id, DeadLetterEntry.Id));
+    }
+
+    private void SetLastProcessedAt(DateTimeOffset lastProcessedAt) => Metadata = Metadata.WithLastProcessedAt(lastProcessedAt);
+    private void IncrementRetry() => Metadata = Metadata.IncrementRetry();
+    private void CalculateNextRetry()
+    {
+        var nextRetryTime = RetryPolicy.CalculateNextRetryTime(Metadata.RetryCount);
+        Metadata = Metadata.WithNextRetry(nextRetryTime);
     }
 }

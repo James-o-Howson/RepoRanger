@@ -1,5 +1,5 @@
 ﻿using RepoRanger.Domain.Common;
-using RepoRanger.Domain.VersionControlSystems.AlternateIds;
+using RepoRanger.Domain.VersionControlSystems.ValueObjects.AlternateIds;
 
 namespace RepoRanger.Domain.VersionControlSystems.Synchronizers;
 

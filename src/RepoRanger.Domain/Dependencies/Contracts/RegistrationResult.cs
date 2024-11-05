@@ -1,5 +1,5 @@
 ﻿using RepoRanger.Domain.Dependencies.Entities;
-using RepoRanger.Domain.VersionControlSystems.AlternateIds;
+using RepoRanger.Domain.VersionControlSystems.ValueObjects.AlternateIds;
 
 namespace RepoRanger.Domain.Dependencies.Contracts;
 

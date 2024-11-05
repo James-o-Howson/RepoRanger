@@ -30,6 +30,7 @@ public static class ServiceConfiguration
         services.AddTransient<IGitRepositoryDetailFactory, GitRepositoryDetailFactory>();
         services.AddTransient<IExternalVulnerabilityService, ExternalVulnerabilitiesService>();
         services.AddTransient<IOutboxMessageProcessor, OutboxMessageProcessor>();
+        services.Configure<OutboxProcessingOptions>(configuration.GetSection(OutboxProcessingOptions.SectionKey));
         
         services.AddTransient<IProjectParser, ProjectPackageReferenceAttributeParser>();
         services.AddTransient<IProjectParser, ProjectReferenceAttributeParser>();

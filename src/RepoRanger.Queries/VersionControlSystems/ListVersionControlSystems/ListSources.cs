@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using RepoRanger.Abstractions.Interfaces;
+using RepoRanger.Abstractions.Interfaces.Data;
 using RepoRanger.Contracts.VersionControlSystems;
 
 namespace RepoRanger.Queries.VersionControlSystems.ListVersionControlSystems;

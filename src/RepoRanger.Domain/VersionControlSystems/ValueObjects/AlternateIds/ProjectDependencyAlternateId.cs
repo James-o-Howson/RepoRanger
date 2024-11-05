@@ -2,7 +2,7 @@ using RepoRanger.Domain.Dependencies.Contracts;
 using RepoRanger.Domain.Dependencies.ValueObjects;
 using RepoRanger.Domain.VersionControlSystems.Entities;
 
-namespace RepoRanger.Domain.VersionControlSystems.AlternateIds;
+namespace RepoRanger.Domain.VersionControlSystems.ValueObjects.AlternateIds;
 
 internal sealed record ProjectDependencyAlternateId(DependencyId DependencyId, DependencyVersionId VersionId) : AlternateId
 {

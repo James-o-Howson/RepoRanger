@@ -5,7 +5,7 @@ using RepoRanger.Domain.Dependencies.Events;
 
 namespace RepoRanger.EventHandlers.Domain;
 
-internal sealed class DependencyVulnerableEventHandler : INotificationHandler<DependencyVulnerableDomainEvent>
+internal sealed class DependencyVulnerableEventHandler : INotificationHandler<DependencyVulnerabilityDiscovered>
 {
     private readonly IIntegrationEventPublisher _integrationEventPublisher;
 
@@ -14,7 +14,7 @@ internal sealed class DependencyVulnerableEventHandler : INotificationHandler<De
         _integrationEventPublisher = integrationEventPublisher;
     }
 
-    public async Task Handle(DependencyVulnerableDomainEvent notification, CancellationToken cancellationToken = default)
+    public async Task Handle(DependencyVulnerabilityDiscovered notification, CancellationToken cancellationToken = default)
     {
         var integrationEvent = new VulnerabilityDiscoveredIntegrationEvent
         {

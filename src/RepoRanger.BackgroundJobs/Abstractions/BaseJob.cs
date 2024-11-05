@@ -11,10 +11,10 @@ internal abstract class BaseJob<TJob> : IJob
     private readonly ILogger<BaseJob<TJob>> _logger;
     private readonly BackgroundJobOptions _options;
 
-    protected BaseJob(ILogger<BaseJob<TJob>> logger, IOptions<BackgroundJobOptions> options)
+    protected BaseJob(ILogger<BaseJob<TJob>> logger, IOptions<BackgroundJobOptions> backgroundJobOptions)
     {
         _logger = logger;
-        _options = options.Value;
+        _options = backgroundJobOptions.Value;
     }
 
     public async Task Execute(IJobExecutionContext context)

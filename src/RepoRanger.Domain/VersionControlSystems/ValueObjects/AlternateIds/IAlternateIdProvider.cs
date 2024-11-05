@@ -1,4 +1,4 @@
-﻿namespace RepoRanger.Domain.VersionControlSystems.AlternateIds;
+﻿namespace RepoRanger.Domain.VersionControlSystems.ValueObjects.AlternateIds;
 
 public interface IAlternateIdProvider
 {

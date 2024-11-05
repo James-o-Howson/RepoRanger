@@ -15,8 +15,8 @@ internal sealed class VcsParserJob : BaseJob<VcsParserJob>
     private readonly IVersionControlSystemParserService _versionControlSystemParserService;
 
     public VcsParserJob(ILogger<VcsParserJob> logger,
-        IOptions<BackgroundJobOptions> options, 
-        IVersionControlSystemParserService versionControlSystemParserService) : base(logger, options)
+        IOptions<BackgroundJobOptions> backgroundJobOptions, 
+        IVersionControlSystemParserService versionControlSystemParserService) : base(logger, backgroundJobOptions)
     {
         _versionControlSystemParserService = versionControlSystemParserService;
     }

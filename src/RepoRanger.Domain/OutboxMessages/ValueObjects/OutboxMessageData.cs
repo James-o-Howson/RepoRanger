@@ -1,10 +1,7 @@
-﻿using System.Text.Json;
-using System.Text.Json.Serialization;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using RepoRanger.Domain.Common;
 using RepoRanger.Domain.Common.Exceptions;
 using RepoRanger.Domain.Events;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace RepoRanger.Domain.OutboxMessages.ValueObjects;
 
@@ -18,17 +15,14 @@ public sealed class OutboxMessageData : ValueObject
     // ReSharper disable once UnusedMember.Local
     private OutboxMessageData() { }
     
-    private OutboxMessageData(IntegrationEvent @event)
-    {
-        var type = EventType.From(@event);
-        Value = JsonConvert.SerializeObject(@event, type, DefaultOptions);
-    }
-    
-    public string Value { get; init; } = string.Empty;
+    public required string Value { get; init; } = string.Empty;
 
     public override string ToString() => Value;
     
-    public static OutboxMessageData From(IntegrationEvent @event) => new(@event);
+    public static OutboxMessageData From(IntegrationEvent @event) => new()
+    {
+        Value = JsonConvert.SerializeObject(@event, EventType.From(@event), DefaultOptions)
+    };
 
     public IntegrationEvent ToIntegrationEvent(Type eventType)
     {

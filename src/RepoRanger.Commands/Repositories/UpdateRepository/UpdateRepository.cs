@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using RepoRanger.Abstractions.Exceptions;
-using RepoRanger.Abstractions.Interfaces;
+using RepoRanger.Abstractions.Interfaces.Data;
 
 namespace RepoRanger.Commands.Repositories.UpdateRepository;
 

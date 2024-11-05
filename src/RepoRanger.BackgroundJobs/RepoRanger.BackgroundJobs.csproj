@@ -13,5 +13,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\RepoRanger.Abstractions\RepoRanger.Abstractions.csproj" />
+      <ProjectReference Include="..\RepoRanger.Infrastructure\RepoRanger.Infrastructure.csproj" />
     </ItemGroup>
 </Project>
