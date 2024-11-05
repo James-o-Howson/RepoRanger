@@ -15,7 +15,7 @@ internal sealed class DomainException(string message)
         }
     }
     
-    private static void ThrowIfNull([NotNull] object? argument, 
+    public static void ThrowIfNull([NotNull] object? argument, 
         [CallerArgumentExpression(nameof(argument))] string? paramName = null)
     {
         if (argument is null)

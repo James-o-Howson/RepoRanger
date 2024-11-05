@@ -1,16 +1,31 @@
-﻿namespace RepoRanger.Domain.OutboxMessages.ValueObjects;
+﻿using RepoRanger.Domain.Common;
 
-public record ProcessingMetadata(int RetryCount, DateTimeOffset? LastProcessedAt, DateTimeOffset? NextRetryAt)
+namespace RepoRanger.Domain.OutboxMessages.ValueObjects;
+
+public sealed class ProcessingMetadata : ValueObject
 {
-    public ProcessingMetadata IncrementRetry() => 
-        this with { RetryCount = RetryCount + 1 };
-
-    public ProcessingMetadata WithNextRetry(DateTimeOffset nextRetry) =>
-        this with { NextRetryAt = nextRetry };
+    public int RetryCount { get; private set; }
+    public DateTimeOffset? LastProcessedAt { get; private set; }
+    public DateTimeOffset? NextRetryAt { get; private set; }
     
-    public ProcessingMetadata WithLastProcessedAt(DateTimeOffset lastProcessedAt) =>
-        this with { LastProcessedAt = lastProcessedAt };
+    // ReSharper disable once UnusedMember.Local
+    private ProcessingMetadata() { }
 
-    public static ProcessingMetadata Initial => 
-        new(RetryCount: 0, LastProcessedAt: null, NextRetryAt: null);
+    public static ProcessingMetadata Initial => new()
+    {
+        RetryCount = 0,
+        LastProcessedAt = null,
+        NextRetryAt = null
+    };
+    
+    public void IncrementRetryCount() => RetryCount++;
+    public void SetNextRetryAt(DateTimeOffset nextRetryAt) => NextRetryAt = nextRetryAt;
+    public void SetLastProcessedAt(DateTimeOffset lastProcessedAt) => LastProcessedAt = lastProcessedAt;
+
+    protected override IEnumerable<object?> GetEqualityComponents()
+    {
+        yield return RetryCount;
+        yield return LastProcessedAt;
+        yield return NextRetryAt;
+    }
 }

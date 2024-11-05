@@ -64,7 +64,7 @@ public class OutboxMessage : BaseEntity
 
         var failure = ProcessingFailure.Create(error, occuredAt, Id);
         _failures.Add(failure);
-        IncrementRetry();
+        IncrementRetryCount();
 
         if (ShouldDeadLetter())
         {
@@ -80,7 +80,9 @@ public class OutboxMessage : BaseEntity
     {
         Status = ProcessingStatus.RetryPending;
         CalculateNextRetry();
-        RaiseEvent(new MessageRetryScheduled(Id, Metadata.NextRetryAt));
+        
+        DomainException.ThrowIfNull(Metadata.NextRetryAt);
+        RaiseEvent(new MessageRetryScheduled(Id, Metadata.NextRetryAt.Value));
     }
 
     private bool ShouldDeadLetter() => RetryPolicy.ShouldDeadLetter(Metadata.RetryCount);
@@ -93,11 +95,11 @@ public class OutboxMessage : BaseEntity
         RaiseEvent(new MessageDeadLettered(Id, DeadLetterEntry.Id));
     }
 
-    private void SetLastProcessedAt(DateTimeOffset lastProcessedAt) => Metadata = Metadata.WithLastProcessedAt(lastProcessedAt);
-    private void IncrementRetry() => Metadata = Metadata.IncrementRetry();
+    private void SetLastProcessedAt(DateTimeOffset lastProcessedAt) => Metadata.SetLastProcessedAt(lastProcessedAt);
+    private void IncrementRetryCount() => Metadata.IncrementRetryCount();
     private void CalculateNextRetry()
     {
         var nextRetryTime = RetryPolicy.CalculateNextRetryTime(Metadata.RetryCount);
-        Metadata = Metadata.WithNextRetry(nextRetryTime);
+        Metadata.SetNextRetryAt(nextRetryTime);
     }
 }
