@@ -9,7 +9,7 @@ namespace RepoRanger.Domain;
 
 public static class ServiceConfiguration
 {
-    public static void AddDomain(this IServiceCollection services)
+    public static void AddDomainServices(this IServiceCollection services)
     {
         // VCS
         services.AddTransient<IVersionControlSystemSynchronizer, VersionControlSystemSynchronizer>();

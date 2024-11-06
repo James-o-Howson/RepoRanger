@@ -14,19 +14,19 @@ namespace RepoRanger.Api;
 
 internal static class ServiceConfiguration
 {
-    public static void AddApi(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment environment)
+    public static void AddApiServices(this IServiceCollection services)
     {
         services.AddCors();
         services.AddExceptionHandlerServices();
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks().AddDbContextCheck<ApplicationDbContext>();
-        services.AddOpenApiDocument(settings =>
-        {
-            settings.Title = "Repo Ranger API";
-            settings.Version = "v1";
-            settings.Description = "API for managing repositories in Repo Ranger.";
-        });
+        // services.AddOpenApiDocument(settings =>
+        // {
+        //     settings.Title = "Repo Ranger API";
+        //     settings.Version = "v1";
+        //     settings.Description = "API for managing repositories in Repo Ranger.";
+        // });
         services.AddHttpContextAccessor();
         services.AddMediatr();
         services.AddValidatorsFromAssemblies([CommandsAssembly.Assembly, QueriesAssembly.Assembly]);
@@ -35,14 +35,14 @@ internal static class ServiceConfiguration
         services.AddSingleton(TimeProvider.System);
     }
     
-    public static void UseSerilog(this IHostBuilder hostBuilder)
+    public static void AddLogging(this IHostBuilder hostBuilder)
     {
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
             .WriteTo.File("Logs/RepoRanger_.txt", rollingInterval: RollingInterval.Day, rollOnFileSizeLimit: true)
             .CreateLogger();
 
-        SerilogHostBuilderExtensions.UseSerilog(hostBuilder);
+        hostBuilder.UseSerilog();
     }
     
     private static void AddExceptionHandlerServices(this IServiceCollection services)

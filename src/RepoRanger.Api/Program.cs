@@ -6,13 +6,13 @@ using RepoRanger.Infrastructure;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Host.UseSerilog();
+builder.Host.AddLogging();
 
-builder.Services.AddApi(builder.Configuration, builder.Environment);
-builder.Services.AddBackgroundJobs(builder.Configuration, builder.Environment);
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddPersistence(builder.Configuration);
-builder.Services.AddDomain();
+builder.Services.AddApiServices();
+builder.Services.AddBackgroundJobServices(builder.Configuration, builder.Environment);
+builder.Services.AddInfrastructureServices(builder.Configuration);
+builder.Services.AddPersistenceServices(builder.Configuration);
+builder.Services.AddDomainServices();
 
 var app = builder.Build();
 
@@ -25,7 +25,7 @@ if (app.Environment.IsDevelopment())
 app.UseSerilogRequestLogging();
 app.UseCors(c => c.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 app.UseHttpsRedirection();
-app.UseHealthChecks("/_health");
+app.UseHealthChecks("/health");
 app.MapControllers();
 
 await app.RunAsync();

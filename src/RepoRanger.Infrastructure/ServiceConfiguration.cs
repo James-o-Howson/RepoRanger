@@ -23,7 +23,7 @@ namespace RepoRanger.Infrastructure;
 
 public static class ServiceConfiguration
 {
-    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static void AddInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IIntegrationEventPublisher, IntegrationEventPublisher>();
         services.AddTransient<IDependencyManagerFactory, DependencyManagerFactory>();

@@ -9,7 +9,7 @@ namespace RepoRanger.BackgroundJobs;
 
 public static class ServiceConfiguration
 {
-    public static void AddBackgroundJobs(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
+    public static void AddBackgroundJobServices(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
         services.Configure<BackgroundJobOptions>(configuration.GetSection(BackgroundJobOptions.ConfigurationKey));
 
