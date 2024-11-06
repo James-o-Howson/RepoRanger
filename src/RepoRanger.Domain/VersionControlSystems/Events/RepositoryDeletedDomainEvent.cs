@@ -1,5 +1,5 @@
 ﻿using RepoRanger.Domain.VersionControlSystems.ValueObjects;
-using SharedKernel.Events.Domain;
+using RepoRanger.SharedKernel.Events.Domain;
 
 namespace RepoRanger.Domain.VersionControlSystems.Events;
 

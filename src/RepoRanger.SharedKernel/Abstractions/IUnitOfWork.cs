@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Abstractions;
+﻿namespace RepoRanger.SharedKernel.Abstractions;
 
 public interface IUnitOfWork
 {

@@ -4,8 +4,8 @@ using RepoRanger.Domain.OutboxMessages.Events;
 using RepoRanger.Domain.OutboxMessages.ValueObjects;
 using RepoRanger.Domain.OutboxMessages.ValueObjects.Enums;
 using RepoRanger.Domain.OutboxMessages.ValueObjects.Ids;
-using SharedKernel.Base;
-using SharedKernel.Events.Integration;
+using RepoRanger.SharedKernel.Base;
+using RepoRanger.SharedKernel.Events.Integration;
 
 namespace RepoRanger.Domain.OutboxMessages;
 

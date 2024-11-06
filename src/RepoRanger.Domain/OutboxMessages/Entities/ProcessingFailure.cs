@@ -1,6 +1,6 @@
 ﻿using RepoRanger.Domain.OutboxMessages.ValueObjects;
 using RepoRanger.Domain.OutboxMessages.ValueObjects.Ids;
-using SharedKernel.Base;
+using RepoRanger.SharedKernel.Base;
 
 namespace RepoRanger.Domain.OutboxMessages.Entities;
 

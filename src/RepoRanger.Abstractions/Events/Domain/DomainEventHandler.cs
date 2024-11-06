@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SharedKernel.Events.Domain;
+using RepoRanger.SharedKernel.Events.Domain;
 
 namespace RepoRanger.Abstractions.Events.Domain;
 

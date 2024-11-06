@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using RepoRanger.Abstractions.Interfaces;
-using SharedKernel.Base;
+using RepoRanger.SharedKernel.Base;
 
 namespace RepoRanger.Data.Interceptors;
 

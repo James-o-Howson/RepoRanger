@@ -1,5 +1,5 @@
 ﻿using RepoRanger.Domain.Dependencies.ValueObjects;
-using SharedKernel.Base;
+using RepoRanger.SharedKernel.Base;
 
 namespace RepoRanger.Domain.Dependencies.Entities;
 

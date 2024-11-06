@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace SharedKernel.Results;
+namespace RepoRanger.SharedKernel.Results;
 
 public sealed class Maybe<T> : IEquatable<Maybe<T>>
 {

@@ -1,4 +1,4 @@
-namespace SharedKernel.Events.Domain;
+namespace RepoRanger.SharedKernel.Events.Domain;
 
 public interface IDomainEvent
 {

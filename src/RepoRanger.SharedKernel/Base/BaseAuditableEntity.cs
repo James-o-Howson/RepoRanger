@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Base;
+﻿namespace RepoRanger.SharedKernel.Base;
 
 public class BaseAuditableEntity : BaseEntity
 {

@@ -3,7 +3,7 @@ using RepoRanger.Domain.Dependencies.Entities;
 using RepoRanger.Domain.Dependencies.ValueObjects;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects.AlternateIds;
-using SharedKernel.Base;
+using RepoRanger.SharedKernel.Base;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 

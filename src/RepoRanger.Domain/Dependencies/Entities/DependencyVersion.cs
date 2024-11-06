@@ -1,6 +1,6 @@
 ﻿using RepoRanger.Domain.Dependencies.ValueObjects;
 using RepoRanger.Domain.VersionControlSystems.Entities;
-using SharedKernel.Base;
+using RepoRanger.SharedKernel.Base;
 
 namespace RepoRanger.Domain.Dependencies.Entities;
 

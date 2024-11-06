@@ -2,7 +2,7 @@
 using RepoRanger.Domain.Dependencies.Events;
 using RepoRanger.Domain.Dependencies.ValueObjects;
 using RepoRanger.Domain.Exceptions;
-using SharedKernel.Base;
+using RepoRanger.SharedKernel.Base;
 
 namespace RepoRanger.Domain.Dependencies;
 

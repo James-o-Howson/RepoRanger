@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Results;
+﻿namespace RepoRanger.SharedKernel.Results;
 
 public static class ResultExtensions
 {

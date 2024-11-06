@@ -5,7 +5,7 @@ using RepoRanger.Abstractions.Events.Integration;
 using RepoRanger.Domain.OutboxMessages;
 using RepoRanger.Domain.OutboxMessages.ValueObjects;
 using RepoRanger.Domain.OutboxMessages.ValueObjects.Enums;
-using SharedKernel.Abstractions;
+using RepoRanger.SharedKernel.Abstractions;
 
 namespace RepoRanger.Infrastructure.OutboxMessages;
 

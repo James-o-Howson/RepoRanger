@@ -2,7 +2,7 @@
 using RepoRanger.Domain.VersionControlSystems.Events;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects.AlternateIds;
-using SharedKernel.Base;
+using RepoRanger.SharedKernel.Base;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 

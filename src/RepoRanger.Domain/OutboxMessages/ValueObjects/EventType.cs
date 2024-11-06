@@ -1,6 +1,6 @@
 ﻿using RepoRanger.Domain.Exceptions;
-using SharedKernel.Base;
-using SharedKernel.Events.Integration;
+using RepoRanger.SharedKernel.Base;
+using RepoRanger.SharedKernel.Events.Integration;
 
 namespace RepoRanger.Domain.OutboxMessages.ValueObjects;
 

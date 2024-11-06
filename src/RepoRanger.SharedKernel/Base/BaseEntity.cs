@@ -1,6 +1,6 @@
-﻿using SharedKernel.Events.Domain;
+﻿using RepoRanger.SharedKernel.Events.Domain;
 
-namespace SharedKernel.Base;
+namespace RepoRanger.SharedKernel.Base;
 
 public abstract class BaseEntity
 {

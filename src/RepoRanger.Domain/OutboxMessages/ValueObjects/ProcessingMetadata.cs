@@ -1,4 +1,4 @@
-﻿using SharedKernel.Base;
+﻿using RepoRanger.SharedKernel.Base;
 
 namespace RepoRanger.Domain.OutboxMessages.ValueObjects;
 

@@ -9,7 +9,7 @@ using RepoRanger.Data.Abstractions;
 using RepoRanger.Data.Interceptors;
 using RepoRanger.Data.Repositories;
 using RepoRanger.Domain.OutboxMessages;
-using SharedKernel.Abstractions;
+using RepoRanger.SharedKernel.Abstractions;
 
 namespace RepoRanger.Data;
 

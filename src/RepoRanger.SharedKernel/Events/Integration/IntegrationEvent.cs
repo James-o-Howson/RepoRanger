@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Events.Integration;
+﻿namespace RepoRanger.SharedKernel.Events.Integration;
 
 public abstract class IntegrationEvent : IIntegrationEvent
 {

@@ -1,4 +1,4 @@
-﻿namespace SharedKernel.Results;
+﻿namespace RepoRanger.SharedKernel.Results;
 
 public class Result<TValue> : Result
 {

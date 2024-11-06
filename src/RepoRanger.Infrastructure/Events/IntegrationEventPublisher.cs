@@ -1,7 +1,7 @@
 ﻿using RepoRanger.Abstractions.Interfaces;
 using RepoRanger.Abstractions.Interfaces.Data;
 using RepoRanger.Domain.OutboxMessages;
-using SharedKernel.Events.Integration;
+using RepoRanger.SharedKernel.Events.Integration;
 
 namespace RepoRanger.Infrastructure.Events;
 

@@ -1,4 +1,4 @@
-﻿using SharedKernel.Abstractions;
+﻿using RepoRanger.SharedKernel.Abstractions;
 
 namespace RepoRanger.Domain.Dependencies.ValueObjects;
 

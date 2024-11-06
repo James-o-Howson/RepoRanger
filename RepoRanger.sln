@@ -59,7 +59,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{45FA6016-9
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.Domain.Tests", "tests\RepoRanger.Domain.Tests\RepoRanger.Domain.Tests.csproj", "{9F0BE02F-EAC1-46E6-BCA4-59AD793CB7BC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedKernel", "src\SharedKernel\SharedKernel.csproj", "{4C9FD18F-942E-4FBD-9CBD-8D120B7D9011}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepoRanger.SharedKernel", "src\RepoRanger.SharedKernel\RepoRanger.SharedKernel.csproj", "{4C9FD18F-942E-4FBD-9CBD-8D120B7D9011}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

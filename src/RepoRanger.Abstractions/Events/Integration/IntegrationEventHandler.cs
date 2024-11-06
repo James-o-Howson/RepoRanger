@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using SharedKernel.Events.Integration;
+using RepoRanger.SharedKernel.Events.Integration;
 
 namespace RepoRanger.Abstractions.Events.Integration;
 
