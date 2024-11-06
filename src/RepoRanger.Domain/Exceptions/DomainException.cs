@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 
-namespace RepoRanger.Domain.Common.Exceptions;
+namespace RepoRanger.Domain.Exceptions;
 
 internal sealed class DomainException(string message)
     : Exception(message)

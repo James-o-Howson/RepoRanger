@@ -1,11 +1,11 @@
-﻿using MediatR;
+﻿using RepoRanger.Abstractions.Events.Domain;
 using RepoRanger.Abstractions.Interfaces;
 using RepoRanger.Contracts.Vulnerabilities.IntegrationEvents;
 using RepoRanger.Domain.Dependencies.Events;
 
 namespace RepoRanger.EventHandlers.Domain;
 
-internal sealed class DependencyVulnerableEventHandler : INotificationHandler<DependencyVulnerabilityDiscovered>
+internal sealed class DependencyVulnerableEventHandler : DomainEventHandler<DependencyVulnerabilityDiscovered>
 {
     private readonly IIntegrationEventPublisher _integrationEventPublisher;
 
@@ -14,11 +14,11 @@ internal sealed class DependencyVulnerableEventHandler : INotificationHandler<De
         _integrationEventPublisher = integrationEventPublisher;
     }
 
-    public async Task Handle(DependencyVulnerabilityDiscovered notification, CancellationToken cancellationToken = default)
+    protected override async Task HandleAsync(DependencyVulnerabilityDiscovered domainEvent, CancellationToken cancellationToken)
     {
         var integrationEvent = new VulnerabilityDiscoveredIntegrationEvent
         {
-            VulnerabilityId = notification.VulnerabilityId
+            VulnerabilityId = domainEvent.VulnerabilityId
         };
         
         await _integrationEventPublisher.PublishAsync(integrationEvent, cancellationToken);

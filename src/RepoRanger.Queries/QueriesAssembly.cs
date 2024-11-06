@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 
-namespace RepoRanger.Queries
+namespace RepoRanger.Queries;
+
+public static class QueriesAssembly
 {
-    public static class QueriesAssembly
-    {
-        public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
-    }
+    public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
 }

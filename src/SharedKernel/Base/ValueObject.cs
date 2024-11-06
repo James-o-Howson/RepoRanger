@@ -1,4 +1,4 @@
-﻿namespace RepoRanger.Domain.Common;
+﻿namespace SharedKernel.Base;
 
 public abstract class ValueObject
 {

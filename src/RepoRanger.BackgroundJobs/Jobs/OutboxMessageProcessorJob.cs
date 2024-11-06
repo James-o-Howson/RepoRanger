@@ -11,16 +11,16 @@ internal sealed class OutboxMessageProcessorJob : BaseJob<OutboxMessageProcessor
 {
     internal static readonly JobKey JobKey = new(nameof(OutboxMessageProcessorJob));
 
-    private readonly IOutboxMessageProcessor _outboxMessageProcessor;
+    private readonly IOutboxMessageDispatcher _outboxMessageDispatcher;
 
     public OutboxMessageProcessorJob(ILogger<OutboxMessageProcessorJob> logger,
         IOptions<BackgroundJobOptions> backgroundJobOptions,
-        IOutboxMessageProcessor outboxMessageProcessor) : base(logger,
+        IOutboxMessageDispatcher outboxMessageDispatcher) : base(logger,
         backgroundJobOptions)
     {
-        _outboxMessageProcessor = outboxMessageProcessor;
+        _outboxMessageDispatcher = outboxMessageDispatcher;
     }
 
     protected override async Task ExecuteJobLogicAsync(IJobExecutionContext context) => 
-        await _outboxMessageProcessor.ProcessAsync(context.CancellationToken);
+        await _outboxMessageDispatcher.ProcessAsync(context.CancellationToken);
 }

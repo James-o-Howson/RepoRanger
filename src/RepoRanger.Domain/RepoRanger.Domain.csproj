@@ -17,4 +17,8 @@
         <InternalsVisibleTo Include="RepoRanger.Api.IntegrationTests" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\SharedKernel\SharedKernel.csproj" />
+    </ItemGroup>
+
 </Project>

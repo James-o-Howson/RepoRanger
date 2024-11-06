@@ -1,4 +1,4 @@
-﻿using RepoRanger.Domain.Common.Interfaces;
+﻿using SharedKernel.Abstractions;
 
 namespace RepoRanger.Domain.Dependencies.ValueObjects;
 

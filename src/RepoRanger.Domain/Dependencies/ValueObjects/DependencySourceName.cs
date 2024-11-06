@@ -1,5 +1,5 @@
-﻿using RepoRanger.Domain.Common;
-using RepoRanger.Domain.Common.Exceptions;
+﻿using RepoRanger.Domain.Exceptions;
+using SharedKernel.Base;
 
 namespace RepoRanger.Domain.Dependencies.ValueObjects;
 

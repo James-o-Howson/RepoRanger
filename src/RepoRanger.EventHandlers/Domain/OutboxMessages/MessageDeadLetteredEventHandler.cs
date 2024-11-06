@@ -1,10 +1,10 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using RepoRanger.Abstractions.Events.Domain;
 using RepoRanger.Domain.OutboxMessages.Events;
 
 namespace RepoRanger.EventHandlers.Domain.OutboxMessages;
 
-internal sealed class MessageDeadLetteredEventHandler : INotificationHandler<MessageDeadLettered>
+internal sealed class MessageDeadLetteredEventHandler : DomainEventHandler<MessageDeadLettered>
 {
     private readonly ILogger<MessageDeadLetteredEventHandler> _logger;
 
@@ -13,9 +13,9 @@ internal sealed class MessageDeadLetteredEventHandler : INotificationHandler<Mes
         _logger = logger;
     }
 
-    public Task Handle(MessageDeadLettered notification, CancellationToken cancellationToken)
+    protected override Task HandleAsync(MessageDeadLettered domainEvent, CancellationToken cancellationToken)
     {
-        _logger.LogWarning("OutboxMessage with Id = {Id} has been Dead Lettered", notification.OutboxMessageId);
+        _logger.LogWarning("OutboxMessage with Id = {Id} has been Dead Lettered", domainEvent.OutboxMessageId);
         
         return Task.CompletedTask;
     }

@@ -1,23 +1,24 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using RepoRanger.Abstractions.Interfaces.Data;
+using RepoRanger.Abstractions.Events.Integration;
 using RepoRanger.Domain.OutboxMessages;
 using RepoRanger.Domain.OutboxMessages.ValueObjects;
 using RepoRanger.Domain.OutboxMessages.ValueObjects.Enums;
+using SharedKernel.Abstractions;
 
 namespace RepoRanger.Infrastructure.OutboxMessages;
 
-internal sealed class OutboxMessageProcessor : IOutboxMessageProcessor
+internal sealed class OutboxMessageDispatcher : IOutboxMessageDispatcher
 {
-    private readonly ILogger<OutboxMessageProcessor> _logger;
+    private readonly ILogger<OutboxMessageDispatcher> _logger;
     private readonly IMediator _mediator;
     private readonly TimeProvider _timeProvider;
     private readonly IUnitOfWork _unitOfWork;
     private readonly IOutboxMessageRepository _outboxMessageRepository;
     private readonly OutboxProcessingOptions _outboxProcessingOptions;
 
-    public OutboxMessageProcessor(ILogger<OutboxMessageProcessor> logger,
+    public OutboxMessageDispatcher(ILogger<OutboxMessageDispatcher> logger,
         IMediator mediator,
         TimeProvider timeProvider, 
         IUnitOfWork unitOfWork, 
@@ -51,7 +52,7 @@ internal sealed class OutboxMessageProcessor : IOutboxMessageProcessor
             await _unitOfWork.SaveChangesAsync(cancellationToken);
             _logger.LogInformation("Processing Outbox Message: {OutboxMessageId}", outboxMessage.Id);
             
-            await _mediator.Publish(outboxMessage.Event, cancellationToken);
+            await _mediator.Publish(outboxMessage.Event.ToNotification(), cancellationToken);
                 
             outboxMessage.Complete(_timeProvider.GetUtcNow());
             await _unitOfWork.SaveChangesAsync(cancellationToken);

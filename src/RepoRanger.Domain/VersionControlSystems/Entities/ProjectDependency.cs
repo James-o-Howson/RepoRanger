@@ -1,9 +1,9 @@
-﻿using RepoRanger.Domain.Common;
-using RepoRanger.Domain.Dependencies;
+﻿using RepoRanger.Domain.Dependencies;
 using RepoRanger.Domain.Dependencies.Entities;
 using RepoRanger.Domain.Dependencies.ValueObjects;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects.AlternateIds;
+using SharedKernel.Base;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 

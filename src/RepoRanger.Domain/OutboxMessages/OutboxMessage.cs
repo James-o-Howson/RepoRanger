@@ -1,11 +1,11 @@
-﻿using RepoRanger.Domain.Common;
-using RepoRanger.Domain.Common.Exceptions;
-using RepoRanger.Domain.Events;
+﻿using RepoRanger.Domain.Exceptions;
 using RepoRanger.Domain.OutboxMessages.Entities;
 using RepoRanger.Domain.OutboxMessages.Events;
 using RepoRanger.Domain.OutboxMessages.ValueObjects;
 using RepoRanger.Domain.OutboxMessages.ValueObjects.Enums;
 using RepoRanger.Domain.OutboxMessages.ValueObjects.Ids;
+using SharedKernel.Base;
+using SharedKernel.Events.Integration;
 
 namespace RepoRanger.Domain.OutboxMessages;
 

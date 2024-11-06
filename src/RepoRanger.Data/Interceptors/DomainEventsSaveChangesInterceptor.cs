@@ -2,17 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using RepoRanger.Domain.Common;
+using RepoRanger.Abstractions.Events.Domain;
+using SharedKernel.Base;
 
 namespace RepoRanger.Data.Interceptors;
 
 public class DomainEventsSaveChangesInterceptor : SaveChangesInterceptor
 {
-    private readonly IMediator _mediator;
+    private readonly IDomainEventDispatcher _domainEventDispatcher;
 
-    public DomainEventsSaveChangesInterceptor(IMediator mediator)
+    public DomainEventsSaveChangesInterceptor(IDomainEventDispatcher domainEventDispatcher)
     {
-        _mediator = mediator;
+        _domainEventDispatcher = domainEventDispatcher;
     }
 
     public override InterceptionResult<int> SavingChanges(DbContextEventData eventData, InterceptionResult<int> result)
@@ -36,16 +37,17 @@ public class DomainEventsSaveChangesInterceptor : SaveChangesInterceptor
     
     private async Task DispatchEventsAsync(DbContext context, CancellationToken cancellationToken)
     {
-        var events = context.ChangeTracker
+        var entities = context.ChangeTracker
             .Entries<BaseEntity>()
-            .GetEntitiesWithEvents()
-            .ExtractEventsForPublishing();
+            .GetEntitiesWithEvents();
         
-        if (events.Count == 0) return;
-
-        foreach (var domainEvent in events)
-        {
-            await _mediator.Publish(domainEvent, cancellationToken);
-        }
+        var events = entities
+            .SelectMany(e => e.GetEvents()).ToList();
+    
+        entities.ForEach(e => e.ClearEvents());
+        
+        if (entities.Count == 0) return;
+        
+        await _domainEventDispatcher.DispatchAsync(events, cancellationToken);
     }
 }

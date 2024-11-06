@@ -1,4 +1,4 @@
-using RepoRanger.Domain.Common;
+using SharedKernel.Base;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.EntityFrameworkCore.ChangeTracking;

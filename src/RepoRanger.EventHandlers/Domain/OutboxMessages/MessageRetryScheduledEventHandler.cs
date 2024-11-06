@@ -1,10 +1,10 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using RepoRanger.Abstractions.Events.Domain;
 using RepoRanger.Domain.OutboxMessages.Events;
 
 namespace RepoRanger.EventHandlers.Domain.OutboxMessages;
 
-internal sealed class MessageRetryScheduledEventHandler : INotificationHandler<MessageRetryScheduled>
+internal sealed class MessageRetryScheduledEventHandler : DomainEventHandler<MessageRetryScheduled>
 {
     private readonly ILogger<MessageRetryScheduledEventHandler> _logger;
 
@@ -12,11 +12,11 @@ internal sealed class MessageRetryScheduledEventHandler : INotificationHandler<M
     {
         _logger = logger;
     }
-
-    public Task Handle(MessageRetryScheduled notification, CancellationToken cancellationToken)
+    
+    protected override Task HandleAsync(MessageRetryScheduled domainEvent, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Outbox Message with Id = {Id} has failed. Retrying at {RetryingAt}", 
-            notification.OutboxMessageId, notification.NextRetryAt);
+            domainEvent.OutboxMessageId, domainEvent.NextRetryAt);
         
         return Task.CompletedTask;
     }

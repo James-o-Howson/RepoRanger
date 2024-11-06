@@ -1,5 +1,5 @@
-﻿using RepoRanger.Domain.Events;
-using RepoRanger.Domain.OutboxMessages.ValueObjects.Ids;
+﻿using RepoRanger.Domain.OutboxMessages.ValueObjects.Ids;
+using SharedKernel.Events.Domain;
 
 namespace RepoRanger.Domain.OutboxMessages.Events;
 

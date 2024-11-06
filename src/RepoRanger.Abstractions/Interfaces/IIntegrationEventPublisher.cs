@@ -1,4 +1,4 @@
-﻿using RepoRanger.Domain.Events;
+﻿using SharedKernel.Events.Integration;
 
 namespace RepoRanger.Abstractions.Interfaces;
 

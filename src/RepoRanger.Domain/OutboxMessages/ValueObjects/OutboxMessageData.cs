@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
-using RepoRanger.Domain.Common;
-using RepoRanger.Domain.Common.Exceptions;
-using RepoRanger.Domain.Events;
+using RepoRanger.Domain.Exceptions;
+using SharedKernel.Base;
+using SharedKernel.Events.Integration;
 
 namespace RepoRanger.Domain.OutboxMessages.ValueObjects;
 

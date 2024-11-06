@@ -1,4 +1,4 @@
-﻿namespace RepoRanger.Abstractions.Interfaces.Data;
+﻿namespace SharedKernel.Abstractions;
 
 public interface IUnitOfWork
 {

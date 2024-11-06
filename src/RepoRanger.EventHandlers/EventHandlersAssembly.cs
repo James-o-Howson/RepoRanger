@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 
-namespace RepoRanger.EventHandlers
+namespace RepoRanger.EventHandlers;
+
+public static class EventHandlersAssembly
 {
-    public static class EventHandlersAssembly
-    {
-        public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
-    }
+    public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
 }

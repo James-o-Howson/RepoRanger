@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using RepoRanger.Domain.Common;
+using SharedKernel.Base;
 
 namespace RepoRanger.Data.Configuration;
 

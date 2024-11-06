@@ -1,8 +1,8 @@
-﻿using RepoRanger.Domain.Common;
-using RepoRanger.Domain.Common.Exceptions;
+﻿using RepoRanger.Domain.Exceptions;
 using RepoRanger.Domain.VersionControlSystems.Events;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects;
 using RepoRanger.Domain.VersionControlSystems.ValueObjects.AlternateIds;
+using SharedKernel.Base;
 
 namespace RepoRanger.Domain.VersionControlSystems.Entities;
 

@@ -6,6 +6,7 @@ using RepoRanger.Domain.OutboxMessages;
 using RepoRanger.Domain.OutboxMessages.Entities;
 using RepoRanger.Domain.VersionControlSystems;
 using RepoRanger.Domain.VersionControlSystems.Entities;
+using SharedKernel.Abstractions;
 
 namespace RepoRanger.Abstractions.Interfaces.Data;
 

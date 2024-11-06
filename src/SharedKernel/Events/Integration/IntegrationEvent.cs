@@ -1,8 +1,6 @@
-﻿using MediatR;
+﻿namespace SharedKernel.Events.Integration;
 
-namespace RepoRanger.Domain.Events;
-
-public abstract class IntegrationEvent : INotification
+public abstract class IntegrationEvent : IIntegrationEvent
 {
     public DateTimeOffset OccuredOn { get; set; } = DateTimeOffset.UtcNow;
     

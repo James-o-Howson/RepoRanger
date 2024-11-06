@@ -1,8 +1,6 @@
-﻿using MediatR;
+﻿namespace SharedKernel.Events.Domain;
 
-namespace RepoRanger.Domain.Events;
-
-public abstract class DomainEvent : INotification
+public abstract class DomainEvent : IDomainEvent
 {
     public DateTimeOffset OccuredOn { get; }
 

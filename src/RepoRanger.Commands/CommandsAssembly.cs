@@ -1,9 +1,8 @@
 ﻿using System.Reflection;
 
-namespace RepoRanger.Commands
+namespace RepoRanger.Commands;
+
+public static class CommandsAssembly
 {
-    public static class CommandsAssembly
-    {
-        public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
-    }
+    public static readonly Assembly Assembly = Assembly.GetExecutingAssembly();
 }

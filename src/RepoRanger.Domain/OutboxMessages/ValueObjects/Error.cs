@@ -1,5 +1,5 @@
-﻿using RepoRanger.Domain.Common;
-using RepoRanger.Domain.OutboxMessages.ValueObjects.Enums;
+﻿using RepoRanger.Domain.OutboxMessages.ValueObjects.Enums;
+using SharedKernel.Base;
 
 namespace RepoRanger.Domain.OutboxMessages.ValueObjects;
 
