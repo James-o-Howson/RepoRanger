@@ -21,12 +21,12 @@ internal static class ServiceConfiguration
         services.AddControllers();
         services.AddEndpointsApiExplorer();
         services.AddHealthChecks().AddDbContextCheck<ApplicationDbContext>();
-        // services.AddOpenApiDocument(settings =>
-        // {
-        //     settings.Title = "Repo Ranger API";
-        //     settings.Version = "v1";
-        //     settings.Description = "API for managing repositories in Repo Ranger.";
-        // });
+        services.AddOpenApiDocument(settings =>
+        {
+            settings.Title = "Repo Ranger API";
+            settings.Version = "v1";
+            settings.Description = "API for managing repositories in Repo Ranger.";
+        });
         services.AddHttpContextAccessor();
         services.AddMediatr();
         services.AddValidatorsFromAssemblies([CommandsAssembly.Assembly, QueriesAssembly.Assembly]);
