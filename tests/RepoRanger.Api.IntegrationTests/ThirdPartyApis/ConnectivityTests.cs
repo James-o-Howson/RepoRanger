@@ -1,4 +1,4 @@
-﻿using ThirdPartyClients.Generated;
+﻿using RepoRanger.ThirdPartyClients.Generated;
 
 namespace RepoRanger.Api.IntegrationTests.ThirdPartyApis;
 

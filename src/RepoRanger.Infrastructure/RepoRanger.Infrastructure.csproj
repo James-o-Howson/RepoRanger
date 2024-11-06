@@ -9,6 +9,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\RepoRanger.Abstractions\RepoRanger.Abstractions.csproj" />
+      <ProjectReference Include="..\RepoRanger.ThirdPartyClients\RepoRanger.ThirdPartyClients.csproj" />
     </ItemGroup>
 
     <ItemGroup>
