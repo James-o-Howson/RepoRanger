@@ -10,17 +10,35 @@ namespace RepoRanger.Api.Controllers;
 public sealed class ProjectsController : ApiControllerBase
 {
     [HttpGet]
-    [ProducesResponseType(typeof(ProjectsVm), 200)]
-    public async Task<ActionResult<ProjectsVm>> List([FromQuery] ListProjectsQuery query) => 
-        await Mediator.Send(query);
-    
-    [HttpGet("[action]")]
-    [ProducesResponseType(typeof(ProjectsVm), 200)]
-    public async Task<ActionResult<ProjectsVm>> GetByRepositoryIds([FromQuery] GetProjectsByRepositoryIdsQuery query) => 
-        await Mediator.Send(query);
-    
-    [HttpGet("[action]")]
-    [ProducesResponseType(typeof(ProjectsVm), 200)]
-    public async Task<ActionResult<ProjectsVm>> GetByDependency([FromQuery] GetProjectsByDependencyQuery query) => 
-        await Mediator.Send(query);
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<ProjectsVm>> List([FromQuery] ListProjectsQuery query)
+    {
+        var result = await Mediator.Send(query);
+        
+        return Ok(result);
+    }
+
+    [HttpGet("[action]")] 
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<ProjectsVm>> GetByRepositoryIds([FromQuery] GetProjectsByRepositoryIdsQuery query)
+    {
+        var result = await Mediator.Send(query);
+        
+        return Ok(result);
+    }
+
+    [HttpGet("[action]")] 
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<ProjectsVm>> GetByDependency([FromQuery] GetProjectsByDependencyQuery query)
+    {
+        var result = await Mediator.Send(query);
+        
+        return Ok(result);
+    }
 }

@@ -7,7 +7,13 @@ namespace RepoRanger.Api.Controllers;
 public sealed class VersionControlSystemsController : ApiControllerBase
 {
     [HttpGet] 
-    [ProducesResponseType(typeof(VersionControlSystemsVm), 200)]
-    public async Task<ActionResult<VersionControlSystemsVm>> List([FromQuery] ListVersionControlSystemsQuery query) => 
-        await Mediator.Send(query);
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<VersionControlSystemsVm>> List([FromQuery] ListVersionControlSystemsQuery query)
+    {
+        var result = await Mediator.Send(query);
+        
+        return Ok(result);
+    }
 }

@@ -8,7 +8,13 @@ namespace RepoRanger.Api.Controllers;
 public sealed class DependencyInstancesController : ApiControllerBase
 {
     [HttpPost("[action]")]
-    [ProducesResponseType(typeof(PaginatedList<ProjectDependencyVm>), 200)]
-    public async Task<ActionResult<PaginatedList<ProjectDependencyVm>>> Search(SearchProjectDependenciesWithPaginationQuery query) => 
-        await Mediator.Send(query);
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<PaginatedList<ProjectDependencyVm>>> Search(SearchProjectDependenciesWithPaginationQuery query)
+    {
+        var result = await Mediator.Send(query);
+        
+        return Ok(result);
+    }
 }

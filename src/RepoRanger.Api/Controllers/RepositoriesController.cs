@@ -10,23 +10,49 @@ namespace RepoRanger.Api.Controllers;
 public sealed class RepositoriesController : ApiControllerBase
 {
     [HttpGet("{id:int}")]
-    [ProducesResponseType(typeof(RepositorySummaryVm), 200)]
-    [ProducesResponseType(404)]
-    public async Task<ActionResult<RepositorySummaryVm>> GetById(int id) => 
-        await Mediator.Send(new GetRepositoryByIdQuery(id));
-    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<RepositorySummaryVm>> GetById(int id)
+    {
+        var result = await Mediator.Send(new GetRepositoryByIdQuery(id));
+        
+        return Ok(result);
+    }
+
     [HttpGet]
-    [ProducesResponseType(typeof(RepositorySummariesVm), 200)]
-    public async Task<ActionResult<RepositorySummariesVm>> List([FromQuery] ListRepositoriesQuery query) => 
-        await Mediator.Send(query);
-    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<RepositorySummariesVm>> List([FromQuery] ListRepositoriesQuery query)
+    {
+        var result = await Mediator.Send(query);
+        
+        return Ok(result);
+    }
+
     [HttpGet("[action]")]
-    [ProducesResponseType(typeof(RepositorySummariesVm), 200)]
-    public async Task<ActionResult<RepositorySummariesVm>> GetByVersionControlSystemId([FromQuery] GetRepositoriesByVersionControlSystemIdQuery query) => 
-        await Mediator.Send(query);
-    
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult<RepositorySummariesVm>> GetByVersionControlSystemId([FromQuery] GetRepositoriesByVersionControlSystemIdQuery query)
+    {
+        var result = await Mediator.Send(query);
+        
+        return Ok(result);
+    }
+
     [HttpDelete("[action]")]
-    [ProducesResponseType(200)]
-    public async Task Delete([FromQuery] DeleteRepositoryCommand query) => 
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<ActionResult> Delete([FromQuery] DeleteRepositoryCommand query)
+    {
         await Mediator.Send(query);
+        
+        return NoContent();
+    }
 }
